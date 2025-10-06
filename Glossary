@@ -1,61 +1,114 @@
+FIA Glossary
+
+
 FIA Terms
-Digital Self-Defense Score: Pre-assessment risk score that routes each participant to the
-most relevant booths/resources.
+Digital Self-Defense Score: Pre-assessment risk score
+	Use Case: To place user into the most relevant booths/resources
 
 Booth Recommendation: Personalized session/activity suggestions derived from survey
 answers and scoring logic.
+	Use Case: To ensure users are getting the most relevant recommendations so they can maximize their time
 
 Canvas Badges / Canvas Credentials: Platform FIA uses to issue and manage digital badges
 for completed actions.
+	Use Case: Allow the user to see which actions they have completed in order to keep track of what needs to be completed.
 
-Badge Passport: Paper/backup record of earned badges when online systems are
-unavailable.
+Badge Passport: Paper/backup record of earned badges.
+	Use Case: Ensure that completed actions continue to be stored even when online systems are unavailable so no records are lost.
 
 Backpack: Participant’s digital repository for storing and viewing their badges.
-Gamified Learning: FIA’s engagement layer using badges/points to reinforce protective
-behaviors.
+	Use Case: Have an easily identifiable and accessible place for users to track their progress.
+
+Gamified Learning: FIA’s engagement layer using badges/points.
+	Use Case: To enhance and reinforce protective behaviors and to encourage the learning process.
 
 Trauma-Informed Design: FIA’s UX approach that prioritizes safety, control, and clear,
 non-alarming guidance.
+	Use Case: To ensure users feel safe and secure while accessing FIA resources in order to promote a safer and more accessible environment.
 
 Safe Space Moderation: FIA’s norms and enforcement to keep chats/events respectful and
 protective.
+	Use Case: To ensure users feel safe in FIA spaces, especially with sensitive topics and information.
 
 Partner Enablement: Materials and processes that make adopting FIA low-lift for campuses
 and sponsors.
+	Use Case: Campuses and sponsors will be able to have the highest outcome with FIA, without having to dedicate too much of their own resources and time. 
 
 Post-Event Follow-Up: FIA’s after-action emails, surveys, and reports to evidence outcomes
 and next steps.
+	Use Case: Ensure users can refer back to past events and work on what they’ve learned in the real world.
 
 Always-On Chatbot: FIA’s supportive assistant for just-in-time nudges, explanations, and
 escalation paths.
+	Use Case: Ensure users have immediate access to assistance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 General Cybersecurity Terms
 Phishing: Deceptive messages that trick users into revealing data or installing malware.
+	Use Case: To help users identify phishing in their personal accounts
 
 Deepfake: AI-generated media impersonating a real person to mislead or coerce.Voice Clone: AI-replicated speech used for scams and impersonation (e.g., vishing).
+	Use Case: To help users identify this type of media when they come across it.
 
 AI Catfishing: Synthetic or AI-amplified personas used for manipulation or fraud.
+	Use Case: To help users identify this type of manipulation.
 
 OAuth Scam: Abuse of “Sign in with…” permissions to gain unauthorized account access.
+	Use Case: To teach users how to review app permissions to protect their data
 
 Spyware: Software that secretly monitors activity and collects data from a device.
+	Use Case: To help users identify when they are being monitored and avoid it.
 
 Stalkerware: Spyware used for surveillance and control in intimate or targeted contexts.
+	Use Case: To help at-risk users identify if they could be a target and what to do to prevent it.
 
 Two-Factor Authentication (2FA): Login method requiring a second proof (code, key, prompt).
+	Use Case: To help users understand the importance of security and security controls.
 
 Password Manager: Tool that generates and stores strong, unique credentials.
+	Use Case: To help users have more secure accounts with strong passwords.
 
 Digital Footprint: The trail of data a person leaves across apps, sites, and services.
+	Use Case: To help users understand the visibility of their actions, especially to outsiders.
 
 Data Broker: Company that aggregates and sells personal information from many sources.
+	Use Case: To help users to understand who could potentially have access to their information and what they do with that information.
 
 Breach Check: Lookup to see if personal data appeared in known security breaches.
+	Use Case: To aid users in identifying which accounts are at risk, and allow them to quickly fix the security issues.
 
 Privacy Audit: Systematic review of settings/permissions to reduce exposure.
+	Use Case: To help users strengthen their online security.
 
 Secure Wi-Fi / VPN: Encrypted network use (e.g., a VPN) to protect traffic, especially on
 public Wi-Fi.
+	Use Case: To inform users of alternate options for security, and to ensure they have knowledge of what to do on public or secure networks.
 
 
 
