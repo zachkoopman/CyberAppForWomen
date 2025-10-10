@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<eventCourses>
+  <event id="a8c2766fe860463a9d5d600adcbd8c10">
+    <course id="c-0002" enabled="true" />
+    <course id="5de6f8cad108480a847e89f82df11049" enabled="false" />
+  </event>
+  <event id="8962f12f5a5e4a09b8427bd560c93360">
+    <course id="c-0002" enabled="true" />
+    <course id="5de6f8cad108480a847e89f82df11049" enabled="true" />
+    <course id="b08fc1ca3fd34fdd9acdfa768b699039" enabled="false" />
+  </event>
+  <event id="06f963c948af47c28d6818b41f0b9263">
+    <course id="c-0002" enabled="true" />
+    <course id="5de6f8cad108480a847e89f82df11049" enabled="true" />
+    <course id="b08fc1ca3fd34fdd9acdfa768b699039" enabled="true" />
+  </event>
+  <event id="bb77abf057754c0793a5679362dbd4fd">
+    <course id="c-0002" enabled="false" />
+    <course id="5de6f8cad108480a847e89f82df11049" enabled="false" />
+    <course id="b08fc1ca3fd34fdd9acdfa768b699039" enabled="true" />
+    <course id="13fceae629534df2a0d290fa0209d898" enabled="true" />
+  </event>
+</eventCourses>
