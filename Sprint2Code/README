@@ -1,1 +1,3 @@
 These are the files I helped contribute to our sprint two end goal.
+
+This folder holds code-behind files for the main admin pages and a brief repo guide: EventManage.aspx.cs manages creating/editing event sessions (XML reads/writes, time checks, UI binding); SuperAdminHome.aspx.cs powers the Super Admin dashboard with auth and rule/microcourse management; UniversityAdminHome.aspx.cs handles University Admin actions scoped to their institution.
