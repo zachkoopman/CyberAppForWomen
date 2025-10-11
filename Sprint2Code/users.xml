@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<users version="1">
+  <!-- Example records; delete after testing -->
+  <user id="u-001" role="Participant">
+    <firstName>Tracy</firstName>
+    <lastName>Nguyen</lastName>
+    <email>tracy@example.edu</email>
+    <university>Arizona State University</university>
+    <passwordHash>
+    </passwordHash>
+    <passwordSalt>
+    </passwordSalt>
+    <createdAt>2025-01-01T00:00:00Z</createdAt>
+    <consentAcceptedAt>2025-01-01T00:00:00Z</consentAcceptedAt>
+    <consentIp>127.0.0.1</consentIp>
+  </user>
+  <user id="u-002" role="Helper">
+    <firstName>Asha</firstName>
+    <lastName>Patel</lastName>
+    <email>asha@example.edu</email>
+    <university>
+    </university>
+    <passwordHash>
+    </passwordHash>
+    <passwordSalt>
+    </passwordSalt>
+    <createdAt>
+    </createdAt>
+    <consentAcceptedAt>
+    </consentAcceptedAt>
+    <consentIp>
+    </consentIp>
+  </user>
+  <user id="u-003" role="UniversityAdmin">
+    <firstName>Priya</firstName>
+    <lastName>Singh</lastName>
+    <email>priya@university.edu</email>
+    <university>Arizona State University</university>
+    <passwordHash>
+    </passwordHash>
+    <passwordSalt>
+    </passwordSalt>
+    <createdAt>
+    </createdAt>
+    <consentAcceptedAt>
+    </consentAcceptedAt>
+    <consentIp>
+    </consentIp>
+  </user>
+  <user id="24ff68a5f72d4b61873db9045034bede" role="Participant">
+    <firstName>Zachary</firstName>
+    <lastName>Koopman</lastName>
+    <email>koopmanzachary@gmail.com</email>
+    <university>Arizona State University</university>
+    <passwordHash>Gvavzr3+1ZufZLaCXEvTJZzyEKtpv7Z1gx12SAWAoHA=</passwordHash>
+    <passwordSalt>C88P/K1Ta0zMWuJtlKevCg==</passwordSalt>
+    <createdAt>2025-10-08T03:46:29.0649964Z</createdAt>
+    <consentAcceptedAt>2025-10-08T03:46:29.0649964Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+  <user id="9273fc4468a142489a1f822e267472d9" role="Participant">
+    <firstName>test1</firstName>
+    <lastName>test1</lastName>
+    <email>zkoopman@asu.edu</email>
+    <university>
+    </university>
+    <passwordHash>ZulPl0GUEAVO6/NYMs4/RCeEsUDhKmppzFK0NiMbpYI=</passwordHash>
+    <passwordSalt>E/zwiTa5dric5IF1rYd0fA==</passwordSalt>
+    <createdAt>2025-10-08T04:01:37.6322651Z</createdAt>
+    <consentAcceptedAt>2025-10-08T04:01:37.6322651Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+  <user id="sa-001" role="SuperAdmin">
+    <firstName>Lauren</firstName>
+    <lastName>Lee</lastName>
+    <email>lauren@fia.org</email>
+    <university>
+    </university>
+    <passwordHash>wFxekAA5i2IuBSU9hbfprc9Cnc8j50eCmTRaCpchY7U=</passwordHash>
+    <passwordSalt>C4kga2/5jOKZOyQq/8TeoQ==</passwordSalt>
+    <createdAt>2025-10-07T00:00:00Z</createdAt>
+    <consentAcceptedAt>2025-10-07T00:00:00Z</consentAcceptedAt>
+    <consentIp>127.0.0.1</consentIp>
+  </user>
+  <user id="ua-asu-001" role="UniversityAdmin">
+    <firstName>Priya</firstName>
+    <lastName>Singh</lastName>
+    <email>ua.asu@fia.org</email>
+    <university>Arizona State University</university>
+    <passwordHash>N51p8XYnFf1tUGpbmfzqY+ikkPYqbZYeNq1tdCnQ5D8=</passwordHash>
+    <passwordSalt>bcNU6I+1ejRxoWHiAhy5VA==</passwordSalt>
+    <createdAt>2025-10-07T00:00:00Z</createdAt>
+    <consentAcceptedAt>2025-10-07T00:00:00Z</consentAcceptedAt>
+    <consentIp>127.0.0.1</consentIp>
+  </user>
+  <user id="a896381fc4934e688811f7eadabe234c" role="Participant">
+    <firstName>new</firstName>
+    <lastName>user</lastName>
+    <email>new@gmail.com</email>
+    <university>
+    </university>
+    <passwordHash>qC+1MM4kBgrDowaYuvbSCZHx/IVAo62d87l7UfmbYgI=</passwordHash>
+    <passwordSalt>fpgQHhIwLgkmK+B8IlohJQ==</passwordSalt>
+    <createdAt>2025-10-10T22:13:56.3333451Z</createdAt>
+    <consentAcceptedAt>2025-10-10T22:13:56.3333451Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+</users>

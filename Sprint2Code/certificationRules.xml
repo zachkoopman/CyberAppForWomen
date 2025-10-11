@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<certRules version="1">
+  <rule id="2" version="1">
+    <name>Phishing Awareness</name>
+    <description>Rules needed for Phishing Awareness Certification for peer helpers</description>
+    <passScore>85</passScore>
+    <minSessionsTaught>3</minSessionsTaught>
+    <expiryDays>365</expiryDays>
+    <maxAttempts>3</maxAttempts>
+    <retakeCooldownDays>1</retakeCooldownDays>
+    <evidence>quiz | mentor approval</evidence>
+    <prerequisites />
+  </rule>
+</certRules>
