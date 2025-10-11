@@ -2,4 +2,4 @@ This is where Zachary's Contributions for the project are found!
 
 Note: For my sprint one database file, you will have to click more pages on GitHub as you scroll down as there were lots of inventoried files
 
-Second Note: For my sprint two work, locate the Sprint2Code folder in this branch to see my files and explanations.
+Second Note: For my sprint two work, locate the Sprint2Code folder in this branch to see my files and explanations. I have also created a slideshow detailing how the application works step by step and a document detailing each page of the code. These are also found in the Sprint2Code folder. These technically weren't apart of my tasks for this sprint, but I thought they would be beneficial for showing off our work so far and maintaing a foundation of knowledge for all members of what we have accomplished so far!
