@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<QuizRules>
+	<Ruleset version="2.0" createdUtc="2025-11-02T00:00:00Z">
+		<Domain id="social_privacy" title="Enhancing Social Media Privacy Settings"
+				quickWin="Set profiles to friends-only; disable location and public tagging."
+				factor="Open profiles, tagging, and location visibility increase exposure." />
+		<Domain id="phishing" title="Phishing Awareness and Email Security"
+				quickWin="Never click from messages—use saved bookmarks or official apps."
+				factor="Unsolicited emails/DMs with links/attachments raise risk." />
+		<Domain id="app_privacy" title="Privacy Settings on Popular Apps"
+				quickWin="Revoke unnecessary camera/mic/location; hide lock-screen previews."
+				factor="Loose app permissions leak sensitive data." />
+		<Domain id="spyware" title="Detecting Spyware Infections on Devices"
+				quickWin="Audit device-admin apps; run reputable scans; update OS."
+				factor="Overheating/drain with unknown admin apps suggests spyware." />
+		<Domain id="twofactor" title="Two-Factor Authentication Setup and Management"
+				quickWin="Enable an authenticator app and store backup codes safely."
+				factor="Missing/weak 2FA eases account takeover." />
+		<Domain id="passwords" title="Password Management and Security"
+				quickWin="Turn on a password manager; rotate any reused passwords."
+				factor="Reused or weak passwords propagate compromise." />
+		<Domain id="footprint" title="Managing Your Digital Footprint"
+				quickWin="Quarterly cleanup: prune old posts; remove data-broker listings."
+				factor="Large, stable footprints make targeting easier." />
+		<Domain id="deepfakes" title="Recognizing AI-Assisted Manipulation and Deepfakes"
+				quickWin="Reverse-image key frames; check lip-sync and metadata before sharing."
+				factor="Exposure to AI personas/media increases manipulation risk." />
+		<Domain id="vpn" title="Using VPNs for Secure Browsing"
+				quickWin="Use a trusted VPN on public or school networks."
+				factor="Unencrypted sessions disclose activity and location." />
+		<Domain id="public_wifi" title="Safe Use of Public Computers and Wi-Fi"
+				quickWin="Avoid sensitive logins; if needed use private windows and sign out."
+				factor="Shared machines and open Wi-Fi leak credentials/data." />
+		<Domain id="surveillance_scan" title="Identifying Hidden Surveillance Devices (Electronic Scanning)"
+				quickWin="Do visual/RF/network sweeps when in new spaces."
+				factor="Never scanning leaves covert cams/mics undiscovered." />
+		<Domain id="online_banking" title="Safe Online Banking Practices"
+				quickWin="Use official apps; enable alerts; review statements weekly."
+				factor="Link-driven logins and poor monitoring risk fraud." />
+		<Domain id="malicious_apps" title="Recognizing Malicious Mobile Apps"
+				quickWin="Install from official stores; review permissions and dev history."
+				factor="Sideloading/rare updates increase malicious app risk." />
+		<Domain id="identity_verify" title="Verifying Online Identities and Combating Catfishing"
+				quickWin="Reverse-image search and cross-check handles before engaging."
+				factor="Accepting unknowns without checks invites scams/abuse." />
+		<Domain id="home_wifi" title="Securing Home Wi-Fi Networks"
+				quickWin="Change admin creds; use WPA3; enable a separate guest network."
+				factor="Defaults and shared main credentials expose the home network." />
+	</Ruleset>
+</QuizRules>
+
+

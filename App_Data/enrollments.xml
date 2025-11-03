@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<enrollments>
+  <session eventId="bb77abf057754c0793a5679362dbd4fd" id="49707a8d0eee4a3eb72d2d6af080e5e8">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="9f1548b213724512a934ddbb3e1ac48d" id="6f2d4bb6b8ab46459a18130980e30d56">
+    <enrolled>
+      <user id="24ff68a5f72d4b61873db9045034bede" ts="2025-10-23T04:57:37.0121174Z" />
+    </enrolled>
+    <waitlist>
+    </waitlist>
+  </session>
+  <session eventId="9f1548b213724512a934ddbb3e1ac48d" id="87c7885113e4445a801b064da9a7d819">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-10-29T18:50:38.1597872Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="a610f301110244d5a9e9949ca0ab97f8">
+    <enrolled>
+      <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36" ts="2025-10-30T02:34:03.5902511Z" />
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-02T23:13:13.2263126Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="22e769a9417f4ed3b364050f071343d8">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="1ef64c94c5c54a979c3a5d505f50fdd7">
+    <enrolled>
+      <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36" ts="2025-10-30T02:37:41.8758181Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="306bccb3518c412083ff1dbb2b9cdec6">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="7d3113ed416f40e384cab8c9549e6a7e">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-02T23:07:29.9621279Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="d9007bb8255c4b17ac56a2383ce3f514" id="98215e5b1ac146ff92e5996cdbe1e12d">
+    <enrolled>
+      <user id="24ff68a5f72d4b61873db9045034bede" ts="2025-11-02T05:51:26.0550736Z" />
+    </enrolled>
+    <waitlist>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-02T05:51:30.1894077Z" />
+      <user id="a0847de458bd4e7ebbfc79cdc943a3eb" ts="2025-11-03T01:01:37.6661214Z" />
+    </waitlist>
+  </session>
+  <session eventId="d9007bb8255c4b17ac56a2383ce3f514" id="6d7cfbb128c04ce2bc72bfa8d5024507">
+    <enrolled />
+    <waitlist>
+      <user id="24ff68a5f72d4b61873db9045034bede" ts="2025-11-02T05:07:43.1884436Z" />
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-02T06:20:00.1153509Z" />
+      <user id="a0847de458bd4e7ebbfc79cdc943a3eb" ts="2025-11-03T01:01:43.2806087Z" />
+    </waitlist>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="572da89b47144e2f8461e66e937b2586">
+    <enrolled />
+    <waitlist>
+    </waitlist>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="5b4dd9bf28e342a89da9ea2b0642669d">
+    <enrolled>
+      <user id="e0ec60e0c5444913acc631486ac8980d" ts="2025-11-02T06:44:49.7960080Z" />
+    </enrolled>
+    <waitlist>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-02T06:32:53.0976414Z" />
+    </waitlist>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="f35d55547cbf4810856ae0df7ba940c1">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-02T23:13:26.3581435Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="eead57b6e0474159957c2e7c8fcf46ab" id="288770d6b065479c8b138697e917b282">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="eead57b6e0474159957c2e7c8fcf46ab" id="987ce2d6f44249eeaa2ba2c8ac06d010">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-03T02:28:47.7214510Z" />
+    </enrolled>
+    <waitlist>
+      <user id="24ff68a5f72d4b61873db9045034bede" ts="2025-11-03T02:31:38.6064057Z" />
+      <user id="a0847de458bd4e7ebbfc79cdc943a3eb" ts="2025-11-03T02:52:16.5848797Z" />
+    </waitlist>
+  </session>
+</enrollments>

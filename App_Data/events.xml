@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<events version="1">
+  <event id="a8c2766fe860463a9d5d600adcbd8c10" status="Draft" createdAt="2025-10-08T06:38:35.5816345Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>New CyberFair</name>
+    <date>2025-10-17T07:00:00.0000000Z</date>
+    <description>test</description>
+    <courses />
+  </event>
+  <event id="8962f12f5a5e4a09b8427bd560c93360" status="Draft" createdAt="2025-10-09T00:26:22.5378919Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>Event #2</name>
+    <date>2025-10-30T07:00:00.0000000Z</date>
+    <description>this is another test!</description>
+    <courses />
+  </event>
+  <event id="d9007bb8255c4b17ac56a2383ce3f514" status="Draft" createdAt="2025-10-09T00:39:18.2307069Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>Event #3</name>
+    <date>2025-11-12T07:00:00.0000000Z</date>
+    <description>Test #3</description>
+    <courses />
+  </event>
+  <event id="06f963c948af47c28d6818b41f0b9263" status="Draft" createdAt="2025-10-10T19:25:00.4358624Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>Event Demonstration</name>
+    <date>2025-10-24T07:00:00.0000000Z</date>
+    <description>For demonstration purposes...</description>
+    <courses />
+  </event>
+  <event id="bb77abf057754c0793a5679362dbd4fd" status="Draft" createdAt="2025-10-10T22:39:05.4112618Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>ftest</name>
+    <date>2025-10-30T07:00:00.0000000Z</date>
+    <description>ftest</description>
+    <courses />
+  </event>
+  <event id="9f1548b213724512a934ddbb3e1ac48d" status="Draft" createdAt="2025-10-23T04:54:48.4731151Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>New Test</name>
+    <date>2025-10-31T07:00:00.0000000Z</date>
+    <description>dwdwd</description>
+    <courses />
+  </event>
+  <event id="26cfa48241da4d8d975d6353adf2a1bb" status="Draft" createdAt="2025-10-30T01:41:22.0004503Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>PreReq Testing</name>
+    <date>2025-11-07T07:00:00.0000000Z</date>
+    <description>ppfpf</description>
+    <courses />
+  </event>
+  <event id="eead57b6e0474159957c2e7c8fcf46ab" status="Draft" createdAt="2025-11-03T01:58:15.2956706Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>Slide Deck Photos Test</name>
+    <date>2025-11-03T07:00:00.0000000Z</date>
+    <description>For making slide deck to show lauren</description>
+    <courses />
+  </event>
+</events>

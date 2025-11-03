@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<completions>
+  <user id="2d51448fbd2544ce8e0a0543b135c885">
+    <course id="4d701c885aac40ff87b6281167743433" completedOn="2025-10-30" />
+    <course id="5de6f8cad108480a847e89f82df11049" completedOn="2025-10-30" />
+    <course id="c-0002" completedOn="2025-10-30" />
+    <course id="13fceae629534df2a0d290fa0209d898" completedOn="2025-11-02" />
+  </user>
+  <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36">
+    <course id="5de6f8cad108480a847e89f82df11049" completedOn="2025-10-30" />
+  </user>
+  <user id="24ff68a5f72d4b61873db9045034bede">
+    <course id="5de6f8cad108480a847e89f82df11049" completedOn="2025-11-02" />
+    <course id="4d701c885aac40ff87b6281167743433" completedOn="2025-11-02" />
+    <course id="c-0002" completedOn="2025-11-03" />
+  </user>
+  <user id="a0847de458bd4e7ebbfc79cdc943a3eb">
+    <course id="c-0002" completedOn="2025-11-03" />
+  </user>
+</completions>

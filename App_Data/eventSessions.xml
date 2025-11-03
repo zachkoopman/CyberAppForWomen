@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<eventSessions>
+  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="47688e66f35047c5b5878fe4ec44cb8c">
+    <courseId>c-0002</courseId>
+    <start>2025-10-23T06:39:00.0000000Z</start>
+    <end>2025-10-26T06:39:00.0000000Z</end>
+    <room>MU 201</room>
+    <helper>Tracy</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="39caf8188abf4601af57fcd484c45a36">
+    <courseId>c-0002</courseId>
+    <start>
+    </start>
+    <end>
+    </end>
+    <room>
+    </room>
+    <helper>
+    </helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="5802d669a5cb4a0882d25c3901f90fe0">
+    <courseId>c-0002</courseId>
+    <start>2025-10-16T07:11:00.0000000Z</start>
+    <end>2025-10-16T07:17:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Tracy</helper>
+    <capacity>6</capacity>
+  </session>
+  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="f194871291e2465e92f49bec464ff8f2">
+    <courseId>c-0002</courseId>
+    <start>2025-10-16T07:12:00.0000000Z</start>
+    <end>2025-10-16T11:55:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>
+    </helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="a34f582032de469c825facf84ddd06b9">
+    <courseId>c-0002</courseId>
+    <start>2025-10-16T07:08:00.0000000Z</start>
+    <end>2025-10-16T07:16:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>
+    </helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="8962f12f5a5e4a09b8427bd560c93360" id="03aebf35d4684419b85b0f226d4bcb2a">
+    <courseId>c-0002</courseId>
+    <start>2025-11-01T00:26:00.0000000Z</start>
+    <end>2025-11-01T00:31:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Tracy</helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="8962f12f5a5e4a09b8427bd560c93360" id="0edbf0c3d7c949a4b2c6dfaf6ec3afc0">
+    <courseId>c-0002</courseId>
+    <start>2025-11-01T00:27:00.0000000Z</start>
+    <end>2025-11-01T00:29:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Tracy</helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="8962f12f5a5e4a09b8427bd560c93360" id="d3b6586fc41c415c823f1b721f61abaf">
+    <courseId>c-0002</courseId>
+    <start>2025-11-01T00:26:00.0000000Z</start>
+    <end>2025-11-01T00:29:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Tracy</helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="8962f12f5a5e4a09b8427bd560c93360" id="417944d3749e4661b4878a9d1a78bdd2">
+    <courseId>c-0002</courseId>
+    <start>2025-11-01T00:20:00.0000000Z</start>
+    <end>2025-11-01T00:27:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Tracy</helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="d9007bb8255c4b17ac56a2383ce3f514" id="6d7cfbb128c04ce2bc72bfa8d5024507">
+    <courseId>c-0002</courseId>
+    <start>2025-11-14T00:40:00.0000000Z</start>
+    <end>2025-11-14T00:50:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Beonica</helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="8962f12f5a5e4a09b8427bd560c93360" id="3eb0822ae53e47dbbb9a896ed07e5d82">
+    <courseId>c-0002</courseId>
+    <start>2025-10-24T19:30:00.0000000Z</start>
+    <end>2025-10-24T20:00:00.0000000Z</end>
+    <room>https://classroom.google.com/c/ODEyMzAzMTg1NjU1</room>
+    <helper>Tracy</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="06f963c948af47c28d6818b41f0b9263" id="0e3a4660c9844c728a20a4a26f01c1a9">
+    <courseId>c-0002</courseId>
+    <start>2025-10-27T19:25:00.0000000Z</start>
+    <end>2025-10-27T19:55:00.0000000Z</end>
+    <room>https://classroom.google.com/c/ODEyMzAzMTg1NjU1</room>
+    <helper>Tracy</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="06f963c948af47c28d6818b41f0b9263" id="522ba3b9f07f40ae8106d0c03e8168d9">
+    <courseId>5de6f8cad108480a847e89f82df11049</courseId>
+    <start>2025-10-28T21:30:00.0000000Z</start>
+    <end>2025-10-28T22:00:00.0000000Z</end>
+    <room>https://classroom.google.com/c/ODEyMzAzMTg1NjU1</room>
+    <helper>Morgan</helper>
+    <capacity>3</capacity>
+  </session>
+  <session eventId="bb77abf057754c0793a5679362dbd4fd" id="49707a8d0eee4a3eb72d2d6af080e5e8">
+    <courseId>13fceae629534df2a0d290fa0209d898</courseId>
+    <start>2025-11-06T22:42:00.0000000Z</start>
+    <end>2025-11-09T04:39:00.0000000Z</end>
+    <room>Zoom Link:</room>
+    <helper>Tracy</helper>
+    <capacity>4</capacity>
+  </session>
+  <session eventId="9f1548b213724512a934ddbb3e1ac48d" id="6f2d4bb6b8ab46459a18130980e30d56">
+    <courseId>c-0002</courseId>
+    <start>2025-11-01T04:54:00.0000000Z</start>
+    <end>2025-11-01T04:58:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>Tracy</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="9f1548b213724512a934ddbb3e1ac48d" id="87c7885113e4445a801b064da9a7d819">
+    <courseId>5de6f8cad108480a847e89f82df11049</courseId>
+    <start>2025-11-01T04:55:00.0000000Z</start>
+    <end>2025-11-01T04:56:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>Morgan</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="1ef64c94c5c54a979c3a5d505f50fdd7">
+    <courseId>c-0002</courseId>
+    <start>2025-10-26T01:41:00.0000000Z</start>
+    <end>2025-11-08T01:41:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Tracy</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="572da89b47144e2f8461e66e937b2586">
+    <courseId>5de6f8cad108480a847e89f82df11049</courseId>
+    <start>2025-11-09T01:42:00.0000000Z</start>
+    <end>2025-11-09T01:43:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>morgan</helper>
+    <capacity>
+    </capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="22e769a9417f4ed3b364050f071343d8">
+    <courseId>5de6f8cad108480a847e89f82df11049</courseId>
+    <start>2025-11-09T01:42:00.0000000Z</start>
+    <end>2025-11-09T01:46:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>kk</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="a610f301110244d5a9e9949ca0ab97f8">
+    <courseId>4d701c885aac40ff87b6281167743433</courseId>
+    <start>2025-11-30T01:47:00.0000000Z</start>
+    <end>2025-12-01T01:48:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>won</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="f53f3ac88a3144db912ac1d34f96ea81">
+    <courseId>13fceae629534df2a0d290fa0209d898</courseId>
+    <start>2025-10-30T05:09:00.0000000Z</start>
+    <end>2025-10-30T05:20:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Tra</helper>
+    <capacity>6</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="4bcf9c3b0aa24c5681d0f18a40518160">
+    <courseId>13fceae629534df2a0d290fa0209d898</courseId>
+    <start>2025-10-30T05:06:00.0000000Z</start>
+    <end>2025-10-30T05:15:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>blabla</helper>
+    <capacity>8</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="7d3113ed416f40e384cab8c9549e6a7e">
+    <courseId>13fceae629534df2a0d290fa0209d898</courseId>
+    <start>2025-11-08T05:17:00.0000000Z</start>
+    <end>2025-11-09T05:17:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>percy</helper>
+    <capacity>6</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="306bccb3518c412083ff1dbb2b9cdec6">
+    <courseId>13fceae629534df2a0d290fa0209d898</courseId>
+    <start>2025-10-30T05:18:00.0000000Z</start>
+    <end>2025-10-30T05:19:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>overlap</helper>
+    <capacity>3</capacity>
+  </session>
+  <session eventId="d9007bb8255c4b17ac56a2383ce3f514" id="98215e5b1ac146ff92e5996cdbe1e12d">
+    <courseId>c-0002</courseId>
+    <start>2025-11-28T04:28:00.0000000Z</start>
+    <end>2025-12-01T04:28:00.0000000Z</end>
+    <room>https://asu.zoom.us/j/82655588146</room>
+    <helper>Tracy</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="5b4dd9bf28e342a89da9ea2b0642669d">
+    <courseId>c-0002</courseId>
+    <start>2025-12-25T06:30:00.0000000Z</start>
+    <end>2026-01-01T06:30:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>Lalal</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="26cfa48241da4d8d975d6353adf2a1bb" id="f35d55547cbf4810856ae0df7ba940c1">
+    <courseId>c-0002</courseId>
+    <start>2026-01-02T23:12:00.0000000Z</start>
+    <end>2026-02-05T23:12:00.0000000Z</end>
+    <room>https://asu.zoom.us/j/88482388304</room>
+    <helper>Zachary</helper>
+    <capacity>3</capacity>
+  </session>
+  <session eventId="eead57b6e0474159957c2e7c8fcf46ab" id="288770d6b065479c8b138697e917b282">
+    <courseId>c-0002</courseId>
+    <start>2025-11-05T02:00:00.0000000Z</start>
+    <end>2025-11-05T02:20:00.0000000Z</end>
+    <room>https://www.zoom.com/</room>
+    <helper>Tracy</helper>
+    <capacity>3</capacity>
+  </session>
+  <session eventId="eead57b6e0474159957c2e7c8fcf46ab" id="6d36a514258b4c4dae2b323f090cf3fb">
+    <courseId>c-0002</courseId>
+    <start>2025-11-05T02:10:00.0000000Z</start>
+    <end>2025-11-05T02:15:00.0000000Z</end>
+    <room>https://www.zoom.com/</room>
+    <helper>Morgan</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="eead57b6e0474159957c2e7c8fcf46ab" id="987ce2d6f44249eeaa2ba2c8ac06d010">
+    <courseId>00ae232aa721473c93ce982c06e6b804</courseId>
+    <start>2025-11-05T03:05:00.0000000Z</start>
+    <end>2025-11-05T03:20:00.0000000Z</end>
+    <room>https://www.zoom.com/</room>
+    <helper>Zach</helper>
+    <capacity>1</capacity>
+  </session>
+</eventSessions>
