@@ -1,0 +1,682 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<QuizQuestions rulesetVersion="2.0">
+
+	
+	<Question id="q1">
+		<Text>What is the current visibility of your main social media profiles?</Text>
+		<A>
+			Public with my real name<Map module="social_privacy" weight="3"/><Map module="footprint" weight="2"/>
+		</A>
+		<B>
+			Visible to friends of friends<Map module="social_privacy" weight="2"/>
+		</B>
+		<C>
+			Private or friends-only<Map module="social_privacy" weight="-2"/><Map module="footprint" weight="-1"/>
+		</C>
+		<D>
+			Mixed settings or I am not sure<Map module="social_privacy" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q2">
+		<Text>Who can tag you or see your location tags by default on social platforms?</Text>
+		<A>
+			Anyone<Map module="social_privacy" weight="3"/>
+		</A>
+		<B>
+			Friends<Map module="social_privacy" weight="1"/>
+		</B>
+		<C>
+			Only me or tagging/location is disabled<Map module="social_privacy" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="social_privacy" weight="2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q3">
+		<Text>How often do you review and limit app permissions (camera, microphone, location) on your phone?</Text>
+		<A>
+			Rarely or never<Map module="app_privacy" weight="3"/><Map module="malicious_apps" weight="1"/>
+		</A>
+		<B>
+			Sometimes<Map module="app_privacy" weight="1"/>
+		</B>
+		<C>
+			Regularly, and I keep them tight<Map module="app_privacy" weight="-2"/>
+		</C>
+		<D>
+			I do not know how to review them<Map module="app_privacy" weight="2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q4">
+		<Text>In the last 30 days, how has your device behaved?</Text>
+		<A>
+			It overheats or drains quickly and I noticed an unknown “device admin” app<Map module="spyware" weight="3"/><Map module="malicious_apps" weight="1"/>
+		</A>
+		<B>
+			There are occasional slowdowns or pop-ups<Map module="spyware" weight="2"/>
+		</B>
+		<C>
+			Everything seems normal<Map module="spyware" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="spyware" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q5">
+		<Text>What is your current setup for two-factor authentication (2FA) on important accounts (email, banking, school)?</Text>
+		<A>
+			No 2FA enabled<Map module="twofactor" weight="3"/><Map module="online_banking" weight="1"/>
+		</A>
+		<B>
+			SMS-based 2FA on some accounts<Map module="twofactor" weight="2"/>
+		</B>
+		<C>
+			An authenticator app on most accounts<Map module="twofactor" weight="-2"/>
+		</C>
+		<D>
+			A hardware security key for critical logins<Map module="twofactor" weight="-3"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q6">
+		<Text>What best describes your password habits across accounts?</Text>
+		<A>
+			I reuse the same or very similar passwords<Map module="passwords" weight="3"/>
+		</A>
+		<B>
+			I reuse with small tweaks (e.g., adding “!”)<Map module="passwords" weight="2"/>
+		</B>
+		<C>
+			I use unique passwords with a manager<Map module="passwords" weight="-3"/>
+		</C>
+		<D>
+			I have a mix of unique and reused passwords<Map module="passwords" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q7">
+		<Text>How often do you post under your real name with strong opinions or personal views?</Text>
+		<A>
+			Often<Map module="footprint" weight="2"/><Map module="social_privacy" weight="1"/><Map module="deepfakes" weight="1"/>
+		</A>
+		<B>
+			Sometimes<Map module="footprint" weight="1"/>
+		</B>
+		<C>
+			Rarely<Map module="footprint" weight="-1"/>
+		</C>
+		<D>
+			Never, or I use a pseudonym<Map module="footprint" weight="-2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q8">
+		<Text>Have you recently encountered profiles or videos that appear AI-generated or manipulated?</Text>
+		<A>
+			Yes<Map module="deepfakes" weight="3"/><Map module="identity_verify" weight="1"/>
+		</A>
+		<B>
+			Maybe<Map module="deepfakes" weight="2"/>
+		</B>
+		<C>
+			No<Map module="deepfakes" weight="0"/>
+		</C>
+		<D>
+			I am not sure<Map module="deepfakes" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q9">
+		<Text>How often do you perform sensitive tasks (banking, portals) on public Wi-Fi?</Text>
+		<A>
+			Often<Map module="public_wifi" weight="3"/><Map module="vpn" weight="1"/>
+		</A>
+		<B>
+			Sometimes for general browsing<Map module="public_wifi" weight="2"/>
+		</B>
+		<C>
+			Rarely and not for sensitive tasks<Map module="public_wifi" weight="1"/>
+		</C>
+		<D>
+			Never<Map module="public_wifi" weight="0"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q10">
+		<Text>How do you use a VPN when you are outside your home network or traveling?</Text>
+		<A>
+			I never use a VPN<Map module="vpn" weight="3"/>
+		</A>
+		<B>
+			I use a VPN sometimes<Map module="vpn" weight="2"/>
+		</B>
+		<C>
+			I use a VPN for sensitive tasks<Map module="vpn" weight="-2"/>
+		</C>
+		<D>
+			My VPN is always on<Map module="vpn" weight="-3"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q11">
+		<Text>How do you typically access your bank or financial accounts online?</Text>
+		<A>
+			I click links from emails or texts<Map module="online_banking" weight="3"/><Map module="phishing" weight="2"/>
+		</A>
+		<B>
+			I sometimes use links from messages<Map module="online_banking" weight="2"/><Map module="phishing" weight="1"/>
+		</B>
+		<C>
+			I only use typed URLs or official apps<Map module="online_banking" weight="-2"/><Map module="phishing" weight="-2"/>
+		</C>
+		<D>
+			It varies or I am not sure<Map module="online_banking" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q12">
+		<Text>How do you handle job-offer or recruiter messages that include links or attachments?</Text>
+		<A>
+			I often engage with them<Map module="phishing" weight="3"/><Map module="identity_verify" weight="1"/>
+		</A>
+		<B>
+			I sometimes engage<Map module="phishing" weight="2"/>
+		</B>
+		<C>
+			I verify first or ignore them<Map module="phishing" weight="-2"/>
+		</C>
+		<D>
+			I have not received any<Map module="phishing" weight="0"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q13">
+		<Text>What best describes your current use of dating apps?</Text>
+		<A>
+			I am active on multiple apps<Map module="identity_verify" weight="3"/><Map module="social_privacy" weight="1"/>
+		</A>
+		<B>
+			I am active on one app<Map module="identity_verify" weight="2"/>
+		</B>
+		<C>
+			I am not using dating apps<Map module="identity_verify" weight="0"/>
+		</C>
+		<D>
+			I prefer not to say<Map module="identity_verify" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q14">
+		<Text>How often do you verify the identity of new contacts before you engage deeply?</Text>
+		<A>
+			Never<Map module="identity_verify" weight="3"/>
+		</A>
+		<B>
+			Sometimes<Map module="identity_verify" weight="1"/>
+		</B>
+		<C>
+			Usually or always<Map module="identity_verify" weight="-2"/>
+		</C>
+		<D>
+			I am not sure how to verify<Map module="identity_verify" weight="2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q15">
+		<Text>How is your home Wi-Fi router currently configured?</Text>
+		<A>
+			Default admin or SSID; I do not know the WPA mode<Map module="home_wifi" weight="3"/>
+		</A>
+		<B>
+			Custom password with WPA2<Map module="home_wifi" weight="1"/>
+		</B>
+		<C>
+			WPA3 with a separate guest network<Map module="home_wifi" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="home_wifi" weight="2"/>
+		</D>
+	</Question>
+
+	<Question id="q16">
+		<Text>How often do you check for hidden cameras or unknown devices in private spaces (new rooms, rentals, etc.)?</Text>
+		<A>
+			Never<Map module="surveillance_scan" weight="3"/>
+		</A>
+		<B>
+			Occasionally<Map module="surveillance_scan" weight="1"/>
+		</B>
+		<C>
+			Regularly using RF/network/visual checks<Map module="surveillance_scan" weight="-2"/>
+		</C>
+		<D>
+			I am not sure what to do<Map module="surveillance_scan" weight="2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q17">
+		<Text>Where do you typically get your phone apps from?</Text>
+		<A>
+			I sideload from unknown sources<Map module="malicious_apps" weight="3"/>
+		</A>
+		<B>
+			Mostly official stores with a few unknown sources<Map module="malicious_apps" weight="2"/>
+		</B>
+		<C>
+			Only official app stores<Map module="malicious_apps" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="malicious_apps" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q18">
+		<Text>How tight are your messaging-app privacy settings (read receipts, “last seen,” profile visibility)?</Text>
+		<A>
+			They are mostly public or at open defaults<Map module="app_privacy" weight="3"/><Map module="social_privacy" weight="1"/>
+		</A>
+		<B>
+			Some limits are enabled<Map module="app_privacy" weight="1"/>
+		</B>
+		<C>
+			They are tight and minimized<Map module="app_privacy" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="app_privacy" weight="2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q19">
+		<Text>How ready are you for account recovery (email security and backup codes) if you lose access?</Text>
+		<A>
+			No backups and weak email security<Map module="passwords" weight="2"/><Map module="twofactor" weight="2"/>
+		</A>
+		<B>
+			Some backups and SMS-based recovery<Map module="twofactor" weight="1"/>
+		</B>
+		<C>
+			Authenticator codes with stored backups<Map module="twofactor" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="twofactor" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q20">
+		<Text>How often do you clean up old public posts and remove yourself from data-broker sites?</Text>
+		<A>
+			Never<Map module="footprint" weight="3"/>
+		</A>
+		<B>
+			About once a year<Map module="footprint" weight="1"/>
+		</B>
+		<C>
+			Quarterly or monthly<Map module="footprint" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="footprint" weight="2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q21">
+		<Text>How do you react to an “urgent” security email about one of your accounts?</Text>
+		<A>
+			I use the link in the message<Map module="phishing" weight="3"/>
+		</A>
+		<B>
+			I Google the site name and then log in<Map module="phishing" weight="1"/>
+		</B>
+		<C>
+			I open a saved bookmark or the official app only<Map module="phishing" weight="-2"/>
+		</C>
+		<D>
+			I ignore the message and verify separately later<Map module="phishing" weight="-2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q22">
+		<Text>Who is currently allowed to message you by default on your social platforms?</Text>
+		<A>
+			Anyone (open DMs)<Map module="social_privacy" weight="3"/>
+		</A>
+		<B>
+			Friends of friends<Map module="social_privacy" weight="2"/>
+		</B>
+		<C>
+			Friends only<Map module="social_privacy" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="social_privacy" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q23">
+		<Text>How often do you use shared or public computers (e.g., labs, libraries) for your online activities?</Text>
+		<A>
+			Often for sensitive tasks<Map module="public_wifi" weight="3"/>
+		</A>
+		<B>
+			Sometimes and I sign out afterward<Map module="public_wifi" weight="2"/>
+		</B>
+		<C>
+			Rarely and never for sensitive tasks<Map module="public_wifi" weight="0"/>
+		</C>
+		<D>
+			Never<Map module="public_wifi" weight="0"/>
+		</D>
+	</Question>
+
+	<Question id="q24">
+		<Text>What steps do you take after using a shared or public computer?</Text>
+		<A>
+			No steps<Map module="public_wifi" weight="2"/>
+		</A>
+		<B>
+			I sign out only<Map module="public_wifi" weight="1"/>
+		</B>
+		<C>
+			I use a private window, sign out, and do not save credentials<Map module="public_wifi" weight="-2"/>
+		</C>
+		<D>
+			I avoid shared computers and use only my own device<Map module="public_wifi" weight="0"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q25">
+		<Text>How do you typically share photos and location information online?</Text>
+		<A>
+			I frequently post live-location or tag my home<Map module="social_privacy" weight="3"/><Map module="footprint" weight="1"/>
+		</A>
+		<B>
+			I occasionally share location details<Map module="social_privacy" weight="1"/>
+		</B>
+		<C>
+			I rarely share or I delay posts until later<Map module="social_privacy" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="social_privacy" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q26">
+		<Text>How closely do you monitor your financial accounts and banking alerts?</Text>
+		<A>
+			I never review statements or alerts<Map module="online_banking" weight="3"/>
+		</A>
+		<B>
+			I check occasionally<Map module="online_banking" weight="1"/>
+		</B>
+		<C>
+			I have alerts on and review weekly<Map module="online_banking" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="online_banking" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q27">
+		<Text>How do you let visitors connect to your home internet?</Text>
+		<A>
+			I give out the main Wi-Fi password<Map module="home_wifi" weight="2"/>
+		</A>
+		<B>
+			I sometimes share a guest network<Map module="home_wifi" weight="0"/>
+		</B>
+		<C>
+			I always use a separate guest network for visitors<Map module="home_wifi" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="home_wifi" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q28">
+		<Text>How do you handle connection or follow requests from people you do not recognize?</Text>
+		<A>
+			I accept most requests<Map module="identity_verify" weight="2"/><Map module="social_privacy" weight="1"/>
+		</A>
+		<B>
+			I skim profiles and then accept<Map module="identity_verify" weight="1"/>
+		</B>
+		<C>
+			I only accept people I know<Map module="identity_verify" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="identity_verify" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q29">
+		<Text>How often do you update your apps and operating system?</Text>
+		<A>
+			Rarely<Map module="malicious_apps" weight="2"/><Map module="spyware" weight="1"/>
+		</A>
+		<B>
+			Sometimes<Map module="malicious_apps" weight="1"/>
+		</B>
+		<C>
+			Auto-updates are enabled<Map module="malicious_apps" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="malicious_apps" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q30">
+		<Text>What is your plan if your phone or laptop is lost or stolen?</Text>
+		<A>
+			No backups and no device lock<Map module="spyware" weight="1"/><Map module="passwords" weight="1"/><Map module="twofactor" weight="1"/>
+		</A>
+		<B>
+			Some backups and a basic lock<Map module="spyware" weight="0"/>
+		</B>
+		<C>
+			Encrypted backups and a strong lock<Map module="spyware" weight="-1"/>
+		</C>
+		<D>
+			I am not sure<Map module="spyware" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q31">
+		<Text>How often do you use privacy-centric search engines or private browsing modes?</Text>
+		<A>
+			Never<Map module="footprint" weight="2"/><Map module="app_privacy" weight="1"/>
+		</A>
+		<B>
+			Sometimes<Map module="footprint" weight="1"/>
+		</B>
+		<C>
+			Often<Map module="footprint" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="footprint" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q32">
+		<Text>How do you handle attachments from unknown senders?</Text>
+		<A>
+			I open them frequently<Map module="phishing" weight="3"/>
+		</A>
+		<B>
+			I sometimes open them after a quick glance<Map module="phishing" weight="2"/>
+		</B>
+		<C>
+			I never open them<Map module="phishing" weight="-3"/>
+		</C>
+		<D>
+			I scan first or verify with the sender<Map module="phishing" weight="-2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q33">
+		<Text>How do you connect when traveling and using hotel or Airbnb Wi-Fi?</Text>
+		<A>
+			I log in to banking or school over hotel/Airbnb Wi-Fi<Map module="public_wifi" weight="3"/><Map module="vpn" weight="1"/>
+		</A>
+		<B>
+			I do only general browsing<Map module="public_wifi" weight="2"/>
+		</B>
+		<C>
+			I use a VPN for any sensitive activity<Map module="vpn" weight="-2"/>
+		</C>
+		<D>
+			I use only my mobile hotspot<Map module="public_wifi" weight="0"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q34">
+		<Text>What can be seen in your phone’s lock-screen notifications?</Text>
+		<A>
+			Full message previews<Map module="app_privacy" weight="2"/>
+		</A>
+		<B>
+			Limited previews<Map module="app_privacy" weight="1"/>
+		</B>
+		<C>
+			Hidden or turned off<Map module="app_privacy" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="app_privacy" weight="1"/>
+		</D>
+	</Question>
+
+	<Question id="q35">
+		<Text>Do you scan your spaces or networks for unknown or suspicious devices?</Text>
+		<A>
+			No<Map module="surveillance_scan" weight="3"/>
+		</A>
+		<B>
+			Sometimes<Map module="surveillance_scan" weight="1"/>
+		</B>
+		<C>
+			Yes, with RF or network checks<Map module="surveillance_scan" weight="-2"/>
+		</C>
+		<D>
+			I am not sure<Map module="surveillance_scan" weight="2"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q36">
+		<Text>How many of the following describe your lived experience (either now or in the past): woman-identifying; part of a marginalized group; LGBTQ+; neurodivergent; third-culture background; survived emotional abuse/coercive control; often suppressing parts of yourself to fit in; destabilizing experiences where you should have felt safe; a mental-health condition; a recent major life transition?</Text>
+		<A>
+			0–1 of these apply to me<Map module="social_privacy" weight="-1"/><Map module="identity_verify" weight="-1"/><Map module="surveillance_scan" weight="-1"/>
+		</A>
+		<B>
+			2–3 of these apply to me<Map module="social_privacy" weight="1"/><Map module="identity_verify" weight="1"/>
+		</B>
+		<C>
+			4–6 of these apply to me<Map module="social_privacy" weight="2"/><Map module="identity_verify" weight="2"/><Map module="surveillance_scan" weight="1"/>
+		</C>
+		<D>
+			7 or more of these apply to me<Map module="social_privacy" weight="3"/><Map module="identity_verify" weight="3"/><Map module="surveillance_scan" weight="2"/><Map module="spyware" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q37">
+		<Text>Which option best describes your current relationship status?</Text>
+		<A>
+			Single and actively dating<Map module="identity_verify" weight="3"/><Map module="social_privacy" weight="1"/>
+		</A>
+		<B>
+			In a long-term relationship<Map module="spyware" weight="1"/><Map module="app_privacy" weight="1"/>
+		</B>
+		<C>
+			Recently ended a relationship<Map module="identity_verify" weight="2"/><Map module="surveillance_scan" weight="1"/>
+		</C>
+		<D>
+			Married or partnered<Map module="spyware" weight="1"/><Map module="home_wifi" weight="1"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q38">
+		<Text>Has a partner (past or present) ever asked for or accessed your digital accounts, devices, or location sharing?</Text>
+		<A>
+			Yes<Map module="spyware" weight="3"/><Map module="app_privacy" weight="2"/><Map module="twofactor" weight="2"/><Map module="passwords" weight="1"/><Map module="social_privacy" weight="1"/>
+		</A>
+		<B>
+			No<Map module="spyware" weight="-2"/>
+		</B>
+		<C>
+			I am not sure<Map module="spyware" weight="2"/>
+		</C>
+		<D>
+			I prefer not to say<Map module="social_privacy" weight="0"/>
+		</D>
+	</Question>
+
+	<Question id="q39">
+		<Text>Do you fear being targeted by online harassment (for example: stalking, smear campaigns, or doxxing)?</Text>
+		<A>
+			Yes<Map module="social_privacy" weight="3"/><Map module="footprint" weight="2"/><Map module="surveillance_scan" weight="1"/><Map module="identity_verify" weight="1"/>
+		</A>
+		<B>
+			No<Map module="social_privacy" weight="-1"/>
+		</B>
+		<C>
+			I am not sure<Map module="social_privacy" weight="1"/>
+		</C>
+		<D>
+			I prefer not to say<Map module="social_privacy" weight="0"/>
+		</D>
+	</Question>
+
+	
+	<Question id="q40">
+		<Text>Have you ever felt like someone had access to your thoughts, feelings, or patterns — even without direct access to your devices?</Text>
+		<A>
+			Yes<Map module="spyware" weight="3"/><Map module="app_privacy" weight="2"/><Map module="surveillance_scan" weight="2"/>
+		</A>
+		<B>
+			No<Map module="spyware" weight="-1"/>
+		</B>
+		<C>
+			I am not sure<Map module="spyware" weight="1"/>
+		</C>
+		<D>
+			I prefer not to say<Map module="surveillance_scan" weight="0"/>
+		</D>
+	</Question>
+
+</QuizQuestions>
+
+

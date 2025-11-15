@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Results>
+  <UserResult name="24ff68a5f72d4b61873db9045034bede" rules="1.0" completedUtc="2025-10-21T23:25:08.1469121Z" overall="25" shareWithHelper="false">
+    <Domains>
+      <Domain title="Phishing &amp; Email Security" score="100" />
+      <Domain title="Password Hygiene" score="0" />
+      <Domain title="Two-Factor Auth" score="0" />
+      <Domain title="Spyware Awareness" score="0" />
+      <Domain title="App/Social Privacy" score="0" />
+      <Domain title="Digital Footprint" score="100" />
+      <Domain title="VPN &amp; Public Wi-Fi" score="0" />
+      <Domain title="Malicious Mobile Apps" score="0" />
+      <Domain title="AI/Deepfakes &amp; Verification" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Password Hygiene: Length + entropy from unrelated words beats tweaked reuses.</Factor>
+      <Factor>Two-Factor Auth: App-based codes resist SIM-swap and inbox compromise better than SMS/email.</Factor>
+      <Factor>Spyware Awareness: Unexpected admin apps + overheating/drain = red flags.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Use a manager to generate and store unique passwords.</Win>
+      <Win>Enable 2FA and store backup codes safely.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="2d51448fbd2544ce8e0a0543b135c885" rules="1.0" completedUtc="2025-10-22T21:50:42.7099536Z" overall="43.8" shareWithHelper="false">
+    <Domains>
+      <Domain title="Phishing &amp; Email Security" score="33.3" />
+      <Domain title="Password Hygiene" score="0" />
+      <Domain title="Two-Factor Auth" score="100" />
+      <Domain title="Spyware Awareness" score="50" />
+      <Domain title="App/Social Privacy" score="50" />
+      <Domain title="Digital Footprint" score="100" />
+      <Domain title="VPN &amp; Public Wi-Fi" score="0" />
+      <Domain title="Malicious Mobile Apps" score="0" />
+      <Domain title="AI/Deepfakes &amp; Verification" score="100" />
+    </Domains>
+    <TopFactors>
+      <Factor>Password Hygiene: Length + entropy from unrelated words beats tweaked reuses.</Factor>
+      <Factor>VPN &amp; Public Wi-Fi: VPN + HTTPS mitigates many public Wi-Fi risks.</Factor>
+      <Factor>Malicious Mobile Apps: Overbroad permissions unrelated to the app’s purpose.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Use a manager to generate and store unique passwords.</Win>
+      <Win>Avoid banking on public Wi-Fi; if unavoidable, use VPN + HTTPS only.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="bf47b8cadf5b44e9a8b15bb95c1bbb36" rules="1.0" completedUtc="2025-10-30T01:51:00.4304987Z" overall="0" shareWithHelper="false">
+    <Domains>
+      <Domain title="Phishing &amp; Email Security" score="0" />
+      <Domain title="Password Hygiene" score="0" />
+      <Domain title="Two-Factor Auth" score="0" />
+      <Domain title="Spyware Awareness" score="0" />
+      <Domain title="App/Social Privacy" score="0" />
+      <Domain title="Digital Footprint" score="0" />
+      <Domain title="VPN &amp; Public Wi-Fi" score="0" />
+      <Domain title="Malicious Mobile Apps" score="0" />
+      <Domain title="AI/Deepfakes &amp; Verification" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Phishing &amp; Email Security: Urgent language + link to “confirm password” is a classic phishing tell.</Factor>
+      <Factor>Password Hygiene: Length + entropy from unrelated words beats tweaked reuses.</Factor>
+      <Factor>Two-Factor Auth: App-based codes resist SIM-swap and inbox compromise better than SMS/email.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Hover to preview links; never enter credentials from email links.</Win>
+      <Win>Use a manager to generate and store unique passwords.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="e0ec60e0c5444913acc631486ac8980d" rules="1.0" completedUtc="2025-11-02T06:29:15.6557855Z" overall="37.5" shareWithHelper="false">
+    <Domains>
+      <Domain title="Phishing &amp; Email Security" score="33.3" />
+      <Domain title="Password Hygiene" score="50" />
+      <Domain title="Two-Factor Auth" score="50" />
+      <Domain title="Spyware Awareness" score="50" />
+      <Domain title="App/Social Privacy" score="100" />
+      <Domain title="Digital Footprint" score="0" />
+      <Domain title="VPN &amp; Public Wi-Fi" score="0" />
+      <Domain title="Malicious Mobile Apps" score="0" />
+      <Domain title="AI/Deepfakes &amp; Verification" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Digital Footprint: Prune old content and restrict visibility to shrink discoverable data.</Factor>
+      <Factor>VPN &amp; Public Wi-Fi: VPN + HTTPS mitigates many public Wi-Fi risks.</Factor>
+      <Factor>Malicious Mobile Apps: Overbroad permissions unrelated to the app’s purpose.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Search yourself quarterly and remove stale public info.</Win>
+      <Win>Avoid banking on public Wi-Fi; if unavoidable, use VPN + HTTPS only.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="a0847de458bd4e7ebbfc79cdc943a3eb" rules="2.0" completedUtc="2025-11-03T00:14:11.9163654Z" overall="2.27" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="8" />
+      <Domain title="Phishing Awareness and Email Security" score="0" />
+      <Domain title="Privacy Settings on Popular Apps" score="0" />
+      <Domain title="Detecting Spyware Infections on Devices" score="0" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="4" />
+      <Domain title="Password Management and Security" score="5" />
+      <Domain title="Managing Your Digital Footprint" score="2" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="3" />
+      <Domain title="Using VPNs for Secure Browsing" score="1" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="4" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="0" />
+      <Domain title="Safe Online Banking Practices" score="1" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="0" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="6" />
+      <Domain title="Securing Home Wi-Fi Networks" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Enhancing Social Media Privacy Settings: Open profiles, tagging, and location visibility increase exposure.</Factor>
+      <Factor>Verifying Online Identities and Combating Catfishing: Accepting unknowns without checks invites scams/abuse.</Factor>
+      <Factor>Password Management and Security: Reused or weak passwords propagate compromise.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Set profiles to friends-only; disable location and public tagging.</Win>
+      <Win>Reverse-image search and cross-check handles before engaging.</Win>
+      <Win>Turn on a password manager; rotate any reused passwords.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="24ff68a5f72d4b61873db9045034bede" rules="2.0" completedUtc="2025-11-03T01:05:27.4731950Z" overall="1.27" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="0" />
+      <Domain title="Phishing Awareness and Email Security" score="0" />
+      <Domain title="Privacy Settings on Popular Apps" score="2" />
+      <Domain title="Detecting Spyware Infections on Devices" score="0" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="0" />
+      <Domain title="Password Management and Security" score="2" />
+      <Domain title="Managing Your Digital Footprint" score="5" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="1" />
+      <Domain title="Using VPNs for Secure Browsing" score="0" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="0" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="0" />
+      <Domain title="Safe Online Banking Practices" score="0" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="3" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="3" />
+      <Domain title="Securing Home Wi-Fi Networks" score="3" />
+    </Domains>
+    <TopFactors>
+      <Factor>Managing Your Digital Footprint: Large, stable footprints make targeting easier.</Factor>
+      <Factor>Recognizing Malicious Mobile Apps: Sideloading/rare updates increase malicious app risk.</Factor>
+      <Factor>Securing Home Wi-Fi Networks: Defaults and shared main credentials expose the home network.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Quarterly cleanup: prune old posts; remove data-broker listings.</Win>
+      <Win>Install from official stores; review permissions and dev history.</Win>
+      <Win>Change admin creds; use WPA3; enable a separate guest network.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="2d51448fbd2544ce8e0a0543b135c885" rules="2.0" completedUtc="2025-11-03T01:12:25.8720034Z" overall="0" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="0" />
+      <Domain title="Phishing Awareness and Email Security" score="0" />
+      <Domain title="Privacy Settings on Popular Apps" score="0" />
+      <Domain title="Detecting Spyware Infections on Devices" score="0" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="0" />
+      <Domain title="Password Management and Security" score="0" />
+      <Domain title="Managing Your Digital Footprint" score="0" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="0" />
+      <Domain title="Using VPNs for Secure Browsing" score="0" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="0" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="0" />
+      <Domain title="Safe Online Banking Practices" score="0" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="0" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="0" />
+      <Domain title="Securing Home Wi-Fi Networks" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Detecting Spyware Infections on Devices: Overheating/drain with unknown admin apps suggests spyware.</Factor>
+      <Factor>Enhancing Social Media Privacy Settings: Open profiles, tagging, and location visibility increase exposure.</Factor>
+      <Factor>Identifying Hidden Surveillance Devices (Electronic Scanning): Never scanning leaves covert cams/mics undiscovered.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Audit device-admin apps; run reputable scans; update OS.</Win>
+      <Win>Set profiles to friends-only; disable location and public tagging.</Win>
+      <Win>Do visual/RF/network sweeps when in new spaces.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="04ce139733774fcdaf385068b52e5259" rules="2.0" completedUtc="2025-11-03T02:34:34.6125321Z" overall="3.73" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="10" />
+      <Domain title="Phishing Awareness and Email Security" score="1" />
+      <Domain title="Privacy Settings on Popular Apps" score="1" />
+      <Domain title="Detecting Spyware Infections on Devices" score="1" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="5" />
+      <Domain title="Password Management and Security" score="5" />
+      <Domain title="Managing Your Digital Footprint" score="9" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="3" />
+      <Domain title="Using VPNs for Secure Browsing" score="3" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="2" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="2" />
+      <Domain title="Safe Online Banking Practices" score="0" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="1" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="8" />
+      <Domain title="Securing Home Wi-Fi Networks" score="5" />
+    </Domains>
+    <TopFactors>
+      <Factor>Enhancing Social Media Privacy Settings: Open profiles, tagging, and location visibility increase exposure.</Factor>
+      <Factor>Managing Your Digital Footprint: Large, stable footprints make targeting easier.</Factor>
+      <Factor>Verifying Online Identities and Combating Catfishing: Accepting unknowns without checks invites scams/abuse.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Set profiles to friends-only; disable location and public tagging.</Win>
+      <Win>Quarterly cleanup: prune old posts; remove data-broker listings.</Win>
+      <Win>Reverse-image search and cross-check handles before engaging.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="e4d146040e574724a0d9c38f111c262b" rules="2.0" completedUtc="2025-11-03T03:00:23.0634179Z" overall="2.8" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="5" />
+      <Domain title="Phishing Awareness and Email Security" score="0" />
+      <Domain title="Privacy Settings on Popular Apps" score="5" />
+      <Domain title="Detecting Spyware Infections on Devices" score="4" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="0" />
+      <Domain title="Password Management and Security" score="2" />
+      <Domain title="Managing Your Digital Footprint" score="0" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="1" />
+      <Domain title="Using VPNs for Secure Browsing" score="3" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="6" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="5" />
+      <Domain title="Safe Online Banking Practices" score="0" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="4" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="7" />
+      <Domain title="Securing Home Wi-Fi Networks" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Verifying Online Identities and Combating Catfishing: Accepting unknowns without checks invites scams/abuse.</Factor>
+      <Factor>Safe Use of Public Computers and Wi-Fi: Shared machines and open Wi-Fi leak credentials/data.</Factor>
+      <Factor>Enhancing Social Media Privacy Settings: Open profiles, tagging, and location visibility increase exposure.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Reverse-image search and cross-check handles before engaging.</Win>
+      <Win>Avoid sensitive logins; if needed use private windows and sign out.</Win>
+      <Win>Set profiles to friends-only; disable location and public tagging.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="e0ec60e0c5444913acc631486ac8980d" rules="2.0" completedUtc="2025-11-15T06:29:50.0021872Z" overall="0.33" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="2" />
+      <Domain title="Phishing Awareness and Email Security" score="0" />
+      <Domain title="Privacy Settings on Popular Apps" score="0" />
+      <Domain title="Detecting Spyware Infections on Devices" score="2" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="0" />
+      <Domain title="Password Management and Security" score="1" />
+      <Domain title="Managing Your Digital Footprint" score="0" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="0" />
+      <Domain title="Using VPNs for Secure Browsing" score="0" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="0" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="0" />
+      <Domain title="Safe Online Banking Practices" score="0" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="0" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="0" />
+      <Domain title="Securing Home Wi-Fi Networks" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Detecting Spyware Infections on Devices: Overheating/drain with unknown admin apps suggests spyware.</Factor>
+      <Factor>Enhancing Social Media Privacy Settings: Open profiles, tagging, and location visibility increase exposure.</Factor>
+      <Factor>Password Management and Security: Reused or weak passwords propagate compromise.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Audit device-admin apps; run reputable scans; update OS.</Win>
+      <Win>Set profiles to friends-only; disable location and public tagging.</Win>
+      <Win>Turn on a password manager; rotate any reused passwords.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="bf47b8cadf5b44e9a8b15bb95c1bbb36" rules="2.0" completedUtc="2025-11-15T06:31:43.4704463Z" overall="3" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="0" />
+      <Domain title="Phishing Awareness and Email Security" score="7" />
+      <Domain title="Privacy Settings on Popular Apps" score="0" />
+      <Domain title="Detecting Spyware Infections on Devices" score="0" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="3" />
+      <Domain title="Password Management and Security" score="0" />
+      <Domain title="Managing Your Digital Footprint" score="3" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="4" />
+      <Domain title="Using VPNs for Secure Browsing" score="4" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="8" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="2" />
+      <Domain title="Safe Online Banking Practices" score="4" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="3" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="6" />
+      <Domain title="Securing Home Wi-Fi Networks" score="1" />
+    </Domains>
+    <TopFactors>
+      <Factor>Safe Use of Public Computers and Wi-Fi: Shared machines and open Wi-Fi leak credentials/data.</Factor>
+      <Factor>Phishing Awareness and Email Security: Unsolicited emails/DMs with links/attachments raise risk.</Factor>
+      <Factor>Verifying Online Identities and Combating Catfishing: Accepting unknowns without checks invites scams/abuse.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Avoid sensitive logins; if needed use private windows and sign out.</Win>
+      <Win>Never click from messages—use saved bookmarks or official apps.</Win>
+      <Win>Reverse-image search and cross-check handles before engaging.</Win>
+    </QuickWins>
+  </UserResult>
+</Results>
