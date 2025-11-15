@@ -1,0 +1,825 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helperProgress version="1">
+  <helper id="example-helper-1">
+    <displayName>Example Helper</displayName>
+    <totals>
+      <totalTeachingSessions>0</totalTeachingSessions>
+      <totalHelpSessions>0</totalHelpSessions>
+      <totalCoursesCertified>0</totalCoursesCertified>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </totals>
+    <!-- Enhancing Social Media Privacy Settings – Quiz rule -->
+    <course id="f98b4b69dc334c9496ca948351e843b7">
+      <title>Enhancing Social Media Privacy Settings</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Phishing Awareness And Email Security – Quiz rule -->
+    <course id="550051f55dad499c850dc2e94289a941">
+      <title>Phishing Awareness And Email Security</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Privacy Settings on Popular Apps – Quiz rule -->
+    <course id="d1c1c3f5edd04cc4abed5927d16eff3f">
+      <title>Privacy Settings on Popular Apps</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Detecting Spyware Infection on Devices – Hard Rule -->
+    <course id="5138068e2bf6482fa1c3aaa0a287f096">
+      <title>Detecting Spyware Infection on Devices</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- 2FA Setup And Mangement – Easy Rule -->
+    <course id="154085e49eb7427b95e967c0af05c870">
+      <title>2FA Setup And Mangement</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Password Management And Security – Easy Rule -->
+    <course id="83b7b2cadf3446d3a81d4e9836cd5982">
+      <title>Password Management And Security</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Managing Digital Footprint – Easy Rule -->
+    <course id="a0e70ced9b0649b68eb6128b2ed2ad7c">
+      <title>Managing Digital Footprint</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Recognizing AI-Assisted Manipulation And Deepfakes – Hard Rule -->
+    <course id="eb171af242e14d3c82db92678ed73b3d">
+      <title>Recognizing AI-Assisted Manipulation And Deepfakes</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Using VPNs for Secure Browsing – Hard Rule -->
+    <course id="d05390f150da4af599b3b66b7b37ef79">
+      <title>Using VPNs for Secure Browsing</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Safe Use of Public Computers and Wi-Fi – Easy Rule -->
+    <course id="ba9ef2af382e4f8e80e2c4357c7993b1">
+      <title>Safe Use of Public Computers and Wi-Fi</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Identifying Hidden-Surveilance Devices – Hard Rule -->
+    <course id="3d36f5f0f13d42b78653b71ba4089a37">
+      <title>Identifying Hidden-Surveilance Devices</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Safe Online Banking Practices – Quiz rule -->
+    <course id="caebb3c577994d098c5086f17c4f7464">
+      <title>Safe Online Banking Practices</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Recognizing Malicious Mobile Apps – Hard Rule -->
+    <course id="0c1e0fd46a0244ad8176b65ea44b05f1">
+      <title>Recognizing Malicious Mobile Apps</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Verifying Online Identities and Combating Catfishing – Quiz rule -->
+    <course id="2415376ae813427bb8fb61f2652fb6d3">
+      <title>Verifying Online Identities and Combating Catfishing</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+    <!-- Securing Home Wi-Fi Networks – Hard Rule -->
+    <course id="97d38c5f9c0246fd9d3ba79014ab56cc">
+      <title>Securing Home Wi-Fi Networks</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-13T00:00:00Z</lastUpdatedUtc>
+    </course>
+  </helper>
+  <helper id="429c338c0567409e8bd5945d28a30bce">
+    <displayName>a</displayName>
+    <course id="f98b4b69dc334c9496ca948351e843b7">
+      <title>Enhancing Social Media Privacy Settings</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>1</teachingSessions>
+      <helpSessions>1</helpSessions>
+      <isCertified>true</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:28:21.4069272Z</lastUpdatedUtc>
+    </course>
+    <course id="550051f55dad499c850dc2e94289a941">
+      <title>Phishing Awareness And Email Security</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>true</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:49:23.1740760Z</lastUpdatedUtc>
+    </course>
+    <course id="d1c1c3f5edd04cc4abed5927d16eff3f">
+      <title>Privacy Settings on Popular Apps</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>true</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:49:28.2457077Z</lastUpdatedUtc>
+    </course>
+    <course id="5138068e2bf6482fa1c3aaa0a287f096">
+      <title>Detecting Spyware Infection on Devices</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="154085e49eb7427b95e967c0af05c870">
+      <title>2FA Setup And Mangement</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="83b7b2cadf3446d3a81d4e9836cd5982">
+      <title>Password Management And Security</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="a0e70ced9b0649b68eb6128b2ed2ad7c">
+      <title>Managing Digital Footprint</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="eb171af242e14d3c82db92678ed73b3d">
+      <title>Recognizing AI-Assisted Manipulation And Deepfakes</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="d05390f150da4af599b3b66b7b37ef79">
+      <title>Using VPNs for Secure Browsing</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="ba9ef2af382e4f8e80e2c4357c7993b1">
+      <title>Safe Use of Public Computers and Wi-Fi</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="3d36f5f0f13d42b78653b71ba4089a37">
+      <title>Identifying Hidden-Surveilance Devices</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="caebb3c577994d098c5086f17c4f7464">
+      <title>Safe Online Banking Practices</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>true</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:49:33.9168057Z</lastUpdatedUtc>
+    </course>
+    <course id="0c1e0fd46a0244ad8176b65ea44b05f1">
+      <title>Recognizing Malicious Mobile Apps</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:27:16.7257667Z</lastUpdatedUtc>
+    </course>
+    <course id="2415376ae813427bb8fb61f2652fb6d3">
+      <title>Verifying Online Identities and Combating Catfishing</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>true</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:49:45.1409955Z</lastUpdatedUtc>
+    </course>
+    <course id="97d38c5f9c0246fd9d3ba79014ab56cc">
+      <title>Securing Home Wi-Fi Networks</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T06:34:52.0355373Z</lastUpdatedUtc>
+    </course>
+    <totals>
+      <totalTeachingSessions>1</totalTeachingSessions>
+      <totalHelpSessions>1</totalHelpSessions>
+      <totalCoursesCertified>5</totalCoursesCertified>
+      <lastUpdatedUtc>2025-11-14T06:49:45.1409955Z</lastUpdatedUtc>
+    </totals>
+  </helper>
+  <helper id="429d338c0568409e8bd5945d28a30bce">
+    <displayName>h</displayName>
+    <course id="f98b4b69dc334c9496ca948351e843b7">
+      <title>Enhancing Social Media Privacy Settings</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>true</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:57.8382653Z</lastUpdatedUtc>
+    </course>
+    <course id="550051f55dad499c850dc2e94289a941">
+      <title>Phishing Awareness And Email Security</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="d1c1c3f5edd04cc4abed5927d16eff3f">
+      <title>Privacy Settings on Popular Apps</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="5138068e2bf6482fa1c3aaa0a287f096">
+      <title>Detecting Spyware Infection on Devices</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="154085e49eb7427b95e967c0af05c870">
+      <title>2FA Setup And Mangement</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>true</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:36:13.8909019Z</lastUpdatedUtc>
+    </course>
+    <course id="83b7b2cadf3446d3a81d4e9836cd5982">
+      <title>Password Management And Security</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="a0e70ced9b0649b68eb6128b2ed2ad7c">
+      <title>Managing Digital Footprint</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="eb171af242e14d3c82db92678ed73b3d">
+      <title>Recognizing AI-Assisted Manipulation And Deepfakes</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="d05390f150da4af599b3b66b7b37ef79">
+      <title>Using VPNs for Secure Browsing</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="ba9ef2af382e4f8e80e2c4357c7993b1">
+      <title>Safe Use of Public Computers and Wi-Fi</title>
+      <ruleKey>Easy Rule</ruleKey>
+      <ruleId>4</ruleId>
+      <ruleName>Easy Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>1</minSessionsTaught>
+      <minHelpSessions>2</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>80</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>true</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>true</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T08:34:05.7290942Z</lastUpdatedUtc>
+    </course>
+    <course id="3d36f5f0f13d42b78653b71ba4089a37">
+      <title>Identifying Hidden-Surveilance Devices</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="caebb3c577994d098c5086f17c4f7464">
+      <title>Safe Online Banking Practices</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="0c1e0fd46a0244ad8176b65ea44b05f1">
+      <title>Recognizing Malicious Mobile Apps</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="2415376ae813427bb8fb61f2652fb6d3">
+      <title>Verifying Online Identities and Combating Catfishing</title>
+      <ruleKey>Quiz</ruleKey>
+      <ruleId>3</ruleId>
+      <ruleName>Quiz</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>0</minSessionsTaught>
+      <minHelpSessions>0</minHelpSessions>
+      <expiryDays>0</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <course id="97d38c5f9c0246fd9d3ba79014ab56cc">
+      <title>Securing Home Wi-Fi Networks</title>
+      <ruleKey>Hard Rule</ruleKey>
+      <ruleId>5</ruleId>
+      <ruleName>Hard Rule</ruleName>
+      <requireQuiz>true</requireQuiz>
+      <passScore>80</passScore>
+      <minSessionsTaught>5</minSessionsTaught>
+      <minHelpSessions>10</minHelpSessions>
+      <expiryDays>365</expiryDays>
+      <quizScore>0</quizScore>
+      <teachingSessions>0</teachingSessions>
+      <helpSessions>0</helpSessions>
+      <isEligible>false</isEligible>
+      <isCertified>false</isCertified>
+      <resourcesConfirmed>false</resourcesConfirmed>
+      <lastUpdatedUtc>2025-11-14T07:35:39.3531890Z</lastUpdatedUtc>
+    </course>
+    <totals>
+      <totalTeachingSessions>0</totalTeachingSessions>
+      <totalHelpSessions>0</totalHelpSessions>
+      <totalCoursesCertified>1</totalCoursesCertified>
+      <lastUpdatedUtc>2025-11-14T12:33:56.9533405Z</lastUpdatedUtc>
+    </totals>
+  </helper>
+</helperProgress>

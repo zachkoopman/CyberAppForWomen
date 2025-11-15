@@ -1,14 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <certRules version="1">
-  <rule id="2" version="1">
-    <name>Phishing Awareness</name>
-    <description>Rules needed for Phishing Awareness Certification for peer helpers</description>
-    <passScore>85</passScore>
-    <minSessionsTaught>3</minSessionsTaught>
+  <rule id="3" version="1">
+    <name>Quiz</name>
+    <description>
+    </description>
+    <passScore>80</passScore>
+    <minSessionsTaught>0</minSessionsTaught>
+    <minHelpSessions>0</minHelpSessions>
+    <expiryDays>
+    </expiryDays>
+    <requireQuiz>true</requireQuiz>
+  </rule>
+  <rule id="4" version="1">
+    <name>Easy Rule</name>
+    <description>Early Requirements for New Helpers</description>
+    <passScore>80</passScore>
+    <minSessionsTaught>1</minSessionsTaught>
+    <minHelpSessions>2</minHelpSessions>
     <expiryDays>365</expiryDays>
-    <maxAttempts>3</maxAttempts>
-    <retakeCooldownDays>1</retakeCooldownDays>
-    <evidence>quiz | mentor approval</evidence>
-    <prerequisites />
+    <requireQuiz>true</requireQuiz>
+  </rule>
+  <rule id="5" version="1">
+    <name>Hard Rule</name>
+    <description>Deeper Requirements for Experienced Helpers</description>
+    <passScore>80</passScore>
+    <minSessionsTaught>5</minSessionsTaught>
+    <minHelpSessions>10</minHelpSessions>
+    <expiryDays>365</expiryDays>
+    <requireQuiz>true</requireQuiz>
   </rule>
 </certRules>

@@ -67,6 +67,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Account\Helper\CertificationProgress.aspx" />
+    <Content Include="Account\Helper\Home.aspx" />
+    <Content Include="Account\Helper\OneOnOneHelp.aspx" />
+    <Content Include="Account\Helper\ResourceViewer.aspx" />
+    <Content Include="Account\Helper\Schedule.aspx" />
     <Content Include="Account\Participant\EnrollSuccess.aspx" />
     <Content Include="Account\Participant\ParticipantScoreWidget.ascx" />
     <Content Include="Account\Participant\Quiz.aspx" />
@@ -83,6 +88,8 @@
     <Content Include="App_Data\eventCourses.xml" />
     <Content Include="App_Data\events.xml" />
     <Content Include="App_Data\eventSessions.xml" />
+    <Content Include="App_Data\helperCheckins.xml" />
+    <Content Include="App_Data\helperProgress.xml" />
     <Content Include="App_Data\microcourses.xml" />
     <Content Include="App_Data\quiz_progress.xml" />
     <Content Include="App_Data\quiz_questions.xml" />
@@ -95,6 +102,41 @@
     <Content Include="Welcome_Page.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\Helper\CertificationProgress.aspx.cs">
+      <DependentUpon>CertificationProgress.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\CertificationProgress.aspx.designer.cs">
+      <DependentUpon>CertificationProgress.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Helper\Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\Home.aspx.designer.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Helper\OneOnOneHelp.aspx.cs">
+      <DependentUpon>OneOnOneHelp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\OneOnOneHelp.aspx.designer.cs">
+      <DependentUpon>OneOnOneHelp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Helper\ResourceViewer.aspx.cs">
+      <DependentUpon>ResourceViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\ResourceViewer.aspx.designer.cs">
+      <DependentUpon>ResourceViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Helper\Schedule.aspx.cs">
+      <DependentUpon>Schedule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\Schedule.aspx.designer.cs">
+      <DependentUpon>Schedule.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Account\Participant\Calendar.ashx.cs">
       <DependentUpon>Calendar.ashx</DependentUpon>
     </Compile>

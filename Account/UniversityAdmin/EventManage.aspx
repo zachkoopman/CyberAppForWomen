@@ -40,6 +40,7 @@
 
     /* Buttons */
     .btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-family:Poppins;cursor:pointer}
+    .btn.small{padding:8px 12px;font-size:.8rem}
     .primary{color:#fff;background:linear-gradient(135deg,var(--fia-blue),var(--fia-teal))}
     .link{background:#fff;border:2px solid var(--fia-blue);color:var(--fia-blue)}
     .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
@@ -54,6 +55,40 @@
 
     /* Validation text */
     .val{color:#c21d1d;font-size:.9rem;margin-top:4px;display:block}
+
+    /* Helper panel */
+    .helper-panel{margin-top:18px;border-top:1px solid #e8eef7;padding-top:12px}
+    .helper-panel h3{margin:0 0 4px 0;font-family:Poppins;font-size:1rem}
+    .helper-filters{margin-bottom:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.9rem}
+    .helper-filters label{font-weight:400;font-family:Lato;font-size:.9rem}
+
+    .helper-status{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:.8rem;
+      font-weight:600;
+    }
+    .helper-status.status-cert{
+      background:rgba(22,163,74,.08);
+      color:#15803d;
+      border:1px solid rgba(22,163,74,.2);
+    }
+    .helper-status.status-eligible{
+      background:rgba(37,99,235,.08);
+      color:#1d4ed8;
+      border:1px solid rgba(37,99,235,.25);
+    }
+    .helper-status.status-notcert{
+      background:#fef2f2;
+      color:#b91c1c;
+      border:1px solid #fecaca;
+    }
+    .helper-status.status-overlap{
+      background:#fef3c7;
+      color:#92400e;
+      border:1px solid #fcd34d;
+    }
   </style>
 </head>
 
@@ -140,28 +175,27 @@
       <div class="grid">
         <div>
           <label for="CourseSelect">Course</label>
-          <asp:DropDownList ID="CourseSelect" runat="server" />
+          <asp:DropDownList ID="CourseSelect" runat="server"
+                            AutoPostBack="true"
+                            OnSelectedIndexChanged="CourseSelect_SelectedIndexChanged" />
         </div>
 
         <div>
           <label for="SessionDateTimeStart">Start</label>
-          <asp:TextBox ID="SessionDateTimeStart" runat="server" TextMode="DateTimeLocal" />
+          <asp:TextBox ID="SessionDateTimeStart" runat="server" TextMode="DateTimeLocal"
+                       AutoPostBack="true"
+                       OnTextChanged="SessionTime_TextChanged" />
           <asp:RequiredFieldValidator runat="server" ControlToValidate="SessionDateTimeStart" CssClass="val"
             ErrorMessage="Start is required." Display="Dynamic" />
         </div>
 
         <div>
           <label for="SessionDateTimeEnd">End</label>
-          <asp:TextBox ID="SessionDateTimeEnd" runat="server" TextMode="DateTimeLocal" />
+          <asp:TextBox ID="SessionDateTimeEnd" runat="server" TextMode="DateTimeLocal"
+                       AutoPostBack="true"
+                       OnTextChanged="SessionTime_TextChanged" />
           <asp:RequiredFieldValidator runat="server" ControlToValidate="SessionDateTimeEnd" CssClass="val"
             ErrorMessage="End is required." Display="Dynamic" />
-        </div>
-
-        <div>
-          <label for="Helper">Helper</label>
-          <asp:TextBox ID="Helper" runat="server" Placeholder="e.g., Tracy Nguyen" />
-          <asp:RequiredFieldValidator runat="server" ControlToValidate="Helper" CssClass="val"
-            ErrorMessage="Helper is required (used to prevent double-booking)." Display="Dynamic" />
         </div>
 
         <div>
@@ -172,6 +206,76 @@
         <div>
           <label for="Capacity">Max participants (optional)</label>
           <asp:TextBox ID="Capacity" runat="server" TextMode="Number" Placeholder="e.g., 25" />
+        </div>
+      </div>
+
+      <!-- Helper overview -->
+      <div class="helper-panel">
+        <h3>Helpers for this university</h3>
+        <p class="sub">Status is based on the selected microcourse and the current time window.</p>
+
+        <div class="helper-filters">
+          <asp:CheckBox ID="FilterEligible" runat="server" Text="Eligible only"
+                        AutoPostBack="true"
+                        OnCheckedChanged="HelperFilterChanged" />
+          <asp:CheckBox ID="FilterCertified" runat="server" Text="Certified only"
+                        AutoPostBack="true"
+                        OnCheckedChanged="HelperFilterChanged" />
+          <asp:Button ID="BtnClearHelperFilters" runat="server"
+                      Text="Clear filters"
+                      CssClass="btn link small"
+                      CausesValidation="false"
+                      OnClick="BtnClearHelperFilters_Click" />
+        </div>
+
+        <asp:PlaceHolder ID="NoHelpersPH" runat="server" Visible="false">
+          <div class="note">No helpers were found yet for this university.</div>
+        </asp:PlaceHolder>
+
+        <asp:Repeater ID="HelpersRepeater" runat="server">
+          <HeaderTemplate>
+            <table>
+              <thead>
+                <tr>
+                  <th>Helper</th>
+                  <th>Certification</th>
+                  <th>Schedule</th>
+                </tr>
+              </thead>
+              <tbody>
+          </HeaderTemplate>
+          <ItemTemplate>
+            <tr>
+              <td><%# Eval("Name") %></td>
+              <td>
+                <span class="helper-status <%# Eval("CertCssClass") %>">
+                  <%# Eval("CertLabel") %>
+                </span>
+              </td>
+              <td>
+                <asp:PlaceHolder ID="OverlapPH" runat="server" Visible='<%# (bool)Eval("HasOverlap") %>'>
+                  <span class="helper-status status-overlap">Schedule overlap</span>
+                </asp:PlaceHolder>
+
+                <asp:PlaceHolder ID="AvailablePH" runat="server" Visible='<%# !(bool)Eval("HasOverlap") %>'>
+                  <span class="helper-status">Available</span>
+                </asp:PlaceHolder>
+              </td>
+            </tr>
+          </ItemTemplate>
+          <FooterTemplate>
+              </tbody>
+            </table>
+          </FooterTemplate>
+        </asp:Repeater>
+
+        <!-- NEW: helper selection moved under helper list -->
+        <div style="margin-top:12px;">
+          <label for="HelperSelect">Helper for this session</label>
+          <asp:DropDownList ID="HelperSelect" runat="server" />
+          <asp:RequiredFieldValidator runat="server" ControlToValidate="HelperSelect" CssClass="val"
+            InitialValue=""
+            ErrorMessage="Pick a certified or eligible helper." Display="Dynamic" />
         </div>
       </div>
 
@@ -235,5 +339,4 @@
 </form>
 </body>
 </html>
-
 

@@ -1,16 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <microcourses version="1">
-  <!-- Example 1: newly created by Super Admin (defaults for UA to fill later) -->
-  <course id="c-0001" status="Draft" createdAt="2025-10-07T03:55:00Z" createdBy="lauren@fia.org">
-    <title>Spot a Phish in 5 Minutes</title>
-    <summary>Learn the top red flags—mismatched domains, urgent tone, suspicious links, and spoofed senders.</summary>
-    <duration>5 min</duration>
-    <externalLink>https://example.com/phishing-slides.pdf</externalLink>
+  <course id="f98b4b69dc334c9496ca948351e843b7" status="Published" createdAt="2025-11-14T00:06:20.4844155Z" createdBy="lauren@fia.org">
+    <title>Enhancing Social Media Privacy Settings</title>
+    <summary>This module provides a guided walkthrough for adjusting privacy settings on platforms like Facebook, Instagram, and Twitter. It covers configuring who can see personal information, posts, and location data, as well as setting up two-factor authentication for extra protection.</summary>
+    <duration>30 Min</duration>
+    <externalLink>
+    </externalLink>
+    <tags>
+      <tag>privacy</tag>
+      <tag>settings</tag>
+      <tag>social-media</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Quiz" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="550051f55dad499c850dc2e94289a941" status="Published" createdAt="2025-11-14T00:07:24.1651000Z" createdBy="lauren@fia.org">
+    <title>Phishing Awareness And Email Security</title>
+    <summary>This intervention focuses on identifying phishing emails, recognizing suspicious links, and understanding how to verify sender authenticity. It may involve reviewing real-life examples and practicing safe email behaviors such as avoiding clicking on unverified links.</summary>
+    <duration>10 Min</duration>
+    <externalLink>https://classroom.google.com/c/Nzk1MTc3MTk1OTQz?cjc=xzt24dvp</externalLink>
     <tags>
       <tag>phishing</tag>
       <tag>email</tag>
-      <tag>beginner</tag>
+      <tag>threat</tag>
     </tags>
+    <requiredRules>
+      <rule id="Quiz" />
+    </requiredRules>
+    <prerequisites />
     <startTime>
     </startTime>
     <endTime>
@@ -18,29 +43,20 @@
     <maxParticipants>
     </maxParticipants>
   </course>
-  <!-- Example 2: already configured for an event -->
-  <course id="c-0002" status="Published" createdAt="2025-10-01T18:20:30Z" createdBy="lauren@fia.org">
-    <title>Lock Down Your Phone</title>
-    <summary>Quick wins for mobile safety: strong screen locks, app permissions, and finding a lost device.</summary>
-    <duration>10 min</duration>
-    <externalLink>https://example.com/phone-security.pdf</externalLink>
+  <course id="d1c1c3f5edd04cc4abed5927d16eff3f" status="Published" createdAt="2025-11-14T00:08:29.0533201Z" createdBy="lauren@fia.org">
+    <title>Privacy Settings on Popular Apps</title>
+    <summary>The session covers how to adjust privacy and security settings within popular applications (like messaging apps, photo-sharing services, and online marketplaces). It explains how to manage permissions, control data sharing, and limit exposure of personal information.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
     <tags>
-      <tag>mobile</tag>
       <tag>privacy</tag>
+      <tag>apps</tag>
     </tags>
-    <startTime>2025-10-15T21:00:00Z</startTime>
-    <endTime>2025-10-15T21:30:00Z</endTime>
-    <maxParticipants>25</maxParticipants>
-  </course>
-  <course id="5de6f8cad108480a847e89f82df11049" status="Published" createdAt="2025-10-08T04:58:05.4908896Z" createdBy="lauren@fia.org">
-    <title>Phishing Awareness</title>
-    <summary>Example Course</summary>
-    <duration>30 Min</duration>
-    <externalLink>https://youtu.be/dQw4w9WgXcQ</externalLink>
-    <tags>
-      <tag>new</tag>
-      <tag>test</tag>
-    </tags>
+    <requiredRules>
+      <rule id="Quiz" />
+    </requiredRules>
+    <prerequisites />
     <startTime>
     </startTime>
     <endTime>
@@ -48,15 +64,36 @@
     <maxParticipants>
     </maxParticipants>
   </course>
-  <course id="b08fc1ca3fd34fdd9acdfa768b699039" status="Published" createdAt="2025-10-08T23:14:54.8270447Z" createdBy="lauren@fia.org">
-    <title>test 3</title>
-    <summary>dedde</summary>
-    <duration>30 Min</duration>
-    <externalLink>https://youtu.be/dQw4w9WgXcQ</externalLink>
+  <course id="5138068e2bf6482fa1c3aaa0a287f096" status="Published" createdAt="2025-11-14T00:09:40.8691151Z" createdBy="lauren@fia.org">
+    <title>Detecting Spyware Infection on Devices</title>
+    <summary>This module teaches how to recognize signs of spyware—such as unusual battery drain, unexpected pop-ups, or slow performance—and how to run free diagnostic tools like Windows Defender or Malwarebytes. Participants learn to scan their devices, interpret the results, and take immediate actions to remove any threats.</summary>
+    <duration>10 Min</duration>
+    <externalLink>https://classroom.google.com/c/NzkxNzE1MjgxMDg3?cjc=fvpycihr</externalLink>
+    <tags>
+      <tag>spyware</tag>
+      <tag>device</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Hard Rule" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="154085e49eb7427b95e967c0af05c870" status="Draft" createdAt="2025-11-14T00:10:31.6086781Z" createdBy="lauren@fia.org">
+    <title>2FA Setup And Mangement</title>
+    <summary>The session guides participants through setting up two-factor authentication (2FA) across various platforms, including banking, email, and social media. It covers using authenticator apps, SMS codes, and backup methods for account recovery.</summary>
+    <duration>10 Min</duration>
+    <externalLink>https://classroom.google.com/c/Nzk1MTg2MTg5ODc0?cjc=4h4ec2iv</externalLink>
     <tags />
     <requiredRules>
-      <rule id="1" />
+      <rule id="Easy Rule" />
     </requiredRules>
+    <prerequisites />
     <startTime>
     </startTime>
     <endTime>
@@ -64,17 +101,37 @@
     <maxParticipants>
     </maxParticipants>
   </course>
-  <course id="13fceae629534df2a0d290fa0209d898" status="Published" createdAt="2025-10-10T22:37:55.7764123Z" createdBy="lauren@fia.org">
-    <title>New Course</title>
-    <summary>new test course</summary>
-    <duration>50 Min</duration>
-    <externalLink>https://www.youtube.com/watch?v=HA4_gVHBUXc</externalLink>
+  <course id="83b7b2cadf3446d3a81d4e9836cd5982" status="Draft" createdAt="2025-11-14T00:11:13.0735684Z" createdBy="lauren@fia.org">
+    <title>Password Management And Security</title>
+    <summary>Participants learn best practices for creating strong, unique passwords and using password managers. The module covers common mistakes like password reuse and offers techniques for generating memorable yet secure passwords.</summary>
+    <duration>10 Min</duration>
+    <externalLink>https://classroom.google.com/c/NzcwNzQ3NTE2NDE1?cjc=lhcaf4yf</externalLink>
+    <tags />
+    <requiredRules>
+      <rule id="Easy Rule" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="a0e70ced9b0649b68eb6128b2ed2ad7c" status="Published" createdAt="2025-11-14T00:11:59.3231811Z" createdBy="lauren@fia.org">
+    <title>Managing Digital Footprint</title>
+    <summary>Participants learn strategies to minimize the digital traces they leave behind, such as regularly cleaning up social media profiles, using privacy-focused search engines, and being cautious about what they share online.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
     <tags>
-      <tag>test</tag>
+      <tag>footprint</tag>
+      <tag>safety</tag>
     </tags>
     <requiredRules>
-      <rule id="2" />
+      <rule id="Easy Rule" />
     </requiredRules>
+    <prerequisites />
     <startTime>
     </startTime>
     <endTime>
@@ -82,18 +139,21 @@
     <maxParticipants>
     </maxParticipants>
   </course>
-  <course id="4d701c885aac40ff87b6281167743433" status="Published" createdAt="2025-10-30T01:40:48.4415609Z" createdBy="lauren@fia.org">
-    <title>prereq course</title>
-    <summary>dwdawdawdwada</summary>
-    <duration>20min</duration>
-    <externalLink>https://zoom.com</externalLink>
+  <course id="eb171af242e14d3c82db92678ed73b3d" status="Published" createdAt="2025-11-14T00:14:55.1043807Z" createdBy="lauren@fia.org">
+    <title>Recognizing AI-Assisted Manipulation And Deepfakes</title>
+    <summary>This session explains the basics of AI-generated media, such as deepfakes and manipulated images. It teaches participants to look for subtle discrepancies (in lighting, movement, or audio quality) and introduces tools for verifying content authenticity.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
     <tags>
-      <tag>ta</tag>
+      <tag>AI</tag>
+      <tag>deepfake</tag>
+      <tag>manipulation</tag>
     </tags>
-    <requiredRules />
-    <prerequisites>
-      <course id="Phishing Awareness" />
-    </prerequisites>
+    <requiredRules>
+      <rule id="Hard Rule" />
+    </requiredRules>
+    <prerequisites />
     <startTime>
     </startTime>
     <endTime>
@@ -101,19 +161,152 @@
     <maxParticipants>
     </maxParticipants>
   </course>
-  <course id="00ae232aa721473c93ce982c06e6b804" status="Published" createdAt="2025-11-03T02:00:28.7073963Z" createdBy="lauren@fia.org">
-    <title>Enhancing Social Media Privacy Settings</title>
-    <summary>Improve security on internet facing accounts to stay safe online.</summary>
-    <duration>30 Min</duration>
-    <externalLink>https://youtube.com</externalLink>
+  <course id="d05390f150da4af599b3b66b7b37ef79" status="Published" createdAt="2025-11-14T00:15:32.6608564Z" createdBy="lauren@fia.org">
+    <title>Using VPNs for Secure Browsing</title>
+    <summary>This module explains what a VPN is, how it encrypts internet traffic, and the benefits of masking your IP address. It includes guidance on choosing reputable VPN services and setting them up on various devices.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
     <tags>
-      <tag>social-media</tag>
-      <tag>privacy</tag>
+      <tag>VPN</tag>
+      <tag>secure</tag>
     </tags>
-    <requiredRules />
-    <prerequisites>
-      <course id="Lock Down Your Phone" />
-    </prerequisites>
+    <requiredRules>
+      <rule id="Hard Rule" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="ba9ef2af382e4f8e80e2c4357c7993b1" status="Published" createdAt="2025-11-14T00:18:07.3578352Z" createdBy="lauren@fia.org">
+    <title>Safe Use of Public Computers and Wi-Fi</title>
+    <summary>This session covers best practices for using public computers and networks, including how to avoid leaving personal data behind, using portable security software, and recognizing the risks of unsecured Wi-Fi.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
+    <tags>
+      <tag>public</tag>
+      <tag>computer</tag>
+      <tag>WI-Fi</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Easy Rule" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="3d36f5f0f13d42b78653b71ba4089a37" status="Published" createdAt="2025-11-14T00:19:02.1793038Z" createdBy="lauren@fia.org">
+    <title>Identifying Hidden-Surveilance Devices</title>
+    <summary>This intervention covers the use of inexpensive RF detectors, smartphone apps, and network scanning tools to detect hidden cameras and microphones. It explains the science behind electronic transmissions, how to perform an electronic scan, and the practical limitations of these tools.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
+    <tags>
+      <tag>hidden</tag>
+      <tag>RF</tag>
+      <tag>network-security</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Hard Rule" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="caebb3c577994d098c5086f17c4f7464" status="Published" createdAt="2025-11-14T00:21:29.1070636Z" createdBy="lauren@fia.org">
+    <title>Safe Online Banking Practices</title>
+    <summary>This module teaches the fundamentals of secure online banking, including how to recognize secure websites (https), use strong passwords, and monitor account activity regularly. It might also include tips on avoiding public Wi-Fi when accessing banking services.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
+    <tags>
+      <tag>banking</tag>
+      <tag>best-practices</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Quiz" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="0c1e0fd46a0244ad8176b65ea44b05f1" status="Published" createdAt="2025-11-14T00:22:22.6952950Z" createdBy="lauren@fia.org">
+    <title>Recognizing Malicious Mobile Apps</title>
+    <summary>This intervention focuses on identifying suspicious apps through their permissions, developer reputation, and user reviews. It guides participants on verifying apps in official stores and understanding warning signs of malicious behavior.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
+    <tags>
+      <tag>mobile</tag>
+      <tag>apps</tag>
+      <tag>malicious</tag>
+      <tag>threat</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Hard Rule" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="2415376ae813427bb8fb61f2652fb6d3" status="Published" createdAt="2025-11-14T00:23:08.2570745Z" createdBy="lauren@fia.org">
+    <title>Verifying Online Identities and Combating Catfishing</title>
+    <summary>Participants learn techniques like reverse image searches, cross-checking profile details across platforms, and identifying red flags in communication. The module may include hands-on exercises with popular social media and dating apps to recognize inconsistencies and verify identity.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
+    <tags>
+      <tag>catfish</tag>
+      <tag>identity</tag>
+      <tag>safety</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Quiz" />
+    </requiredRules>
+    <prerequisites />
+    <startTime>
+    </startTime>
+    <endTime>
+    </endTime>
+    <maxParticipants>
+    </maxParticipants>
+  </course>
+  <course id="97d38c5f9c0246fd9d3ba79014ab56cc" status="Published" createdAt="2025-11-14T00:23:41.7575590Z" createdBy="lauren@fia.org">
+    <title>Securing Home Wi-Fi Networks</title>
+    <summary>Participants learn how to change default router settings, set strong Wi-Fi passwords, update firmware, and disable remote management features. This session includes demonstrations of router interfaces and tips for regular maintenance.</summary>
+    <duration>10 Min</duration>
+    <externalLink>
+    </externalLink>
+    <tags>
+      <tag>Wi-Fi</tag>
+      <tag>network</tag>
+      <tag>safety</tag>
+    </tags>
+    <requiredRules>
+      <rule id="Hard Rule" />
+    </requiredRules>
+    <prerequisites />
     <startTime>
     </startTime>
     <endTime>

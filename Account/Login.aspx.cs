@@ -116,7 +116,7 @@ namespace CyberApp_FIA.Account
                     Response.Redirect("~/Account/UniversityAdmin/UniversityAdminHome.aspx"); // (make later)
                     break;
                 case "helper":
-                    Response.Redirect("~/Helper/Home.aspx"); // (make later)
+                    Response.Redirect("~/Account/Helper/Home.aspx"); // (make later)
                     break;
                 case "participant":
                 default:

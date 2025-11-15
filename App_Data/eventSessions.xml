@@ -272,4 +272,21 @@
     <helper>Zach</helper>
     <capacity>1</capacity>
   </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="ec4ab3b5356e414196dc1c9a8843bc45">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2025-11-26T08:50:00.0000000Z</start>
+    <end>2025-11-26T09:00:00.0000000Z</end>
+    <room>https://asu.zoom.us/j/82855533981</room>
+    <helper>h@gmail.com</helper>
+    <capacity>5</capacity>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="eb03ffa34daa4716ad1d95cdb0e42b01">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2025-11-30T21:01:00.0000000Z</start>
+    <end>2025-11-30T22:04:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>h@gmail.com</helper>
+    <capacity>1</capacity>
+  </session>
 </eventSessions>

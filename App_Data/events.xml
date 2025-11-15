@@ -56,4 +56,11 @@
     <description>For making slide deck to show lauren</description>
     <courses />
   </event>
+  <event id="f44c95fcdb764b1ebf1af411792367b6" status="Draft" createdAt="2025-11-14T08:23:57.6892955Z" createdBy="ua.asu@fia.org">
+    <university>Arizona State University</university>
+    <name>November Fair</name>
+    <date>2025-11-30T07:00:00.0000000Z</date>
+    <description>November Event for testing helper workflows.</description>
+    <courses />
+  </event>
 </events>

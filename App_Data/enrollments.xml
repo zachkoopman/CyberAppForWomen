@@ -97,4 +97,17 @@
       <user id="a0847de458bd4e7ebbfc79cdc943a3eb" ts="2025-11-03T02:52:16.5848797Z" />
     </waitlist>
   </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="ec4ab3b5356e414196dc1c9a8843bc45">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-14T12:29:32.8047599Z" admitted="true" admittedAt="2025-11-15T06:56:52.0241524Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="eb03ffa34daa4716ad1d95cdb0e42b01">
+    <enrolled>
+      <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36" ts="2025-11-15T06:56:09.4676760Z" />
+    </enrolled>
+    <waitlist>
+    </waitlist>
+  </session>
 </enrollments>

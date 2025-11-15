@@ -128,9 +128,16 @@
       margin-right:8px;
       font-size:.9rem;
     }
-    .fieldset{ border:1px dashed #e5e7eb; border-radius:14px; padding:10px }
-    .cbgrid{ display:grid; grid-template-columns:1fr 1fr; gap:8px }
-    @media (max-width:960px){ .cbgrid{ grid-template-columns:1fr } }
+    .fieldset{ border:1px dashed #e5e7eb; border-radius:14px; padding:10px; margin-top:6px; }
+    .muted{ color:var(--muted); font-size:.85rem; }
+    .quiz-toggle-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:8px;
+      margin-bottom:4px;
+    }
   </style>
 </head>
 
@@ -145,7 +152,7 @@
         <div class="badge">FIA</div>
         <div>
           <h1>Certification Rules</h1>
-          <div class="sub">Create and update certification requirements without changing code.</div>
+          <div class="sub">Define what Helpers must complete to earn or keep a certification.</div>
         </div>
       </div>
 
@@ -167,51 +174,54 @@
           </div>
 
           <!-- Name -->
-          <div>
+          <div style="margin-top:8px">
             <label for="RuleName">Name</label>
             <asp:TextBox ID="RuleName" runat="server" />
           </div>
 
           <!-- Description -->
-          <div>
+          <div style="margin-top:8px">
             <label for="RuleDesc">Description</label>
             <asp:TextBox ID="RuleDesc" runat="server" TextMode="MultiLine" Rows="3" />
           </div>
 
-          <!-- Numeric fields, laid out in a small grid -->
-          <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-            <div>
+          <!-- Quiz requirement -->
+          <div style="margin-top:10px">
+            <div class="quiz-toggle-row">
+              <div>
+                <label>Quiz requirement</label>
+                <div class="muted">Toggle on if this certification requires a quiz.</div>
+              </div>
+              <div>
+                <asp:CheckBox ID="RequireQuiz" runat="server"
+                              AutoPostBack="true"
+                              OnCheckedChanged="RequireQuiz_CheckedChanged" />
+                <span class="muted">Require quiz</span>
+              </div>
+            </div>
+
+            <asp:Panel ID="PassScorePanel" runat="server" CssClass="fieldset">
               <label for="PassScore">Pass score %</label>
               <asp:TextBox ID="PassScore" runat="server" TextMode="Number" />
-            </div>
-            <div>
-              <label for="MinSessions">Min sessions taught</label>
-              <asp:TextBox ID="MinSessions" runat="server" TextMode="Number" />
-            </div>
-            <div>
-              <label for="ExpiryDays">Expiry (days)</label>
-              <asp:TextBox ID="ExpiryDays" runat="server" TextMode="Number" />
-            </div>
-            <div>
-              <label for="MaxAttempts">Max attempts (0=∞)</label>
-              <asp:TextBox ID="MaxAttempts" runat="server" TextMode="Number" />
-            </div>
-            <div>
-              <label for="CooldownDays">Retake cooldown (days)</label>
-              <asp:TextBox ID="CooldownDays" runat="server" TextMode="Number" />
-            </div>
-            <div>
-              <label for="Evidence">Evidence type</label>
-              <asp:TextBox ID="Evidence" runat="server" Placeholder="quiz | demo | mentorApproval | mixed" />
-            </div>
+              <div class="muted">0–100. Leave 0 if you are still drafting this rule.</div>
+            </asp:Panel>
           </div>
 
-          <!-- Prerequisite rules (multi-select) -->
-          <div style="margin-top:8px">
-            <label>Prerequisite rules (multi-select)</label>
-            <div class="fieldset">
-              <asp:CheckBoxList ID="PrereqList" runat="server" CssClass="cbgrid" RepeatLayout="Flow" />
-              <div class="pill" style="margin-top:8px">Tip: a rule cannot depend on itself</div>
+          <!-- Numeric fields: teaching sessions, 1:1 help, expiry -->
+          <div style="margin-top:10px">
+            <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+              <div>
+                <label for="MinSessions">Teaching sessions (min)</label>
+                <asp:TextBox ID="MinSessions" runat="server" TextMode="Number" />
+              </div>
+              <div>
+                <label for="HelpSessions">1:1 help sessions (min)</label>
+                <asp:TextBox ID="HelpSessions" runat="server" TextMode="Number" />
+              </div>
+              <div>
+                <label for="ExpiryDays">Expiry (days)</label>
+                <asp:TextBox ID="ExpiryDays" runat="server" TextMode="Number" />
+              </div>
             </div>
           </div>
 
@@ -260,8 +270,10 @@
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Requires quiz?</th>
                     <th>Pass</th>
-                    <th>Min Sessions</th>
+                    <th>Teaching sessions</th>
+                    <th>1:1 help</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -272,8 +284,10 @@
               <tr>
                 <td><%# Eval("id") %></td>
                 <td><%# Eval("name") %></td>
+                <td><%# Eval("requireQuizText") %></td>
                 <td><%# Eval("passScore") %>%</td>
                 <td><%# Eval("minSessions") %></td>
+                <td><%# Eval("minHelpSessions") %></td>
                 <td>
                   <asp:LinkButton
                     runat="server"

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helperCheckins>
+  <checkin helperId="123" helperName="Alex Rivera" eventId="cyberfair-2025" sessionId="session-001" tsUtc="2025-11-14T01:23:45.6789012Z" />
+  <checkin helperId="429d338c0568409e8bd5945d28a30bce" helperName="" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="ec4ab3b5356e414196dc1c9a8843bc45" tsUtc="2025-11-15T05:49:31.4321241Z" />
+  <checkin helperId="429d338c0568409e8bd5945d28a30bce" helperName="Mandy Demas" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="eb03ffa34daa4716ad1d95cdb0e42b01" tsUtc="2025-11-15T06:03:06.6634645Z" />
+</helperCheckins>

@@ -48,4 +48,19 @@
     <course id="4d701c885aac40ff87b6281167743433" enabled="false" />
     <course id="00ae232aa721473c93ce982c06e6b804" enabled="true" />
   </event>
+  <event id="f44c95fcdb764b1ebf1af411792367b6">
+    <course id="f98b4b69dc334c9496ca948351e843b7" enabled="true" />
+    <course id="550051f55dad499c850dc2e94289a941" enabled="true" />
+    <course id="d1c1c3f5edd04cc4abed5927d16eff3f" enabled="true" />
+    <course id="5138068e2bf6482fa1c3aaa0a287f096" enabled="true" />
+    <course id="a0e70ced9b0649b68eb6128b2ed2ad7c" enabled="true" />
+    <course id="eb171af242e14d3c82db92678ed73b3d" enabled="true" />
+    <course id="d05390f150da4af599b3b66b7b37ef79" enabled="true" />
+    <course id="ba9ef2af382e4f8e80e2c4357c7993b1" enabled="true" />
+    <course id="3d36f5f0f13d42b78653b71ba4089a37" enabled="true" />
+    <course id="caebb3c577994d098c5086f17c4f7464" enabled="true" />
+    <course id="0c1e0fd46a0244ad8176b65ea44b05f1" enabled="true" />
+    <course id="2415376ae813427bb8fb61f2652fb6d3" enabled="true" />
+    <course id="97d38c5f9c0246fd9d3ba79014ab56cc" enabled="true" />
+  </event>
 </eventCourses>

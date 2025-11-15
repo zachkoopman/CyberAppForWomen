@@ -114,15 +114,6 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.TextBox SessionDateTimeEnd;
 
         /// <summary>
-        /// Helper control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Helper;
-
-        /// <summary>
         /// Room control.
         /// </summary>
         /// <remarks>
@@ -139,6 +130,60 @@ namespace CyberApp_FIA.Account
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox Capacity;
+
+        /// <summary>
+        /// FilterEligible control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox FilterEligible;
+
+        /// <summary>
+        /// FilterCertified control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox FilterCertified;
+
+        /// <summary>
+        /// BtnClearHelperFilters control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnClearHelperFilters;
+
+        /// <summary>
+        /// NoHelpersPH control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder NoHelpersPH;
+
+        /// <summary>
+        /// HelpersRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater HelpersRepeater;
+
+        /// <summary>
+        /// HelperSelect control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList HelperSelect;
 
         /// <summary>
         /// BtnAddSession control.

@@ -88,6 +88,9 @@ namespace CyberApp_FIA.Participant
 
                 LoadEventHeader(eventId);
 
+                // NEW: load assigned Helper pill in the header (if any)
+                LoadAssignedHelperChip(CurrentUserId());
+
                 EnsureXmlDoc(EnrollmentsXmlPath, "enrollments");
                 EnsureXmlDoc(CompletionsXmlPath, "completions");
 
@@ -118,6 +121,65 @@ namespace CyberApp_FIA.Participant
             var doc = new XmlDocument(); doc.Load(EventsXmlPath);
             var ev = (XmlElement)doc.SelectSingleNode($"/events/event[@id='{eventId}']");
             EventName.Text = ev?["name"]?.InnerText ?? "(unknown)";
+        }
+
+        /// <summary>
+        /// Looks up the participant's assigned Helper in users.xml and, if found,
+        /// shows a pill in the header with the Helper's first name.
+        /// </summary>
+        private void LoadAssignedHelperChip(string userId)
+        {
+            // Default to hidden / empty if anything fails.
+            HelperPill.Visible = false;
+            HelperName.Text = string.Empty;
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(userId))
+                    return;
+
+                var usersPath = Server.MapPath("~/App_Data/users.xml");
+                if (!File.Exists(usersPath))
+                    return;
+
+                var doc = new XmlDocument();
+                doc.Load(usersPath);
+
+                // Find the current participant by id.
+                var me = (XmlElement)doc.SelectSingleNode($"/users/user[@id='{userId}']");
+                if (me == null)
+                    return;
+
+                var helperId = me.GetAttribute("assignedHelperId");
+                if (string.IsNullOrWhiteSpace(helperId))
+                    return;
+
+                // Find the Helper row.
+                var helper = (XmlElement)doc.SelectSingleNode($"/users/user[@id='{helperId}' and @role='Helper']");
+                if (helper == null)
+                    return;
+
+                var firstName = helper["firstName"]?.InnerText ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(firstName))
+                {
+                    // Fallbacks if firstName is missing for some reason.
+                    firstName = helper["name"]?.InnerText
+                                ?? helper["email"]?.InnerText
+                                ?? string.Empty;
+                }
+
+                if (string.IsNullOrWhiteSpace(firstName))
+                    return;
+
+                HelperName.Text = Server.HtmlEncode(firstName);
+                HelperPill.Visible = true;
+            }
+            catch
+            {
+                // Soft-fail: header helper pill is non-critical.
+                HelperPill.Visible = false;
+                HelperName.Text = string.Empty;
+            }
         }
 
         private Dictionary<string, HashSet<string>> LoadCourseTags()
@@ -608,6 +670,20 @@ namespace CyberApp_FIA.Participant
                 // compute waitlist position for "My Sessions" when applicable
                 var waitlistPosition = isWaitlisted ? GetWaitlistPosition(eventId, sid, userId) : 0;
 
+                // NEW: Only participants the Helper has "admitted" see the room link.
+                bool isAdmitted = false;
+                if (isEnrolled)
+                {
+                    var thisUserNode = sesNode.SelectSingleNode($"enrolled/user[@id='{userId}']") as XmlElement;
+                    if (thisUserNode != null &&
+                        string.Equals(thisUserNode.GetAttribute("admitted"), "true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isAdmitted = true;
+                    }
+                }
+
+                bool canSeeRoom = !string.IsNullOrWhiteSpace(room) && isEnrolled && isAdmitted;
+
                 rows.Add(new
                 {
                     microcourseTitle,
@@ -617,7 +693,8 @@ namespace CyberApp_FIA.Participant
                     sessionId = sid,
                     isEnrolled,
                     isWaitlisted,
-                    waitlistPosition
+                    waitlistPosition,
+                    canSeeRoom
                 });
             }
 
@@ -957,5 +1034,7 @@ namespace CyberApp_FIA.Participant
         }
     }
 }
+
+
 
 

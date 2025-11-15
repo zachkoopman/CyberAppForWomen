@@ -92,7 +92,12 @@ namespace CyberApp_FIA.Participant
             // OPTIONAL: store university on the participant’s profile if it was blank
             var email = (string)Session["Email"] ?? "";
             if (!string.IsNullOrWhiteSpace(email))
+            {
                 SaveUserUniversityIfEmpty(email, selectedUni);
+
+                // NEW: assign a Helper from this university to the participant (one-time, balanced by current load).
+                AssignHelperIfMissing(email, selectedUni);
+            }
 
             // NEW: persist lastEventId on the user's profile (keyed by UserId, fallback to email lookup)
             var userId = Session["UserId"] as string;
@@ -101,6 +106,7 @@ namespace CyberApp_FIA.Participant
             // Go to participant home/catalog
             Response.Redirect("~/Account/Participant/Home.aspx");
         }
+
 
         // --- Binding helpers ---
 
@@ -223,6 +229,129 @@ namespace CyberApp_FIA.Participant
                 // swallow for now; optional profile write shouldn't block flow
             }
         }
+
+        // --- New helpers for assigning Helpers to Participants ---
+
+        /// <summary>
+        /// Assigns a Helper from the given university to the participant identified by email,
+        /// but only if they do not already have an assignment.
+        /// The chosen Helper is the one in that university with the fewest currently assigned participants
+        /// (based on the users.xml assignedHelperId attribute), to help balance load.
+        /// </summary>
+        private void AssignHelperIfMissing(string email, string university)
+        {
+            try
+            {
+                // Guard clauses: we need a valid email, university, and users.xml file.
+                if (string.IsNullOrWhiteSpace(email) ||
+                    string.IsNullOrWhiteSpace(university) ||
+                    !File.Exists(UsersXmlPath))
+                {
+                    return;
+                }
+
+                var doc = new XmlDocument();
+                doc.Load(UsersXmlPath);
+
+                var emailLower = email.ToLowerInvariant();
+
+                // Locate the participant user row by email (case-insensitive).
+                var userNode = doc.SelectSingleNode(
+                    $"/users/user[translate(email,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{emailLower}']"
+                ) as XmlElement;
+
+                if (userNode == null)
+                {
+                    // No user found for this email; nothing to assign.
+                    return;
+                }
+
+                // Only assign Helpers for Participant accounts; skip other roles.
+                var role = (userNode.GetAttribute("role") ?? string.Empty).Trim();
+                if (!role.Equals("Participant", StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
+                // Respect existing assignments: if this participant already has a Helper, stop.
+                var existingHelperId = userNode.GetAttribute("assignedHelperId");
+                if (!string.IsNullOrWhiteSpace(existingHelperId))
+                {
+                    return;
+                }
+
+                // Collect all Helpers whose university matches the participant's selected university.
+                var helperCandidates = new List<XmlElement>();
+                var helperNodes = doc.SelectNodes("/users/user[@role='Helper']");
+                foreach (XmlElement helper in helperNodes)
+                {
+                    var helperUni = (helper["university"]?.InnerText ?? string.Empty).Trim();
+                    if (helperUni.Length == 0)
+                    {
+                        continue; // helper not scoped to any university yet
+                    }
+
+                    if (string.Equals(helperUni, university.Trim(), StringComparison.OrdinalIgnoreCase))
+                    {
+                        helperCandidates.Add(helper);
+                    }
+                }
+
+                if (helperCandidates.Count == 0)
+                {
+                    // No Helpers registered for this university; leave unassigned.
+                    return;
+                }
+
+                // Choose the Helper with the fewest assigned participants in this university.
+                XmlElement chosenHelper = null;
+                var minCount = int.MaxValue;
+
+                foreach (var helper in helperCandidates)
+                {
+                    var helperId = helper.GetAttribute("id");
+                    if (string.IsNullOrWhiteSpace(helperId))
+                    {
+                        continue;
+                    }
+
+                    // Count participants that currently reference this Helper's id.
+                    var assignedNodes = doc.SelectNodes(
+                        $"/users/user[@role='Participant' and @assignedHelperId='{helperId}']"
+                    );
+                    var currentCount = assignedNodes?.Count ?? 0;
+
+                    if (currentCount < minCount)
+                    {
+                        minCount = currentCount;
+                        chosenHelper = helper;
+                    }
+                }
+
+                if (chosenHelper == null)
+                {
+                    return;
+                }
+
+                var chosenId = chosenHelper.GetAttribute("id");
+                if (string.IsNullOrWhiteSpace(chosenId))
+                {
+                    return;
+                }
+
+                // Persist the assignment as an attribute on the participant <user> row.
+                // This adds the new attribute to users.xml:
+                //   <user id="..." role="Participant" assignedHelperId="helper-guid">
+                userNode.SetAttribute("assignedHelperId", chosenId);
+
+                doc.Save(UsersXmlPath);
+            }
+            catch
+            {
+                // Helper assignment is best-effort; failures should not block navigation.
+            }
+        }
+
 
         // --- New helpers for lastEventId persistence/lookup ---
 

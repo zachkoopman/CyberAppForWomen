@@ -233,4 +233,62 @@
       <Win>Set profiles to friends-only; disable location and public tagging.</Win>
     </QuickWins>
   </UserResult>
+  <UserResult name="e0ec60e0c5444913acc631486ac8980d" rules="2.0" completedUtc="2025-11-15T06:29:50.0021872Z" overall="0.33" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="2" />
+      <Domain title="Phishing Awareness and Email Security" score="0" />
+      <Domain title="Privacy Settings on Popular Apps" score="0" />
+      <Domain title="Detecting Spyware Infections on Devices" score="2" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="0" />
+      <Domain title="Password Management and Security" score="1" />
+      <Domain title="Managing Your Digital Footprint" score="0" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="0" />
+      <Domain title="Using VPNs for Secure Browsing" score="0" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="0" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="0" />
+      <Domain title="Safe Online Banking Practices" score="0" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="0" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="0" />
+      <Domain title="Securing Home Wi-Fi Networks" score="0" />
+    </Domains>
+    <TopFactors>
+      <Factor>Detecting Spyware Infections on Devices: Overheating/drain with unknown admin apps suggests spyware.</Factor>
+      <Factor>Enhancing Social Media Privacy Settings: Open profiles, tagging, and location visibility increase exposure.</Factor>
+      <Factor>Password Management and Security: Reused or weak passwords propagate compromise.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Audit device-admin apps; run reputable scans; update OS.</Win>
+      <Win>Set profiles to friends-only; disable location and public tagging.</Win>
+      <Win>Turn on a password manager; rotate any reused passwords.</Win>
+    </QuickWins>
+  </UserResult>
+  <UserResult name="bf47b8cadf5b44e9a8b15bb95c1bbb36" rules="2.0" completedUtc="2025-11-15T06:31:43.4704463Z" overall="3" shareWithHelper="false">
+    <Domains>
+      <Domain title="Enhancing Social Media Privacy Settings" score="0" />
+      <Domain title="Phishing Awareness and Email Security" score="7" />
+      <Domain title="Privacy Settings on Popular Apps" score="0" />
+      <Domain title="Detecting Spyware Infections on Devices" score="0" />
+      <Domain title="Two-Factor Authentication Setup and Management" score="3" />
+      <Domain title="Password Management and Security" score="0" />
+      <Domain title="Managing Your Digital Footprint" score="3" />
+      <Domain title="Recognizing AI-Assisted Manipulation and Deepfakes" score="4" />
+      <Domain title="Using VPNs for Secure Browsing" score="4" />
+      <Domain title="Safe Use of Public Computers and Wi-Fi" score="8" />
+      <Domain title="Identifying Hidden Surveillance Devices (Electronic Scanning)" score="2" />
+      <Domain title="Safe Online Banking Practices" score="4" />
+      <Domain title="Recognizing Malicious Mobile Apps" score="3" />
+      <Domain title="Verifying Online Identities and Combating Catfishing" score="6" />
+      <Domain title="Securing Home Wi-Fi Networks" score="1" />
+    </Domains>
+    <TopFactors>
+      <Factor>Safe Use of Public Computers and Wi-Fi: Shared machines and open Wi-Fi leak credentials/data.</Factor>
+      <Factor>Phishing Awareness and Email Security: Unsolicited emails/DMs with links/attachments raise risk.</Factor>
+      <Factor>Verifying Online Identities and Combating Catfishing: Accepting unknowns without checks invites scams/abuse.</Factor>
+    </TopFactors>
+    <QuickWins>
+      <Win>Avoid sensitive logins; if needed use private windows and sign out.</Win>
+      <Win>Never click from messages—use saved bookmarks or official apps.</Win>
+      <Win>Reverse-image search and cross-check handles before engaging.</Win>
+    </QuickWins>
+  </UserResult>
 </Results>

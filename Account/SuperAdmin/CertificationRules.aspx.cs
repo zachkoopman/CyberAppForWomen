@@ -12,7 +12,10 @@ namespace CyberApp_FIA.Account
     /// CertificationRules admin page (SuperAdmin only).
     /// - Lists existing certification rules (right-side table)
     /// - Creates/updates/deletes rules
-    /// - Supports multi-select prerequisites between rules
+    /// - Simplified fields:
+    ///     Rule ID, Name, Description,
+    ///     RequireQuiz (toggle), PassScore%,
+    ///     Teaching sessions, 1:1 help sessions, Expiry days
     /// - Persists to ~/App_Data/certificationRules.xml
     /// </summary>
     public partial class CertificationRules : Page
@@ -23,8 +26,7 @@ namespace CyberApp_FIA.Account
         private string RulesXmlPath => Server.MapPath("~/App_Data/certificationRules.xml");
 
         /// <summary>
-        /// Auth gate (SuperAdmin only) and first-load bindings
-        /// (rules table + prerequisite choices).
+        /// Auth gate (SuperAdmin only) and first-load bindings.
         /// </summary>
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -38,14 +40,13 @@ namespace CyberApp_FIA.Account
 
             if (!IsPostBack)
             {
-                BindRules();         // populate right-side rules table
-                BindPrereqChoices(); // populate left-side prerequisite chooser
+                BindRules();
+                EnsureQuizPanelVisibility();
             }
         }
 
         /// <summary>
         /// Ensures the rules XML datastore exists with a <certRules> root.
-        /// Creates directories as needed.
         /// </summary>
         private void EnsureXml()
         {
@@ -56,71 +57,40 @@ namespace CyberApp_FIA.Account
 
         /// <summary>
         /// Reads all rules and binds them to the repeater on the right.
-        /// Shows id, name, passScore, and minSessionsTaught.
+        /// Shows id, name, requireQuiz, passScore, minSessionsTaught, and minHelpSessions.
         /// </summary>
         private void BindRules()
         {
             EnsureXml();
 
             var rows = new List<object>();
-            var doc = new XmlDocument(); doc.Load(RulesXmlPath);
+            var doc = new XmlDocument();
+            doc.Load(RulesXmlPath);
 
             foreach (XmlElement r in doc.SelectNodes("/certRules/rule"))
             {
+                var id = r.GetAttribute("id");
+                var name = r["name"]?.InnerText ?? string.Empty;
+                var passScore = r["passScore"]?.InnerText ?? "0";
+                var minSessions = r["minSessionsTaught"]?.InnerText ?? "0";
+                var minHelpSessions = r["minHelpSessions"]?.InnerText ?? "0";
+                var requireQuiz = (r["requireQuiz"]?.InnerText ?? "false")
+                    .Equals("true", StringComparison.OrdinalIgnoreCase);
+
                 rows.Add(new
                 {
-                    id = r.GetAttribute("id"),
-                    name = r["name"]?.InnerText ?? "",
-                    passScore = r["passScore"]?.InnerText ?? "0",
-                    minSessions = r["minSessionsTaught"]?.InnerText ?? "0"
+                    id,
+                    name,
+                    passScore,
+                    minSessions,
+                    minHelpSessions,
+                    requireQuizText = requireQuiz ? "Yes" : "No"
                 });
             }
 
             NoRulesPH.Visible = rows.Count == 0;
             RulesRepeater.DataSource = rows;
             RulesRepeater.DataBind();
-        }
-
-        /// <summary>
-        /// Binds the prerequisite multiselect list with all rules except
-        /// the one currently being edited (prevents self-dependency).
-        /// Optionally accepts a set of pre-selected IDs to reflect current state.
-        /// </summary>
-        private void BindPrereqChoices(string currentRuleId = null, IEnumerable<string> selected = null)
-        {
-            EnsureXml();
-
-            var doc = new XmlDocument(); doc.Load(RulesXmlPath);
-            var items = new List<ListItem>();
-
-            foreach (XmlElement r in doc.SelectNodes("/certRules/rule"))
-            {
-                var id = r.GetAttribute("id");
-                var name = r["name"]?.InnerText ?? id;
-                if (string.IsNullOrWhiteSpace(id)) continue;
-
-                // Do not allow selecting itself as a prerequisite.
-                if (!string.IsNullOrWhiteSpace(currentRuleId) &&
-                    id.Equals(currentRuleId, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                items.Add(new ListItem($"{name} ({id})", id));
-            }
-
-            PrereqList.DataSource = items;
-            PrereqList.DataTextField = "Text";
-            PrereqList.DataValueField = "Value";
-            PrereqList.DataBind();
-
-            // Restore selection state if provided.
-            if (selected != null)
-            {
-                var set = new HashSet<string>(selected, StringComparer.OrdinalIgnoreCase);
-                foreach (ListItem li in PrereqList.Items)
-                    li.Selected = set.Contains(li.Value);
-            }
         }
 
         /// <summary>
@@ -136,125 +106,74 @@ namespace CyberApp_FIA.Account
 
         /// <summary>
         /// Loads a rule into the left-side edit form by id.
-        /// Also binds the prerequisites multiselect with the rule's current prereqs.
-        /// Supports both structured (<prerequisites><rule id="..."/></prerequisites>)
-        /// and legacy CSV in <prerequisites> text.
         /// </summary>
         private void LoadRuleToForm(string id)
         {
             EnsureXml();
 
-            var doc = new XmlDocument(); doc.Load(RulesXmlPath);
+            var doc = new XmlDocument();
+            doc.Load(RulesXmlPath);
             var r = (XmlElement)doc.SelectSingleNode($"/certRules/rule[@id='{id}']");
             if (r == null) return;
 
-            // Basic fields
             RuleId.Text = r.GetAttribute("id");
-            RuleName.Text = r["name"]?.InnerText ?? "";
-            RuleDesc.Text = r["description"]?.InnerText ?? "";
+            RuleName.Text = r["name"]?.InnerText ?? string.Empty;
+            RuleDesc.Text = r["description"]?.InnerText ?? string.Empty;
             PassScore.Text = r["passScore"]?.InnerText ?? "0";
             MinSessions.Text = r["minSessionsTaught"]?.InnerText ?? "0";
+            HelpSessions.Text = r["minHelpSessions"]?.InnerText ?? "0";
             ExpiryDays.Text = r["expiryDays"]?.InnerText ?? "0";
-            MaxAttempts.Text = r["maxAttempts"]?.InnerText ?? "0";
-            CooldownDays.Text = r["retakeCooldownDays"]?.InnerText ?? "0";
-            Evidence.Text = r["evidence"]?.InnerText ?? "";
 
-            // Collect prerequisite IDs (structured first, legacy CSV fallback).
-            var selected = new List<string>();
+            var requireQuizVal = r["requireQuiz"]?.InnerText ?? "false";
+            RequireQuiz.Checked = requireQuizVal.Equals("true", StringComparison.OrdinalIgnoreCase);
 
-            // Structured form
-            foreach (XmlElement rr in r.SelectNodes("./prerequisites/rule"))
-            {
-                var rid = rr.GetAttribute("id");
-                if (!string.IsNullOrWhiteSpace(rid)) selected.Add(rid);
-            }
+            EnsureQuizPanelVisibility();
 
-            // Legacy fallback: CSV within <prerequisites> element text (no children).
-            if (selected.Count == 0 && r["prerequisites"] != null && r["prerequisites"].HasChildNodes == false)
-            {
-                var csv = r["prerequisites"]?.InnerText ?? "";
-                var parts = (csv ?? "").Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                       .Select(s => s.Trim());
-                selected.AddRange(parts);
-            }
-
-            // Rebind left-side choices excluding the rule itself; mark current selections.
-            BindPrereqChoices(RuleId.Text, selected);
-
-            // UX: notify which rule is loaded.
             FormMessage.Text = $"Loaded rule <strong>{RuleId.Text}</strong>.";
         }
 
         /// <summary>
         /// Save (upsert) the current rule from the edit form.
-        /// - Validates RuleId
-        /// - Inserts or updates <rule id="..."> with core fields
-        /// - Replaces <prerequisites> with structured child <rule id="..."/> entries
-        /// - Saves the document, refreshes table, and rebinds prereqs
         /// </summary>
         protected void BtnSave_Click(object sender, EventArgs e)
         {
             EnsureXml();
 
-            var doc = new XmlDocument(); doc.Load(RulesXmlPath);
+            var doc = new XmlDocument();
+            doc.Load(RulesXmlPath);
             var root = doc.DocumentElement;
 
-            // Require an ID for the rule.
             if (string.IsNullOrWhiteSpace(RuleId.Text))
             {
                 FormMessage.Text = "<span style='color:#c21d1d'>Rule ID is required.</span>";
                 return;
             }
 
-            // Upsert: find existing or create a new <rule>.
-            var r = (XmlElement)doc.SelectSingleNode($"/certRules/rule[@id='{RuleId.Text.Trim()}']");
+            var trimmedId = RuleId.Text.Trim();
+
+            // Upsert rule
+            var r = (XmlElement)doc.SelectSingleNode($"/certRules/rule[@id='{trimmedId}']");
             if (r == null)
             {
                 r = doc.CreateElement("rule");
-                r.SetAttribute("id", RuleId.Text.Trim());
-                r.SetAttribute("version", "1"); // initial version; reserved for future migrations
+                r.SetAttribute("id", trimmedId);
+                r.SetAttribute("version", "1");
                 root.AppendChild(r);
             }
 
-            // Update core fields (create node if missing).
             SetOrCreate(doc, r, "name", RuleName.Text);
             SetOrCreate(doc, r, "description", RuleDesc.Text);
             SetOrCreate(doc, r, "passScore", PassScore.Text);
             SetOrCreate(doc, r, "minSessionsTaught", MinSessions.Text);
+            SetOrCreate(doc, r, "minHelpSessions", HelpSessions.Text);
             SetOrCreate(doc, r, "expiryDays", ExpiryDays.Text);
-            SetOrCreate(doc, r, "maxAttempts", MaxAttempts.Text);
-            SetOrCreate(doc, r, "retakeCooldownDays", CooldownDays.Text);
-            SetOrCreate(doc, r, "evidence", Evidence.Text);
+            SetOrCreate(doc, r, "requireQuiz", RequireQuiz.Checked ? "true" : "false");
 
-            // --- Structured prerequisites from the CheckBoxList ---
-            // Remove existing <prerequisites> block to rewrite cleanly.
-            var existingPrereqs = r.SelectSingleNode("./prerequisites");
-            if (existingPrereqs != null) r.RemoveChild(existingPrereqs);
-
-            // Build a new prerequisites container with distinct IDs.
-            var pre = doc.CreateElement("prerequisites");
-            var selected = PrereqList.Items.Cast<ListItem>()
-                             .Where(i => i.Selected)
-                             .Select(i => i.Value.Trim())
-                             .Where(v => !string.IsNullOrWhiteSpace(v))
-                             .Distinct(StringComparer.OrdinalIgnoreCase)
-                             .ToList();
-
-            foreach (var pid in selected)
-            {
-                var rr = doc.CreateElement("rule");
-                rr.SetAttribute("id", pid);
-                pre.AppendChild(rr);
-            }
-            r.AppendChild(pre);
-
-            // Persist changes.
             doc.Save(RulesXmlPath);
 
-            // UX: notify, refresh rules table, and keep prereq selections visible.
             FormMessage.Text = "<span style='color:#0a7a3c'>Rule saved.</span>";
             BindRules();
-            BindPrereqChoices(RuleId.Text, selected);
+            EnsureQuizPanelVisibility();
         }
 
         /// <summary>
@@ -264,8 +183,10 @@ namespace CyberApp_FIA.Account
         {
             EnsureXml();
 
-            var doc = new XmlDocument(); doc.Load(RulesXmlPath);
-            var r = (XmlElement)doc.SelectSingleNode($"/certRules/rule[@id='{RuleId.Text.Trim()}']");
+            var doc = new XmlDocument();
+            doc.Load(RulesXmlPath);
+            var trimmedId = RuleId.Text.Trim();
+            var r = (XmlElement)doc.SelectSingleNode($"/certRules/rule[@id='{trimmedId}']");
             if (r != null)
             {
                 r.ParentNode.RemoveChild(r);
@@ -274,43 +195,60 @@ namespace CyberApp_FIA.Account
 
             ClearForm();
             BindRules();
-            BindPrereqChoices();
             FormMessage.Text = "<span style='color:#0a7a3c'>Rule deleted.</span>";
         }
 
         /// <summary>
-        /// Resets the form and prerequisite choices without saving.
+        /// Resets the form without saving.
         /// </summary>
         protected void BtnClear_Click(object sender, EventArgs e)
         {
             ClearForm();
-            BindPrereqChoices();
-            FormMessage.Text = "";
+            EnsureQuizPanelVisibility();
+            FormMessage.Text = string.Empty;
         }
 
         /// <summary>
-        /// Helper: set an element's InnerText or create the element if missing,
-        /// then attach it to the parent node.
+        /// Toggle handler for RequireQuiz checkbox.
+        /// Shows or hides the PassScore panel.
+        /// </summary>
+        protected void RequireQuiz_CheckedChanged(object sender, EventArgs e)
+        {
+            EnsureQuizPanelVisibility();
+        }
+
+        /// <summary>
+        /// Ensures PassScorePanel visibility matches RequireQuiz state.
+        /// </summary>
+        private void EnsureQuizPanelVisibility()
+        {
+            PassScorePanel.Visible = RequireQuiz.Checked;
+        }
+
+        /// <summary>
+        /// Helper: set an element's InnerText or create the element if missing.
         /// </summary>
         private static void SetOrCreate(XmlDocument d, XmlElement parent, string name, string value)
         {
             var node = parent[name] ?? d.CreateElement(name);
-            node.InnerText = value?.Trim() ?? "";
+            node.InnerText = value?.Trim() ?? string.Empty;
             if (node.ParentNode == null) parent.AppendChild(node);
         }
 
         /// <summary>
-        /// Clears all form fields to defaults and unselects prerequisites.
+        /// Clears all form fields to defaults.
         /// </summary>
         private void ClearForm()
         {
-            RuleId.Text = RuleName.Text = RuleDesc.Text = "";
-            PassScore.Text = MinSessions.Text = ExpiryDays.Text = MaxAttempts.Text = CooldownDays.Text = "0";
-            Evidence.Text = "";
-
-            foreach (ListItem li in PrereqList.Items) li.Selected = false;
+            RuleId.Text = string.Empty;
+            RuleName.Text = string.Empty;
+            RuleDesc.Text = string.Empty;
+            PassScore.Text = "0";
+            MinSessions.Text = "0";
+            HelpSessions.Text = "0";
+            ExpiryDays.Text = "0";
+            RequireQuiz.Checked = false;
         }
     }
 }
-
 

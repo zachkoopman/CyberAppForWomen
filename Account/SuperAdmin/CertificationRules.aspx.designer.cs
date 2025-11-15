@@ -51,6 +51,24 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.TextBox RuleDesc;
 
         /// <summary>
+        /// RequireQuiz control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox RequireQuiz;
+
+        /// <summary>
+        /// PassScorePanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel PassScorePanel;
+
+        /// <summary>
         /// PassScore control.
         /// </summary>
         /// <remarks>
@@ -69,6 +87,15 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.TextBox MinSessions;
 
         /// <summary>
+        /// HelpSessions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox HelpSessions;
+
+        /// <summary>
         /// ExpiryDays control.
         /// </summary>
         /// <remarks>
@@ -76,42 +103,6 @@ namespace CyberApp_FIA.Account
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox ExpiryDays;
-
-        /// <summary>
-        /// MaxAttempts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox MaxAttempts;
-
-        /// <summary>
-        /// CooldownDays control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox CooldownDays;
-
-        /// <summary>
-        /// Evidence control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Evidence;
-
-        /// <summary>
-        /// PrereqList control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList PrereqList;
 
         /// <summary>
         /// BtnSave control.

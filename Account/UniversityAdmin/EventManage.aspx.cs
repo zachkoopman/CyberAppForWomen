@@ -14,6 +14,7 @@ namespace CyberApp_FIA.Account
     /// - Toggle which microcourses are enabled for this event (#85)
     /// - Add scheduled sessions for the event (#68/#69) with helper double-booking prevention
     /// - List all sessions for this event
+    /// - Show helper list with certification status and schedule overlap flags for the selected course/time.
     /// Uses multiple XML files in App_Data as lightweight datastores.
     /// </summary>
     public partial class EventManage : Page
@@ -22,16 +23,33 @@ namespace CyberApp_FIA.Account
         private string EventsXmlPath => Server.MapPath("~/App_Data/events.xml");
         private string MicrocoursesXmlPath => Server.MapPath("~/App_Data/microcourses.xml");
         private string EventCoursesXmlPath => Server.MapPath("~/App_Data/eventCourses.xml");   // #85 switches (per-event microcourse enablement)
-        private string EventSessionsXmlPath => Server.MapPath("~/App_Data/eventSessions.xml");  // #68/#69 sessions (per-event session list)
+        private string EventSessionsXmlPath => Server.MapPath("~/App_Data/eventSessions.xml"); // #68/#69 sessions (per-event session list)
+        private string UsersXmlPath => Server.MapPath("~/App_Data/users.xml");                 // helpers per university
+        private string HelperProgressXmlPath => Server.MapPath("~/App_Data/helperProgress.xml"); // certification + eligibility
 
         // Holds the current event id from the query string for use within the page lifecycle.
         private string _eventId;
+
+        /// <summary>
+        /// Helper row for the helper status table.
+        /// </summary>
+        private sealed class HelperRow
+        {
+            public string HelperId { get; set; }
+            public string Name { get; set; }
+            public bool IsEligible { get; set; }
+            public bool IsCertified { get; set; }
+            public bool HasOverlap { get; set; }
+            public string CertLabel { get; set; }
+            public string CertCssClass { get; set; }
+        }
 
         /// <summary>
         /// Auth gate (UniversityAdmin only), resolves _eventId from query string, and on first load:
         /// - loads event header
         /// - binds list of published microcourses and their per-event enable switches
         /// - binds course select dropdown for scheduling
+        /// - binds helpers overview
         /// - binds existing sessions for the event
         /// </summary>
         protected void Page_Load(object sender, EventArgs e)
@@ -58,6 +76,7 @@ namespace CyberApp_FIA.Account
                 LoadEventHeader();
                 BindMicrocourses();
                 BindCourseSelect();
+                BindHelpersList();
                 BindSessions();
             }
         }
@@ -240,7 +259,7 @@ namespace CyberApp_FIA.Account
 
         /// <summary>
         /// Adds a session for this event:
-        /// - Validates course pick, start/end times, and helper (required to prevent double-booking)
+        /// - Validates course pick, start/end times, and helper (via dropdown)
         /// - Converts user-entered local datetimes to UTC ISO for storage
         /// - Checks for helper overlaps against existing sessions for the same event
         /// - Saves the new <session> to eventSessions.xml and refreshes the list
@@ -262,19 +281,22 @@ namespace CyberApp_FIA.Account
                 !TryParseLocalToUtc(SessionDateTimeEnd.Text, out var endUtc))
             {
                 ScheduleMessage.Text = "<span class='err'>Enter valid start and end times.</span>";
+                BindHelpersList(); // show updated overlap state if parsing failed/changed
                 return;
             }
             if (endUtc <= startUtc)
             {
                 ScheduleMessage.Text = "<span class='err'>End time must be after start.</span>";
+                BindHelpersList(); // reflect invalid/changed window
                 return;
             }
 
-            // Helper is required because we enforce "same helper cannot overlap" policy.
-            var helper = (Helper.Text ?? "").Trim();
+            // Helper is required and must come from dropdown (only eligible/certified options are present).
+            var helper = (HelperSelect.SelectedValue ?? "").Trim();
             if (string.IsNullOrWhiteSpace(helper))
             {
-                ScheduleMessage.Text = "<span class='err'>Helper is required to prevent double-booking.</span>";
+                ScheduleMessage.Text = "<span class='err'>Pick a certified or eligible helper from the list.</span>";
+                BindHelpersList();
                 return;
             }
 
@@ -307,6 +329,7 @@ namespace CyberApp_FIA.Account
                     ScheduleMessage.Text =
                         $"<span class='err'>Helper <strong>{Server.HtmlEncode(helper)}</strong> is already booked " +
                         $"from {sStartUtc.ToLocalTime():yyyy-MM-dd HH:mm} to {sEndUtc.ToLocalTime():HH:mm}.</span>";
+                    BindHelpersList(); // show overlap tag inline
                     return;
                 }
             }
@@ -321,15 +344,20 @@ namespace CyberApp_FIA.Account
             node.AppendChild(Mk(doc, "start", startUtc.ToString("o"))); // ISO UTC
             node.AppendChild(Mk(doc, "end", endUtc.ToString("o")));     // ISO UTC
             node.AppendChild(Mk(doc, "room", room));
-            node.AppendChild(Mk(doc, "helper", helper));
+            node.AppendChild(Mk(doc, "helper", helper));                // helper from dropdown
             node.AppendChild(Mk(doc, "capacity", cap > 0 ? cap.ToString() : ""));
 
             root.AppendChild(node);
             doc.Save(EventSessionsXmlPath);
 
-            // Refresh list and clear form inputs (keep course dropdown as-is).
+            // Refresh list and helper statuses, then clear form inputs (keep course dropdown as-is).
             BindSessions();
-            SessionDateTimeStart.Text = SessionDateTimeEnd.Text = Room.Text = Helper.Text = Capacity.Text = "";
+            BindHelpersList();
+            SessionDateTimeStart.Text = SessionDateTimeEnd.Text = Room.Text = Capacity.Text = "";
+            if (HelperSelect.Items.Count > 0)
+            {
+                HelperSelect.SelectedIndex = 0;
+            }
             ScheduleMessage.Text = "<span class='ok'>Session added.</span>";
         }
 
@@ -408,6 +436,254 @@ namespace CyberApp_FIA.Account
         }
 
         // =========================
+        //  Helper list (status + overlap)
+        // =========================
+
+        /// <summary>
+        /// Binds helpers for this event's university with:
+        /// - Certification status for the selected course (Not certified / Eligible / Certified)
+        /// - Schedule overlap flag based on current start/end fields across all events.
+        /// Filters can limit to eligible or certified helpers only.
+        /// Also populates the HelperSelect dropdown with only Eligible/Certified helpers.
+        /// </summary>
+        private void BindHelpersList()
+        {
+            var rows = new List<HelperRow>();
+
+            var universityName = (University.Text ?? "").Trim();
+
+            if (!File.Exists(UsersXmlPath))
+            {
+                NoHelpersPH.Visible = true;
+                HelpersRepeater.DataSource = rows;
+                HelpersRepeater.DataBind();
+                HelperSelect.Items.Clear();
+                HelperSelect.Items.Add(new ListItem("-- Select helper --", ""));
+                return;
+            }
+
+            string courseId = CourseSelect.SelectedValue;
+            bool hasCourse = !string.IsNullOrEmpty(courseId);
+
+            // Parse current time window from the scheduling inputs.
+            DateTime startUtc = default, endUtc = default;
+            bool hasTimeWindow =
+                TryParseLocalToUtc(SessionDateTimeStart.Text, out startUtc) &&
+                TryParseLocalToUtc(SessionDateTimeEnd.Text, out endUtc) &&
+                endUtc > startUtc;
+
+            // Load helper progress doc (for isEligible / isCertified).
+            XmlDocument progressDoc = null;
+            if (File.Exists(HelperProgressXmlPath))
+            {
+                progressDoc = new XmlDocument();
+                progressDoc.Load(HelperProgressXmlPath);
+            }
+
+            // Load all sessions once for overlap checking.
+            XmlDocument sessionsDoc = null;
+            XmlNodeList sessionNodes = null;
+            if (File.Exists(EventSessionsXmlPath) && hasTimeWindow)
+            {
+                sessionsDoc = new XmlDocument();
+                sessionsDoc.Load(EventSessionsXmlPath);
+                sessionNodes = sessionsDoc.SelectNodes("/eventSessions/session");
+            }
+
+            var usersDoc = new XmlDocument();
+            usersDoc.Load(UsersXmlPath);
+
+            // Support either <users> or <accounts> root, depending on existing schema.
+            var helperNodes = usersDoc.SelectNodes("/users/user | /accounts/user");
+            foreach (XmlElement u in helperNodes)
+            {
+                var roleText = u["role"]?.InnerText ?? u.GetAttribute("role");
+                if (!roleText.Equals("Helper", StringComparison.OrdinalIgnoreCase)) continue;
+
+                var helperUniversity = u["university"]?.InnerText ?? u.GetAttribute("university") ?? "";
+                if (!string.IsNullOrWhiteSpace(universityName) && !string.IsNullOrWhiteSpace(helperUniversity))
+                {
+                    if (!string.Equals(universityName.Trim(), helperUniversity.Trim(), StringComparison.OrdinalIgnoreCase))
+                        continue;
+                }
+
+                var id = u["id"]?.InnerText ?? u.GetAttribute("id");
+                var name = u["displayName"]?.InnerText;
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    name = u["email"]?.InnerText ?? "(Helper)";
+                }
+
+                bool isCert = false;
+                bool isElig = false;
+
+                if (progressDoc != null && hasCourse && !string.IsNullOrEmpty(id))
+                {
+                    var courseNode = progressDoc.SelectSingleNode(
+                        $"/helperProgress/helper[@id='{id}']/course[@id='{courseId}']"
+                    ) as XmlElement;
+
+                    if (courseNode != null)
+                    {
+                        var certText = courseNode["isCertified"]?.InnerText ?? "false";
+                        var eligText = courseNode["isEligible"]?.InnerText ?? "";
+
+                        isCert = certText.Equals("true", StringComparison.OrdinalIgnoreCase);
+
+                        if (!string.IsNullOrEmpty(eligText))
+                            isElig = eligText.Equals("true", StringComparison.OrdinalIgnoreCase);
+                        else
+                            isElig = isCert; // fallback for older data
+                    }
+                }
+
+                string certLabel;
+                string certCss;
+
+                if (isCert)
+                {
+                    certLabel = "Certified";
+                    certCss = "status-cert";
+                }
+                else if (isElig)
+                {
+                    certLabel = "Eligible";
+                    certCss = "status-eligible";
+                }
+                else
+                {
+                    certLabel = "Not certified";
+                    certCss = "status-notcert";
+                }
+
+                bool hasOverlap = false;
+                if (hasTimeWindow && sessionNodes != null)
+                {
+                    foreach (XmlElement s in sessionNodes)
+                    {
+                        var hName = (s["helper"]?.InnerText ?? "").Trim();
+                        if (!string.Equals(hName, name.Trim(), StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        var sStartIso = s["start"]?.InnerText ?? "";
+                        var sEndIso = s["end"]?.InnerText ?? "";
+                        if (!TryParseIsoUtc(sStartIso, out var sStartUtc) ||
+                            !TryParseIsoUtc(sEndIso, out var sEndUtc))
+                            continue;
+
+                        if (IntervalsOverlap(startUtc, endUtc, sStartUtc, sEndUtc))
+                        {
+                            hasOverlap = true;
+                            break;
+                        }
+                    }
+                }
+
+                rows.Add(new HelperRow
+                {
+                    HelperId = id,
+                    Name = name,
+                    IsCertified = isCert,
+                    IsEligible = isElig,
+                    HasOverlap = hasOverlap,
+                    CertLabel = certLabel,
+                    CertCssClass = certCss
+                });
+            }
+
+            // Build list for helper dropdown: only eligible or certified helpers.
+            var dropdownRows = new List<HelperRow>();
+            foreach (var r in rows)
+            {
+                if (r.IsCertified || r.IsEligible)
+                    dropdownRows.Add(r);
+            }
+
+            // Apply filters for the table display
+            bool filterEligible = FilterEligible.Checked;
+            bool filterCertified = FilterCertified.Checked;
+
+            if (filterEligible || filterCertified)
+            {
+                var filtered = new List<HelperRow>();
+                foreach (var row in rows)
+                {
+                    var matchEligible = filterEligible && row.IsEligible;
+                    var matchCertified = filterCertified && row.IsCertified;
+                    if (matchEligible || matchCertified)
+                    {
+                        filtered.Add(row);
+                    }
+                }
+                rows = filtered;
+            }
+
+            NoHelpersPH.Visible = rows.Count == 0;
+            HelpersRepeater.DataSource = rows;
+            HelpersRepeater.DataBind();
+
+            // Populate helper dropdown with Eligible/Certified helpers only.
+            var previousSelection = HelperSelect.SelectedValue;
+
+            HelperSelect.Items.Clear();
+            HelperSelect.Items.Add(new ListItem("-- Select helper --", ""));
+
+            foreach (var r in dropdownRows)
+            {
+                // Avoid duplicate names in dropdown
+                if (HelperSelect.Items.FindByValue(r.Name) == null)
+                {
+                    HelperSelect.Items.Add(new ListItem(r.Name, r.Name));
+                }
+            }
+
+            // Try to restore previous selection if still valid.
+            if (!string.IsNullOrEmpty(previousSelection))
+            {
+                var existing = HelperSelect.Items.FindByValue(previousSelection);
+                if (existing != null)
+                {
+                    HelperSelect.ClearSelection();
+                    existing.Selected = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Course selection changed → refresh helper list because eligibility/certification is per-course.
+        /// </summary>
+        protected void CourseSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindHelpersList();
+        }
+
+        /// <summary>
+        /// Start/end changed → refresh helper list so schedule overlap flags update.
+        /// </summary>
+        protected void SessionTime_TextChanged(object sender, EventArgs e)
+        {
+            BindHelpersList();
+        }
+
+        /// <summary>
+        /// Eligible/Certified filter toggles changed.
+        /// </summary>
+        protected void HelperFilterChanged(object sender, EventArgs e)
+        {
+            BindHelpersList();
+        }
+
+        /// <summary>
+        /// Clear helper filters and show all helpers again.
+        /// </summary>
+        protected void BtnClearHelperFilters_Click(object sender, EventArgs e)
+        {
+            FilterEligible.Checked = false;
+            FilterCertified.Checked = false;
+            BindHelpersList();
+        }
+
+        // =========================
         //  Utility helpers
         // =========================
 
@@ -470,5 +746,8 @@ namespace CyberApp_FIA.Account
         }
     }
 }
+
+
+
 
 

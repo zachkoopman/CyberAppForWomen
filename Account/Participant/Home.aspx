@@ -418,6 +418,10 @@
           <div class="sub subchips">
             <span class="pill">University: <asp:Literal ID="University" runat="server" /></span>
             <span class="pill">Event: <asp:Literal ID="EventName" runat="server" /></span>
+            <!-- NEW: Assigned Helper pill -->
+            <span id="HelperPill" runat="server" class="pill" visible="false">
+              Helper: <asp:Literal ID="HelperName" runat="server" />
+            </span>
 
             <a class="pill pill-pink" href="<%: ResolveUrl("~/Account/Participant/SelectEvent.aspx?change=1") %>">
               Change event
@@ -513,14 +517,17 @@
                     <span class="label">Time</span>
                     <span class="value"><%# Eval("startLocal", "{0:ddd, MMM d • h:mm tt}") %></span>
                   </div>
-                  <asp:PlaceHolder runat="server" Visible='<%# !string.IsNullOrWhiteSpace(Convert.ToString(Eval("room"))) %>'>
-                    <div class="line" style="margin-top:6px;">
-                      <span class="label">Room</span>
+                  <div class="line" style="margin-top:6px;">
+                    <span class="label">Room</span>
+                    <asp:PlaceHolder runat="server" Visible='<%# (bool)Eval("canSeeRoom") %>'>
                       <span class="value">
-  <a href='<%# Eval("room") %>' target="_blank" rel="noopener">Join Room</a>
-</span>
-                    </div>
-                  </asp:PlaceHolder>
+                        <a href='<%# Eval("room") %>' target="_blank" rel="noopener">Join Room</a>
+                      </span>
+                    </asp:PlaceHolder>
+                    <asp:PlaceHolder runat="server" Visible='<%# !(bool)Eval("canSeeRoom") %>'>
+                      <span class="value subtle">Wait for Helper to Send Room Link</span>
+                    </asp:PlaceHolder>
+                  </div>
                 </div>
 
                 <!-- Status -->
@@ -575,7 +582,7 @@
           </span>
         </h2>
 
-        <asp:Repeater ID="SessionsRepeater" runat="server" OnItemCommand="SessionsRepeater_ItemCommand">
+        <asp:Repeater ID="SessionsRepeater" runat="server">
           <HeaderTemplate>
             <div class="fia-sessions-grid">
           </HeaderTemplate>
@@ -677,10 +684,4 @@
   </form>
 </body>
 </html>
-
-
-
-
-
-
 
