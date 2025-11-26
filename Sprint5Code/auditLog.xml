@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<auditLog version="1" retentionDays="1095">
+  <!-- Example participant consent (Task #158 – Jenna) -->
+  <entry id="consent-0001"
+         timestampUtc="2025-11-20T18:30:00.0000000Z"
+         actorUserId="24ff68a5f72d4b61873db9045034bede"
+         actorRole="Participant"
+         actorEmail="abby@example.edu"
+         actorDisplayName="Abby N."
+         actorUniversity="Arizona State University"
+         category="Consent"
+         actionType="ParticipantConsentAccepted"
+         targetType="ParticipantAccount"
+         targetId="24ff68a5f72d4b61873db9045034bede"
+         targetLabel="Abby N. (Participant)"
+         clientIp="192.0.2.42"
+         userAgentHash="sha256:example"
+         consentVersion="v1.2"
+         severity="Info">
+    <notes>Participant accepted consent for v1.2 of FIA microcourses.</notes>
+    <meta>
+      <item key="formVersion">1.2</item>
+      <item key="lang">en-US</item>
+    </meta>
+  </entry>
+
+  <!-- Example Super Admin switching to a university view (Task #158 – Jenna) -->
+  <entry id="impersonation-0001"
+         timestampUtc="2025-11-20T19:05:00.0000000Z"
+         actorUserId="superadmin-01"
+         actorRole="SuperAdmin"
+         actorEmail="super@fia.org"
+         actorDisplayName="Super Admin"
+         actorUniversity=""
+         category="Auth"
+         actionType="SuperAdminSwitchedUniversity"
+         targetType="University"
+         targetId="asu"
+         targetLabel="Arizona State University"
+         clientIp="203.0.113.5"
+         userAgentHash="sha256:example2"
+         consentVersion=""
+         severity="Info">
+    <notes>Super Admin entered ASU view for catalog checks.</notes>
+  </entry>
+
+  <!-- Example new university creation (Task #162 – Zachary) -->
+  <entry id="university-0001"
+         timestampUtc="2025-11-21T16:10:00.0000000Z"
+         actorUserId="superadmin-01"
+         actorRole="SuperAdmin"
+         actorEmail="super@fia.org"
+         actorDisplayName="Super Admin"
+         actorUniversity=""
+         category="System"
+         actionType="NewUniversityCreated"
+         targetType="University"
+         targetId="detroitcc"
+         targetLabel="Detroit Community College"
+         clientIp="203.0.113.5"
+         userAgentHash="sha256:example3"
+         consentVersion=""
+         severity="Info">
+    <notes>New pilot university Detroit Community College created with one University Admin.</notes>
+    <meta>
+      <item key="adminEmail">ua.detroitcc@fia.org</item>
+    </meta>
+  </entry>
+
+  <!-- Example helper log verification (Task #169 – Carissa) -->
+  <entry id="helper-verification-0001"
+         timestampUtc="2025-11-22T08:45:00.0000000Z"
+         actorUserId="ua.asu"
+         actorRole="UniversityAdmin"
+         actorEmail="ua.asu@fia.org"
+         actorDisplayName="ASU Coordinator"
+         actorUniversity="Arizona State University"
+         category="Helper"
+         actionType="HelperLogVerified"
+         targetType="HelperLog"
+         targetId="note:429d338c0568409e8bd5945d28a30bce:course-1:202511220830"
+         targetLabel="One-to-one note for Helper 429d338c…"
+         clientIp="192.0.2.88"
+         userAgentHash="sha256:example4"
+         consentVersion=""
+         severity="Info">
+    <notes>Log reviewed and confirmed as accurate for certification.</notes>
+    <meta>
+      <item key="helperId">429d338c0568409e8bd5945d28a30bce</item>
+      <item key="source">OneToOneNote</item>
+    </meta>
+  </entry>
+
+  <!-- Example password reset trigger (Task #160 – Zachary) -->
+  <entry id="reset-0001"
+         timestampUtc="2025-11-23T12:00:00.0000000Z"
+         actorUserId="superadmin-01"
+         actorRole="SuperAdmin"
+         actorEmail="super@fia.org"
+         actorDisplayName="Super Admin"
+         actorUniversity=""
+         category="Security"
+         actionType="PasswordResetTriggered"
+         targetType="HelperAccount"
+         targetId="429d338c0568409e8bd5945d28a30bce"
+         targetLabel="Helper h (ASU)"
+         clientIp="203.0.113.5"
+         userAgentHash="sha256:example5"
+         consentVersion=""
+         severity="Warning">
+    <notes>Password reset for helper after suspicious activity review.</notes>
+  </entry>
+</auditLog>
