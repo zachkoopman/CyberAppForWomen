@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<helperVerifications version="1">
+  <!-- Example verification for a one-to-one note (Task #169 – Carissa) -->
+  <verification key="note:429d338c0568409e8bd5945d28a30bce:course-1:202511220830"
+                helperId="429d338c0568409e8bd5945d28a30bce"
+                helperName="h"
+                source="OneToOneNote"
+                decision="Verified"
+                adminEmail="ua.asu@fia.org"
+                adminUniversity="Arizona State University"
+                tsUtc="2025-11-22T08:45:00.0000000Z">
+    <note>Clear, specific help log aligned with event goals.</note>
+  </verification>
+
+  <!-- Example questioned log (so you have both flows represented) -->
+  <verification key="delivery:789d338c0568409e8bd5945d28a30lop:course-2:202511220900"
+                helperId="789d338c0568409e8bd5945d28a30lop"
+                helperName="Demo Helper 2"
+                source="TeachingDelivery"
+                decision="Questioned"
+                adminEmail="ua.asu@fia.org"
+                adminUniversity="Arizona State University"
+                tsUtc="2025-11-22T09:05:00.0000000Z">
+    <note>Timing and duration did not match event schedule; needs follow-up.</note>
+  </verification>
+</helperVerifications>
