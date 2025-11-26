@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<universities version="1">
+  <university id="asu" code="ASU" isActive="true">
+    <name>Arizona State University</name>
+    <shortName>ASU</shortName>
+    <primaryDomain>asu.edu</primaryDomain>
+    <createdAt>2025-10-01T00:00:00.0000000Z</createdAt>
+    <defaultAdminEmail>ua.asu@fia.org</defaultAdminEmail>
+  </university>
+
+  <university id="detroitcc" code="DETROITCC" isActive="true">
+    <name>Detroit Community College</name>
+    <shortName>Detroit CC</shortName>
+    <primaryDomain>detroitcc.edu</primaryDomain>
+    <createdAt>2025-11-21T16:10:00.0000000Z</createdAt>
+    <defaultAdminEmail>ua.detroitcc@fia.org</defaultAdminEmail>
+  </university>
+</universities>
