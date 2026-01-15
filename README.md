@@ -12,7 +12,7 @@ Sprint Four: For my sprint four work, locate the Sprint4Code folder in this bran
 Sprint Five: For my sprint five work, locate the Sprint5Code folder in this branch to see my files and explanations. I have also added onto the sprint 4 slideshow detailing how the application works step by step and a document detailing each page of the code. These are also found in the Sprint5code's Sprint5SlideDeck subfolder.
 
 
-----------------------------------------------------          SEMESTER TWO         ------------------------------------------------------------------
+----------------------------------------------------          SEMESTER TWO         ----------------------------------------------------------
 
 
 Sprint Six: For my sprint six work, locate the Sprint6Code folder in this branch to see my files and explanations. I have also added onto the sprint 5 slideshow detailing how the application works step by step and a document detailing each page of the code. These are also found in the Sprint6code's Sprint6SlideDeck subfolder
