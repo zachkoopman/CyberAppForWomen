@@ -732,10 +732,16 @@
             <asp:LinkButton ID="btnHighlight" runat="server"
                 CssClass="btn btn-ghost"
                 OnClick="HighlightRecommended_Click"
-                Style="margin-left: 10px; boreder; 1px solid var(--fia-blue); color; var(--fia-blue);">
-                <i class="filters-actions fa-star"></i> Highlight Reccomended
-            </asp:LinkButton>">
-          </span>
+                Style="margin-left: 10px; border: 1px solid var(--fia-blue); color: var(--fia-blue);">
+                <i class="fa fa-star"></i> Highlight Recommended
+            </asp:LinkButton>
+
+            <asp:CheckBox ID="chkHideCompleted" runat="server"
+                Text=" Hide Completed"
+                AutoPostBack="true"
+                OnCheckedChanged="HideCompleted_CheckedChanged"
+                CssClass="filter-checkbox"
+                Style="margin-left: 15px; font-size: 0.9rem; color: var(--muted); cursor:pointer;" />
         </h2>
 
         <asp:Repeater ID="SessionsRepeater" runat="server">
@@ -751,6 +757,14 @@
 
               <!-- Title -->
               <div class="card-sec">
+                <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px">
+                    <asp:PlaceHolder runat="server" Visible='<%# Eval("isCompleted") %>'>
+                        <span style="color: #059669; font-weight: bold; font-size: 10px; background: #d1fae5; padding: 2px 8px; border-radius: 4px; width: fit-content;">
+                            <i class="fa fa-check-circle"></i> COMPLETED
+                        </span>
+                    </asp:PlaceHolder>
+                </div>
+
                 <h3 class="title"><%# Eval("microcourseTitle") %></h3>
               </div>
 
