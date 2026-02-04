@@ -37,6 +37,8 @@ namespace CyberApp_FIA.Participant
             public DateTime? To { get; set; }
             public HashSet<string> Tags { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             public string Query { get; set; } = "";
+
+            public bool HideCompleted { get; set; }
         }
 
         private sealed class Interval
@@ -414,6 +416,7 @@ namespace CyberApp_FIA.Participant
             var tags = (Request.QueryString["tags"] ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var t in tags) f.Tags.Add(t);
             f.Query = (Request.QueryString["q"] ?? "").Trim();
+            f.HideCompleted = chkHideCompleted.Checked;
             return f;
         }
 
@@ -710,6 +713,13 @@ namespace CyberApp_FIA.Participant
             {
                 var courseId = s["courseId"]?.InnerText ?? "";
                 if (string.IsNullOrEmpty(courseId)) continue;
+
+                bool isActuallyCompleted = completedSet.Contains(courseId);
+                if (filters.HideCompleted && isActuallyCompleted)
+                {
+                    continue;
+                }
+
                 if (visibleCourseIds.Count > 0 && !visibleCourseIds.Contains(courseId)) continue;
 
                 var startIso = s["start"]?.InnerText ?? "";
@@ -835,7 +845,8 @@ namespace CyberApp_FIA.Participant
                     hasConflict,
                     conflictMessage,
                     replacementUrl,
-                    isRecommended
+                    isRecommended,
+                    isCompleted = isActuallyCompleted
                 });
             }
 
@@ -1401,6 +1412,13 @@ namespace CyberApp_FIA.Participant
             catch { /* Fail silently if XML is malformed */ }
 
             return scores;
+        }
+
+        protected void HideCompleted_CheckedChanged(object sender, EventArgs e)
+        {
+            var eventId = (string)Session["EventId"];
+            var filters = ReadFiltersFromQuery();
+            BindSessions(eventId, filters);
         }
 
     
