@@ -42,13 +42,49 @@ namespace CyberApp_FIA.Participant
         protected global::System.Web.UI.WebControls.Literal EventName;
 
         /// <summary>
-        /// HelperPill control.
+        /// BtnLogout control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl HelperPill;
+        protected global::System.Web.UI.WebControls.LinkButton BtnLogout;
+
+        /// <summary>
+        /// SessionDeletionNoticePH control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder SessionDeletionNoticePH;
+
+        /// <summary>
+        /// SessionDeletionNoticeText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal SessionDeletionNoticeText;
+
+        /// <summary>
+        /// ScoreWidget control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::CyberApp_FIA.Account.Participant.ParticipantScoreWidget ScoreWidget;
+
+        /// <summary>
+        /// HelperSupportPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder HelperSupportPanel;
 
         /// <summary>
         /// HelperName control.
@@ -60,22 +96,31 @@ namespace CyberApp_FIA.Participant
         protected global::System.Web.UI.WebControls.Literal HelperName;
 
         /// <summary>
-        /// BtnLogout control.
+        /// StartHelperMessageBtn control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton BtnLogout;
+        protected global::System.Web.UI.WebControls.Button StartHelperMessageBtn;
 
         /// <summary>
-        /// ScoreWidget control.
+        /// ConversationsEmpty control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::CyberApp_FIA.Account.Participant.ParticipantScoreWidget ScoreWidget;
+        protected global::System.Web.UI.WebControls.PlaceHolder ConversationsEmpty;
+
+        /// <summary>
+        /// ConversationsRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater ConversationsRepeater;
 
         /// <summary>
         /// FilterFrom control.

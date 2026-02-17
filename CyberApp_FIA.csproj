@@ -67,21 +67,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AboutUs.aspx" />
     <Content Include="Account\Helper\CertificationProgress.aspx" />
+    <Content Include="Account\Helper\HelperConversation.aspx" />
     <Content Include="Account\Helper\Home.aspx" />
     <Content Include="Account\Helper\OneOnOneHelp.aspx" />
+    <Content Include="Account\Helper\ParticipantConversations.aspx" />
     <Content Include="Account\Helper\ResourceViewer.aspx" />
     <Content Include="Account\Helper\Schedule.aspx" />
     <Content Include="Account\Participant\EnrollSuccess.aspx" />
+    <Content Include="Account\Participant\HelperConversation.aspx" />
+    <Content Include="Account\Participant\HelperMessage.aspx" />
     <Content Include="Account\Participant\ParticipantScoreWidget.ascx" />
     <Content Include="Account\Participant\Quiz.aspx" />
     <Content Include="Account\Participant\Replacements.aspx" />
     <Content Include="Account\SuperAdmin\CertificationRules.aspx" />
     <Content Include="Account\CreateAccountPage.aspx" />
+    <Content Include="Account\SuperAdmin\CreateUniversityAdmin.aspx" />
+    <Content Include="Account\SuperAdmin\SuperAdminAudit.aspx" />
+    <Content Include="Account\SuperAdmin\SuperAdminMicrocourses.aspx" />
     <Content Include="Account\UniversityAdmin\EventManage.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\SuperAdmin\SuperAdminHome.aspx" />
+    <Content Include="Account\UniversityAdmin\EventSessionEdit.aspx" />
+    <Content Include="Account\UniversityAdmin\UniversityAdminAddHelper.aspx" />
+    <Content Include="Account\UniversityAdmin\UniversityAdminAudit.aspx" />
+    <Content Include="Account\UniversityAdmin\UniversityAdminHelperAudit.aspx" />
     <Content Include="Account\UniversityAdmin\UniversityAdminHome.aspx" />
+    <Content Include="App_Data\Audit_Log\UnvAdminAudit.xml" />
     <Content Include="App_Data\certificationRules.xml" />
     <Content Include="App_Data\completions.xml" />
     <Content Include="App_Data\enrollments.xml" />
@@ -89,6 +102,8 @@
     <Content Include="App_Data\events.xml" />
     <Content Include="App_Data\eventSessions.xml" />
     <Content Include="App_Data\helperCheckins.xml" />
+    <Content Include="App_Data\helperHelpNotes.xml" />
+    <Content Include="App_Data\helperNotes.xml" />
     <Content Include="App_Data\helperProgress.xml" />
     <Content Include="App_Data\microcourses.xml" />
     <Content Include="App_Data\quiz_progress.xml" />
@@ -98,16 +113,31 @@
     <Content Include="App_Data\users.xml" />
     <Content Include="Account\Participant\Home.aspx" />
     <Content Include="Account\Participant\SelectEvent.aspx" />
+    <Content Include="ContactUs.aspx" />
     <Content Include="Web.config" />
     <Content Include="Welcome_Page.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutUs.aspx.cs">
+      <DependentUpon>AboutUs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AboutUs.aspx.designer.cs">
+      <DependentUpon>AboutUs.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Account\Helper\CertificationProgress.aspx.cs">
       <DependentUpon>CertificationProgress.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Account\Helper\CertificationProgress.aspx.designer.cs">
       <DependentUpon>CertificationProgress.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Helper\HelperConversation.aspx.cs">
+      <DependentUpon>HelperConversation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\HelperConversation.aspx.designer.cs">
+      <DependentUpon>HelperConversation.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\Helper\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
@@ -122,6 +152,13 @@
     </Compile>
     <Compile Include="Account\Helper\OneOnOneHelp.aspx.designer.cs">
       <DependentUpon>OneOnOneHelp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Helper\ParticipantConversations.aspx.cs">
+      <DependentUpon>ParticipantConversations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\ParticipantConversations.aspx.designer.cs">
+      <DependentUpon>ParticipantConversations.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\Helper\ResourceViewer.aspx.cs">
       <DependentUpon>ResourceViewer.aspx</DependentUpon>
@@ -146,6 +183,20 @@
     </Compile>
     <Compile Include="Account\Participant\EnrollSuccess.aspx.designer.cs">
       <DependentUpon>EnrollSuccess.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Participant\HelperConversation.aspx.cs">
+      <DependentUpon>HelperConversation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Participant\HelperConversation.aspx.designer.cs">
+      <DependentUpon>HelperConversation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Participant\HelperMessage.aspx.cs">
+      <DependentUpon>HelperMessage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Participant\HelperMessage.aspx.designer.cs">
+      <DependentUpon>HelperMessage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\Participant\ParticipantScoreWidget.ascx.cs">
       <DependentUpon>ParticipantScoreWidget.ascx</DependentUpon>
@@ -182,6 +233,27 @@
     <Compile Include="Account\CreateAccountPage.aspx.designer.cs">
       <DependentUpon>CreateAccountPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Account\SuperAdmin\CreateUniversityAdmin.aspx.cs">
+      <DependentUpon>CreateUniversityAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\SuperAdmin\CreateUniversityAdmin.aspx.designer.cs">
+      <DependentUpon>CreateUniversityAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\SuperAdmin\SuperAdminAudit.aspx.cs">
+      <DependentUpon>SuperAdminAudit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\SuperAdmin\SuperAdminAudit.aspx.designer.cs">
+      <DependentUpon>SuperAdminAudit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\SuperAdmin\SuperAdminMicrocourses.aspx.cs">
+      <DependentUpon>SuperAdminMicrocourses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\SuperAdmin\SuperAdminMicrocourses.aspx.designer.cs">
+      <DependentUpon>SuperAdminMicrocourses.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Account\UniversityAdmin\EventManage.aspx.cs">
       <DependentUpon>EventManage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -202,6 +274,34 @@
     </Compile>
     <Compile Include="Account\SuperAdmin\SuperAdminHome.aspx.designer.cs">
       <DependentUpon>SuperAdminHome.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\EventSessionEdit.aspx.cs">
+      <DependentUpon>EventSessionEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\EventSessionEdit.aspx.designer.cs">
+      <DependentUpon>EventSessionEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\UniversityAdminAddHelper.aspx.cs">
+      <DependentUpon>UniversityAdminAddHelper.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\UniversityAdminAddHelper.aspx.designer.cs">
+      <DependentUpon>UniversityAdminAddHelper.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\UniversityAdminAudit.aspx.cs">
+      <DependentUpon>UniversityAdminAudit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\UniversityAdminAudit.aspx.designer.cs">
+      <DependentUpon>UniversityAdminAudit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\UniversityAdminHelperAudit.aspx.cs">
+      <DependentUpon>UniversityAdminHelperAudit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\UniversityAdmin\UniversityAdminHelperAudit.aspx.designer.cs">
+      <DependentUpon>UniversityAdminHelperAudit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\UniversityAdmin\UniversityAdminHome.aspx.cs">
       <DependentUpon>UniversityAdminHome.aspx</DependentUpon>
@@ -225,6 +325,14 @@
       <DependentUpon>SelectEvent.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Code\Services\QuizService.cs" />
+    <Compile Include="App_Code\Services\UniversityAuditLogger.cs" />
+    <Compile Include="ContactUs.aspx.cs">
+      <DependentUpon>ContactUs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ContactUs.aspx.designer.cs">
+      <DependentUpon>ContactUs.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Welcome_Page.aspx.cs">
       <DependentUpon>Welcome_Page.aspx</DependentUpon>

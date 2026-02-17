@@ -48,6 +48,19 @@
       padding:24px 16px 40px;
     }
 
+    .helper-note-input{
+  width:100%;
+  margin-top:6px;
+  margin-bottom:8px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  padding:8px 10px;
+  font-family:inherit;
+  font-size:0.85rem;
+  resize:vertical;
+}
+
+
     /* Hero */
     .cert-hero{
       border-radius:24px;
@@ -141,6 +154,36 @@
       font-weight:600;
       color:var(--fia-blue);
     }
+
+     .questioned-banner{
+      margin-bottom:18px;
+      border-radius:16px;
+      border:1px solid #fecaca;
+      background:#fef2f2;
+      padding:10px 12px;
+      font-size:0.9rem;
+      color:#991b1b;
+    }
+
+    .questioned-banner-title{
+      font-weight:600;
+      margin-bottom:4px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .questioned-banner-title .icon{
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      background:#fee2e2;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:0.75rem;
+    }
+
 
     /* Section headings */
     .section-block{
@@ -433,6 +476,26 @@
       z-index:1;
     }
 
+        /* Verified badge for modules */
+    .verified-check{
+      display:none;
+      margin-left:6px;
+      font-size:0.78rem;
+      padding:2px 6px;
+      border-radius:999px;
+      background:#ecfdf3;
+      color:#15803d;
+      border:1px solid #bbf7d0;
+      font-weight:600;
+    }
+
+    .verified-check.verified-show{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+    }
+
+
     /* Simple resource row styles */
     .resource-row{
       margin-top:8px;
@@ -512,6 +575,17 @@
         </div>
       </div>
 
+              <asp:PlaceHolder ID="QuestionedNoticePH" runat="server" Visible="false">
+        <div class="questioned-banner">
+          <div class="questioned-banner-title">
+            <span class="icon">!</span>
+            <span>Some certifications are on hold</span>
+          </div>
+          <asp:Literal ID="QuestionedNoticeText" runat="server" />
+        </div>
+      </asp:PlaceHolder>
+
+
       <!-- Certification status widget -->
       <div class="section-block">
         <h2 class="section-heading">Your module certifications</h2>
@@ -528,7 +602,13 @@
             <asp:Repeater ID="NotCertifiedRepeater" runat="server">
               <ItemTemplate>
                 <div class="module-pill">
-                  <div class="module-pill-title"><%# Eval("Title") %></div>
+                  <div class="module-pill-title">
+  <%# Eval("Title") %>
+  <span class="verified-check <%# Eval("VerificationCssClass") %>">
+    ✓ Verified
+  </span>
+</div>
+
                   <div class="module-pill-status <%# Eval("StatusCssClass") %>">
                     <%# Eval("StatusLabel") %>
                   </div>
@@ -547,7 +627,13 @@
             <asp:Repeater ID="EligibleRepeater" runat="server">
               <ItemTemplate>
                 <div class="module-pill">
-                  <div class="module-pill-title"><%# Eval("Title") %></div>
+                  <div class="module-pill-title">
+  <%# Eval("Title") %>
+  <span class="verified-check <%# Eval("VerificationCssClass") %>">
+    ✓ Verified
+  </span>
+</div>
+
                   <div class="module-pill-status <%# Eval("StatusCssClass") %>">
                     <%# Eval("StatusLabel") %>
                   </div>
@@ -566,7 +652,13 @@
             <asp:Repeater ID="CertifiedRepeater" runat="server">
               <ItemTemplate>
                 <div class="module-pill">
-                  <div class="module-pill-title"><%# Eval("Title") %></div>
+                  <div class="module-pill-title">
+  <%# Eval("Title") %>
+  <span class="verified-check <%# Eval("VerificationCssClass") %>">
+    ✓ Verified
+  </span>
+</div>
+
                   <div class="module-pill-status <%# Eval("StatusCssClass") %>">
                     <%# Eval("StatusLabel") %>
                   </div>
@@ -591,11 +683,17 @@
             <ItemTemplate>
               <div class="req-card">
                 <div class="req-header">
-                  <h3 class="req-title"><%# Eval("Title") %></h3>
-                  <span class="req-status-pill <%# Eval("HeaderStatusCss") %>">
-                    <%# Eval("HeaderStatusLabel") %>
-                  </span>
-                </div>
+  <h3 class="req-title">
+    <%# Eval("Title") %>
+    <span class="verified-check <%# Eval("VerificationCssClass") %>">
+      ✓ Verified
+    </span>
+  </h3>
+  <span class="req-status-pill <%# Eval("HeaderStatusCss") %>">
+    <%# Eval("HeaderStatusLabel") %>
+  </span>
+</div>
+
                 <p class="req-desc">
                   <%# Eval("Description") %>
                 </p>
@@ -631,6 +729,18 @@
                     <div class="req-item-status <%# Eval("TeachingStatusCss") %>">
                       <%# Eval("TeachingStatusText") %>
                     </div>
+                      <asp:PlaceHolder ID="TeachingOnHoldPH" runat="server"
+  Visible='<%# (bool)Eval("TeachingOnHold") %>'>
+  <div class="req-meta"
+       style="margin-top:4px; padding:6px 8px; border-radius:10px;
+              background:#fef2f2; color:#991b1b;">
+    <strong>Note from your admin (teaching):</strong>
+    <span><%# Eval("TeachingReviewNote") %></span>
+    <br />
+    <span>One teaching session for this microcourse is currently on hold and does not count toward certification.</span>
+  </div>
+</asp:PlaceHolder>
+
                   </div>
 
                   <!-- 1:1 help sessions requirement -->
@@ -647,6 +757,18 @@
                     <div class="req-item-status <%# Eval("HelpStatusCss") %>">
                       <%# Eval("HelpStatusText") %>
                     </div>
+                      <asp:PlaceHolder ID="HelpOnHoldPH" runat="server"
+  Visible='<%# (bool)Eval("HelpOnHold") %>'>
+  <div class="req-meta"
+       style="margin-top:4px; padding:6px 8px; border-radius:10px;
+              background:#fef2f2; color:#991b1b;">
+    <strong>Note from your admin (1:1 help):</strong>
+    <span><%# Eval("HelpReviewNote") %></span>
+    <br />
+    <span>One 1:1 help session for this microcourse is currently on hold and does not count toward certification.</span>
+  </div>
+</asp:PlaceHolder>
+
                   </div>
 
                   <!-- Expiry info -->
@@ -679,13 +801,51 @@
                   </div>
                 </asp:PlaceHolder>
 
-                <asp:Button
-                  ID="BtnConfirmResources"
-                  runat="server"
-                  CssClass="resource-confirm-btn"
-                  Text="I’ve reviewed the resources and passed the quiz"
-                  CommandName="confirmResources"
-                  CommandArgument='<%# Eval("CourseId") %>' />
+                                <!-- Normal confirm button (hidden when this module is on hold) -->
+                <asp:PlaceHolder ID="ConfirmResourcesPH" runat="server" Visible='<%# (bool)Eval("ShowConfirmButton") %>'>
+                  <asp:Button
+                    ID="BtnConfirmResources"
+                    runat="server"
+                    CssClass="resource-confirm-btn"
+                    Text="I’ve reviewed the resources and passed the quiz"
+                    CommandName="confirmResources"
+                    CommandArgument='<%# Eval("CourseId") %>' />
+                </asp:PlaceHolder>
+
+                  <!-- Admin's reason when this module is questioned -->
+<asp:PlaceHolder ID="AdminNotePH" runat="server"
+    Visible='<%# (bool)Eval("ShowAdminNoteForHelper") %>'>
+  <div class="req-meta"
+       style="margin-top:6px; padding:6px 8px; border-radius:10px;
+              background:#fef2f2; color:#991b1b;">
+    <strong>Your admin’s note:</strong>
+    <span><%# Eval("AdminNote") %></span>
+  </div>
+</asp:PlaceHolder>
+
+
+               <!-- On-hold state: allow the helper to re-submit for review -->
+<asp:PlaceHolder ID="ResubmitPH" runat="server" Visible='<%# (bool)Eval("ShowResubmitButton") %>'>
+  <asp:TextBox
+    ID="HelperNoteText"
+    runat="server"
+    TextMode="MultiLine"
+    Rows="3"
+    CssClass="helper-note-input"
+    Placeholder="Share a quick note for your admin (for example, what you fixed or double-checked)."
+    Text='<%# Eval("HelperNote") %>'>
+  </asp:TextBox>
+
+  <asp:Button
+    ID="BtnResubmit"
+    runat="server"
+    CssClass="resource-confirm-btn"
+    Text="Resubmit for verification"
+    CommandName="resubmitVerification"
+    CommandArgument='<%# Eval("CourseId") %>' />
+</asp:PlaceHolder>
+
+
 
                 <!-- IMPORTANT: req-meta stays inside .req-card -->
                 <div class="req-meta">
@@ -701,8 +861,3 @@
   </form>
 </body>
 </html>
-
-
-
-
-

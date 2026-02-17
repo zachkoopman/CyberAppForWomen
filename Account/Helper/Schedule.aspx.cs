@@ -5,6 +5,8 @@ using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
+using CyberApp_FIA.Services;
+
 
 namespace CyberApp_FIA.Helper
 {
@@ -22,8 +24,19 @@ namespace CyberApp_FIA.Helper
         private string EnrollmentsXmlPath => Server.MapPath("~/App_Data/enrollments.xml");
         private string HelperCheckinsXmlPath => Server.MapPath("~/App_Data/helperCheckins.xml");
 
+        // New: helper progress + notes storage
+        private string HelperProgressXmlPath => Server.MapPath("~/App_Data/helperProgress.xml");
+        private string HelperNotesXmlPath => Server.MapPath("~/App_Data/helperNotes.xml");
+
         private static readonly object HelperCheckinsLock = new object();
         private static readonly TimeSpan HelperCheckinUndoWindow = TimeSpan.FromMinutes(5);
+
+        // New: locks + window for delivered-session undo
+        private static readonly object HelperProgressLock = new object();
+        private static readonly object HelperNotesLock = new object();
+        private static readonly TimeSpan DeliverUndoWindow = TimeSpan.FromMinutes(5);
+
+        private const string DeliverHistorySessionKey = "DeliverHistory";
 
         /// <summary>
         /// Small DTO for binding schedule cards.
@@ -54,20 +67,48 @@ namespace CyberApp_FIA.Helper
             public bool Invited { get; set; } // true if admitted == true
         }
 
+        /// <summary>
+        /// DTO for recent delivered-session history rows.
+        /// </summary>
+        private sealed class DeliverHistoryRow
+        {
+            public string CourseTitle { get; set; }
+            public string WhenLabel { get; set; }
+            public string Snapshot { get; set; }
+            public long Ticks { get; set; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Always enforce Helper role on load
+            if (!EnsureHelperRole(out var userId))
+            {
+                return;
+            }
+
             if (!IsPostBack)
             {
-                // Enforce Helper role and bind their sessions.
-                if (!EnsureHelperRole(out var userId))
+                // Only bind dropdown + sessions the first time
+                try
                 {
-                    return; // EnsureHelperRole already redirected
+                    BindDeliverableCourses(userId);
+                }
+                catch
+                {
+                    // Keep schedule usable even if helperProgress.xml has issues
                 }
 
-                // Pull the helper's identity keys (email / full name / first name)
                 GetHelperIdentity(userId, out var email, out var fullName, out var firstName);
-
                 BindSessions(email, fullName, firstName, userId);
+
+                try
+                {
+                    BindDeliverHistory(userId);
+                }
+                catch
+                {
+                    // History is best-effort; never block page load.
+                }
             }
         }
 
@@ -135,6 +176,167 @@ namespace CyberApp_FIA.Helper
             {
                 fullName = (Session["DisplayName"] as string ?? "").Trim();
             }
+        }
+
+        /// <summary>
+        /// Binds the dropdown of courses where this helper is currently
+        /// eligible or certified, based on helperProgress.xml.
+        /// </summary>
+        private void BindDeliverableCourses(string helperId)
+        {
+            if (DeliverCourseDropDown == null)
+            {
+                return;
+            }
+
+            DeliverCourseDropDown.Items.Clear();
+            DeliverCourseDropDown.Items.Add(new ListItem("Select a course…", ""));
+
+            if (!File.Exists(HelperProgressXmlPath))
+            {
+                return;
+            }
+
+            var doc = new XmlDocument();
+            doc.Load(HelperProgressXmlPath);
+
+            // We don't assume a specific root; just search for helper by id.
+            var helperNode = doc.SelectSingleNode($"//helper[@id='{helperId}']") as XmlElement;
+            if (helperNode == null)
+            {
+                return;
+            }
+
+            foreach (XmlElement courseEl in helperNode.SelectNodes("course"))
+            {
+                var id = courseEl.GetAttribute("id");
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    continue;
+                }
+
+                var titleNode = courseEl["title"];
+                var title = titleNode != null ? (titleNode.InnerText ?? "").Trim() : id;
+
+                var isEligibleText = courseEl["isEligible"]?.InnerText ?? "";
+                var isCertifiedText = courseEl["isCertified"]?.InnerText ?? "";
+
+                bool isEligible = string.Equals(isEligibleText.Trim(), "true", StringComparison.OrdinalIgnoreCase);
+                bool isCertified = string.Equals(isCertifiedText.Trim(), "true", StringComparison.OrdinalIgnoreCase);
+
+                if (isEligible || isCertified)
+                {
+                    DeliverCourseDropDown.Items.Add(new ListItem(title, id));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Binds the "recent delivered sessions" history list,
+        /// showing up to the last three logs for this helper.
+        /// </summary>
+        private void BindDeliverHistory(string helperId)
+        {
+            if (DeliverHistoryRepeater == null || DeliverHistoryEmpty == null)
+            {
+                return;
+            }
+
+            var rows = new List<DeliverHistoryRow>();
+
+            var list = Session[DeliverHistorySessionKey] as List<string>;
+            if (list != null && !string.IsNullOrWhiteSpace(helperId))
+            {
+                XmlDocument progressDoc = null;
+                try
+                {
+                    if (File.Exists(HelperProgressXmlPath))
+                    {
+                        progressDoc = new XmlDocument();
+                        progressDoc.Load(HelperProgressXmlPath);
+                    }
+                }
+                catch
+                {
+                    progressDoc = null;
+                }
+
+                foreach (var snap in list)
+                {
+                    if (string.IsNullOrWhiteSpace(snap))
+                    {
+                        continue;
+                    }
+
+                    var parts = snap.Split('|');
+                    if (parts.Length != 5)
+                    {
+                        continue;
+                    }
+
+                    var snapHelperId = parts[0];
+                    if (!string.Equals(helperId, snapHelperId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    var courseId = parts[1];
+                    if (!long.TryParse(parts[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out var ticks))
+                    {
+                        continue;
+                    }
+
+                    string title = courseId;
+
+                    if (progressDoc != null)
+                    {
+                        try
+                        {
+                            var helperNode = progressDoc.SelectSingleNode($"//helper[@id='{helperId}']") as XmlElement;
+                            if (helperNode != null)
+                            {
+                                var courseNode = helperNode.SelectSingleNode($"course[@id='{courseId}']") as XmlElement;
+                                if (courseNode != null)
+                                {
+                                    var tNode = courseNode["title"];
+                                    var text = tNode != null ? (tNode.InnerText ?? "").Trim() : null;
+                                    if (!string.IsNullOrWhiteSpace(text))
+                                    {
+                                        title = text;
+                                    }
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // Best-effort; fall back to courseId if needed.
+                        }
+                    }
+
+                    var local = new DateTime(ticks, DateTimeKind.Utc).ToLocalTime();
+                    var whenLabel = local.ToString("MMM d • h:mm tt", CultureInfo.CurrentCulture);
+
+                    rows.Add(new DeliverHistoryRow
+                    {
+                        CourseTitle = title,
+                        WhenLabel = whenLabel,
+                        Snapshot = snap,
+                        Ticks = ticks
+                    });
+                }
+            }
+
+            // Show the most recent three, newest first.
+            rows.Sort((a, b) => b.Ticks.CompareTo(a.Ticks));
+            if (rows.Count > 3)
+            {
+                rows = rows.GetRange(0, 3);
+            }
+
+            DeliverHistoryRepeater.DataSource = rows;
+            DeliverHistoryRepeater.DataBind();
+
+            DeliverHistoryEmpty.Visible = rows.Count == 0;
         }
 
         /// <summary>
@@ -321,6 +523,8 @@ namespace CyberApp_FIA.Helper
             return false;
         }
 
+
+
         /// <summary>
         /// Parses an ISO-8601 "o" format string that is expected to be UTC,
         /// returning a DateTime in UTC on success.
@@ -360,6 +564,10 @@ namespace CyberApp_FIA.Helper
                 return;
             }
 
+            // For audit logging, resolve the microcourse title (best-effort).
+            var courseTitleForLog = GetCourseTitleForSession(eventId, sessionId);
+
+
             string email, fullName, firstName;
             GetHelperIdentity(helperId, out email, out fullName, out firstName);
 
@@ -375,6 +583,25 @@ namespace CyberApp_FIA.Helper
                 {
                     AdmitParticipants(eventId, sessionId);
 
+                    try
+                    {
+                        var details = string.Format(
+                            "Helper admitted enrolled participants and sent the room link for session \"{0}\" (eventId={1}, sessionId={2}).",
+                            courseTitleForLog,
+                            eventId,
+                            sessionId);
+
+                        UniversityAuditLogger.AppendForCurrentUser(
+                            this,
+                            "Helper Admit Participants",
+                            details);
+                    }
+                    catch
+                    {
+                        // Audit log is best-effort; do not block UI.
+                    }
+
+
                     // FIA toast instead of browser alert
                     ClientScript.RegisterStartupScript(
                         GetType(),
@@ -386,6 +613,24 @@ namespace CyberApp_FIA.Helper
                 {
                     RecordHelperCheckin(helperId, helperName, eventId, sessionId);
 
+                    try
+                    {
+                        var details = string.Format(
+                            "Helper checked in for session \"{0}\" (eventId={1}, sessionId={2}).",
+                            courseTitleForLog,
+                            eventId,
+                            sessionId);
+
+                        UniversityAuditLogger.AppendForCurrentUser(
+                            this,
+                            "Helper Check In",
+                            details);
+                    }
+                    catch
+                    {
+                    }
+
+
                     ClientScript.RegisterStartupScript(
                         GetType(),
                         "HelperCheckin",
@@ -396,6 +641,23 @@ namespace CyberApp_FIA.Helper
                 {
                     if (TryUndoHelperCheckin(helperId, eventId, sessionId))
                     {
+                        try
+                        {
+                            var details = string.Format(
+                                "Helper undid their check-in for session \"{0}\" (eventId={1}, sessionId={2}).",
+                                courseTitleForLog,
+                                eventId,
+                                sessionId);
+
+                            UniversityAuditLogger.AppendForCurrentUser(
+                                this,
+                                "Helper Check In (Undo)",
+                                details);
+                        }
+                        catch
+                        {
+                        }
+
                         ClientScript.RegisterStartupScript(
                             GetType(),
                             "UndoHelperCheckin",
@@ -745,6 +1007,556 @@ namespace CyberApp_FIA.Helper
             }
 
             return "Participant";
+        }
+
+        /// <summary>
+        /// Best-effort lookup of the microcourse title for a given event/session.
+        /// Used only for audit logging; never blocks helper flows.
+        /// </summary>
+        private string GetCourseTitleForSession(string eventId, string sessionId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(eventId) || string.IsNullOrWhiteSpace(sessionId))
+                {
+                    return "(session)";
+                }
+
+                if (!File.Exists(EventSessionsXmlPath))
+                {
+                    return "(session)";
+                }
+
+                var doc = new XmlDocument();
+                doc.Load(EventSessionsXmlPath);
+
+                var ses = doc.SelectSingleNode(
+                    $"/eventSessions/session[@eventId='{eventId}' and @id='{sessionId}']") as XmlElement;
+                if (ses == null)
+                {
+                    return "(session)";
+                }
+
+                var courseId = (ses["courseId"]?.InnerText ?? string.Empty).Trim();
+                if (string.IsNullOrWhiteSpace(courseId))
+                {
+                    return "(session)";
+                }
+
+                if (!File.Exists(MicrocoursesXmlPath))
+                {
+                    return courseId;
+                }
+
+                var mdoc = new XmlDocument();
+                mdoc.Load(MicrocoursesXmlPath);
+
+                var courseEl = mdoc.SelectSingleNode(
+                    $"/microcourses/course[@id='{courseId}']") as XmlElement;
+                var title = courseEl?["title"]?.InnerText;
+
+                title = (title ?? string.Empty).Trim();
+                return string.IsNullOrWhiteSpace(title) ? courseId : title;
+            }
+            catch
+            {
+                // Audit logging should never break main helper flows.
+                return "(session)";
+            }
+        }
+
+
+
+
+        // ---------- New: helper progress + notes for delivered sessions ----------
+
+        private XmlDocument LoadHelperProgressDoc()
+        {
+            var doc = new XmlDocument();
+
+            if (File.Exists(HelperProgressXmlPath))
+            {
+                doc.Load(HelperProgressXmlPath);
+                if (doc.DocumentElement == null)
+                {
+                    var rootMissing = doc.CreateElement("helperProgress");
+                    doc.AppendChild(rootMissing);
+                }
+            }
+            else
+            {
+                var root = doc.CreateElement("helperProgress");
+                doc.AppendChild(root);
+            }
+
+            return doc;
+        }
+
+        private void SaveHelperProgressDoc(XmlDocument doc)
+        {
+            lock (HelperProgressLock)
+            {
+                doc.Save(HelperProgressXmlPath);
+            }
+        }
+
+        private XmlDocument LoadHelperNotesDoc()
+        {
+            var doc = new XmlDocument();
+
+            if (File.Exists(HelperNotesXmlPath))
+            {
+                doc.Load(HelperNotesXmlPath);
+                if (doc.DocumentElement == null)
+                {
+                    var rootMissing = doc.CreateElement("helperNotes");
+                    doc.AppendChild(rootMissing);
+                }
+            }
+            else
+            {
+                var root = doc.CreateElement("helperNotes");
+                doc.AppendChild(root);
+            }
+
+            return doc;
+        }
+
+        private void SaveHelperNotesDoc(XmlDocument doc)
+        {
+            lock (HelperNotesLock)
+            {
+                doc.Save(HelperNotesXmlPath);
+            }
+        }
+
+        private static int ParseIntSafe(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                return 0;
+            }
+
+            int val;
+            return int.TryParse(raw.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out val)
+                ? val
+                : 0;
+        }
+
+        /// <summary>
+        /// Returns the in-session storage list for delivered-session snapshots.
+        /// Each item is a string: helperId|courseId|prevCourseTeaching|prevTotalTeaching|ticks.
+        /// </summary>
+        private List<string> GetDeliverHistoryStorage()
+        {
+            var list = Session[DeliverHistorySessionKey] as List<string>;
+            if (list == null)
+            {
+                list = new List<string>();
+                Session[DeliverHistorySessionKey] = list;
+            }
+
+            return list;
+        }
+
+        private void AddDeliverSnapshotToHistory(string snapshot)
+        {
+            if (string.IsNullOrWhiteSpace(snapshot))
+            {
+                return;
+            }
+
+            var list = GetDeliverHistoryStorage();
+            list.Add(snapshot);
+
+            // Keep a modest cap so the session list does not grow without bound.
+            if (list.Count > 20)
+            {
+                list.RemoveAt(0);
+            }
+        }
+
+        private void RemoveDeliverSnapshotFromHistory(string snapshot)
+        {
+            if (string.IsNullOrWhiteSpace(snapshot))
+            {
+                return;
+            }
+
+            var list = Session[DeliverHistorySessionKey] as List<string>;
+            if (list == null)
+            {
+                return;
+            }
+
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                if (string.Equals(list[i], snapshot, StringComparison.Ordinal))
+                {
+                    list.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Increments teachingSessions for the selected course plus totalTeachingSessions
+        /// for this helper in helperProgress.xml, and records an undo snapshot.
+        /// </summary>
+        private bool TryIncrementDeliveredSession(string helperId, string courseId, out string courseTitle)
+        {
+            courseTitle = null;
+
+            if (string.IsNullOrWhiteSpace(helperId) || string.IsNullOrWhiteSpace(courseId))
+            {
+                return false;
+            }
+
+            var doc = LoadHelperProgressDoc();
+            var helperNode = doc.SelectSingleNode($"//helper[@id='{helperId}']") as XmlElement;
+            if (helperNode == null)
+            {
+                return false;
+            }
+
+            var courseNode = helperNode.SelectSingleNode($"course[@id='{courseId}']") as XmlElement;
+            if (courseNode == null)
+            {
+                return false;
+            }
+
+            courseTitle = (courseNode["title"]?.InnerText ?? "").Trim();
+
+            int prevCourseTeaching = ParseIntSafe(courseNode["teachingSessions"]?.InnerText);
+
+            var totalsNode = helperNode.SelectSingleNode("totals") as XmlElement;
+            int prevTotalTeaching = 0;
+            if (totalsNode != null)
+            {
+                prevTotalTeaching = ParseIntSafe(totalsNode["totalTeachingSessions"]?.InnerText);
+            }
+
+            int newCourseTeaching = prevCourseTeaching + 1;
+            int newTotalTeaching = prevTotalTeaching + 1;
+
+            var teachingEl = courseNode["teachingSessions"];
+            if (teachingEl == null)
+            {
+                teachingEl = doc.CreateElement("teachingSessions");
+                courseNode.AppendChild(teachingEl);
+            }
+            teachingEl.InnerText = newCourseTeaching.ToString(CultureInfo.InvariantCulture);
+
+            if (totalsNode == null)
+            {
+                totalsNode = doc.CreateElement("totals");
+                helperNode.AppendChild(totalsNode);
+            }
+
+            var totalTeachEl = totalsNode["totalTeachingSessions"];
+            if (totalTeachEl == null)
+            {
+                totalTeachEl = doc.CreateElement("totalTeachingSessions");
+                totalsNode.AppendChild(totalTeachEl);
+            }
+            totalTeachEl.InnerText = newTotalTeaching.ToString(CultureInfo.InvariantCulture);
+
+            SaveHelperProgressDoc(doc);
+
+            // Store undo snapshot in session: helperId|courseId|prevCourseTeaching|prevTotalTeaching|ticks
+            var nowTicks = DateTime.UtcNow.Ticks;
+            var snapshot = string.Join("|",
+                helperId ?? string.Empty,
+                courseId ?? string.Empty,
+                prevCourseTeaching.ToString(CultureInfo.InvariantCulture),
+                prevTotalTeaching.ToString(CultureInfo.InvariantCulture),
+                nowTicks.ToString(CultureInfo.InvariantCulture));
+
+            AddDeliverSnapshotToHistory(snapshot);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Rolls back a delivered-session increment for this helper based on a snapshot string,
+        /// if within the undo window.
+        /// </summary>
+        private bool TryUndoDeliveredSession(string helperId, string snapshot, out string courseTitle)
+        {
+            courseTitle = null;
+
+            if (string.IsNullOrWhiteSpace(helperId) || string.IsNullOrWhiteSpace(snapshot))
+            {
+                return false;
+            }
+
+            var parts = snapshot.Split('|');
+            if (parts.Length != 5)
+            {
+                return false;
+            }
+
+            var snapHelperId = parts[0];
+            var courseId = parts[1];
+
+            if (!string.Equals(helperId, snapHelperId, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (!int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out var prevCourseTeaching))
+            {
+                return false;
+            }
+
+            if (!int.TryParse(parts[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out var prevTotalTeaching))
+            {
+                return false;
+            }
+
+            if (!long.TryParse(parts[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out var ticks))
+            {
+                return false;
+            }
+
+            var savedUtc = new DateTime(ticks, DateTimeKind.Utc);
+            var age = DateTime.UtcNow - savedUtc;
+            if (age > DeliverUndoWindow)
+            {
+                // Undo window expired.
+                return false;
+            }
+
+            var doc = LoadHelperProgressDoc();
+            var helperNode = doc.SelectSingleNode($"//helper[@id='{helperId}']") as XmlElement;
+            if (helperNode == null)
+            {
+                return false;
+            }
+
+            var courseNode = helperNode.SelectSingleNode($"course[@id='{courseId}']") as XmlElement;
+            if (courseNode == null)
+            {
+                return false;
+            }
+
+            courseTitle = (courseNode["title"]?.InnerText ?? "").Trim();
+
+            var teachingEl = courseNode["teachingSessions"];
+            if (teachingEl == null)
+            {
+                teachingEl = doc.CreateElement("teachingSessions");
+                courseNode.AppendChild(teachingEl);
+            }
+            teachingEl.InnerText = prevCourseTeaching.ToString(CultureInfo.InvariantCulture);
+
+            var totalsNode = helperNode.SelectSingleNode("totals") as XmlElement;
+            if (totalsNode == null)
+            {
+                totalsNode = doc.CreateElement("totals");
+                helperNode.AppendChild(totalsNode);
+            }
+
+            var totalTeachEl = totalsNode["totalTeachingSessions"];
+            if (totalTeachEl == null)
+            {
+                totalTeachEl = doc.CreateElement("totalTeachingSessions");
+                totalsNode.AppendChild(totalTeachEl);
+            }
+            totalTeachEl.InnerText = prevTotalTeaching.ToString(CultureInfo.InvariantCulture);
+
+            SaveHelperProgressDoc(doc);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Append a helper note for this delivered session into helperNotes.xml.
+        /// </summary>
+        private void AppendHelperNote(string helperId, string courseId, string courseTitle, string notes)
+        {
+            var doc = LoadHelperNotesDoc();
+            var root = doc.DocumentElement;
+            if (root == null)
+            {
+                root = doc.CreateElement("helperNotes");
+                doc.AppendChild(root);
+            }
+
+            var noteEl = doc.CreateElement("note");
+            noteEl.SetAttribute("helperId", helperId ?? string.Empty);
+            noteEl.SetAttribute("courseId", courseId ?? string.Empty);
+            noteEl.SetAttribute("courseTitle", courseTitle ?? string.Empty);
+            noteEl.SetAttribute("tsUtc", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
+
+            var textEl = doc.CreateElement("text");
+            textEl.InnerText = notes ?? string.Empty;
+            noteEl.AppendChild(textEl);
+
+            root.AppendChild(noteEl);
+
+            SaveHelperNotesDoc(doc);
+        }
+
+        // ---------- New: event handlers for mark-delivered + undo ----------
+
+        protected void DeliverSubmitButton_Click(object sender, EventArgs e)
+        {
+            if (!EnsureHelperRole(out var helperId))
+            {
+                return;
+            }
+
+            var selectedCourseId = DeliverCourseDropDown.SelectedValue;
+            if (string.IsNullOrWhiteSpace(selectedCourseId))
+            {
+                ClientScript.RegisterStartupScript(
+                    GetType(),
+                    "DeliverValidation",
+                    "showFiaToast('Please choose a course before logging a delivered session.');",
+                    true);
+                return;
+            }
+
+            string courseTitle;
+            if (!TryIncrementDeliveredSession(helperId, selectedCourseId, out courseTitle))
+            {
+                ClientScript.RegisterStartupScript(
+                    GetType(),
+                    "DeliverError",
+                    "showFiaToast('We could not log this delivered session. Please try again.');",
+                    true);
+                return;
+            }
+
+            var notesText = DeliverNotesTextBox.Text ?? string.Empty;
+            try
+            {
+                AppendHelperNote(helperId, selectedCourseId, courseTitle, notesText);
+            }
+            catch
+            {
+                // Notes are best-effort; do not block certification progress.
+            }
+
+            try
+            {
+                var details = string.Format(
+                    "Helper logged a delivered teaching session for \"{0}\" (courseId={1}). A private helper note was also saved for certification review.",
+                    courseTitle,
+                    selectedCourseId);
+
+                UniversityAuditLogger.AppendForCurrentUser(
+                    this,
+                    "Helper Delivered Session",
+                    details);
+            }
+            catch
+            {
+                // Never block helper progress or notes if audit logging fails.
+            }
+
+
+            // Clear notes box after successful log.
+            DeliverNotesTextBox.Text = string.Empty;
+
+            // Refresh dropdown options and recent-history panel after progress change.
+            try
+            {
+                BindDeliverableCourses(helperId);
+            }
+            catch
+            {
+                // ignore
+            }
+
+            try
+            {
+                BindDeliverHistory(helperId);
+            }
+            catch
+            {
+                // ignore
+            }
+
+            ClientScript.RegisterStartupScript(
+                GetType(),
+                "DeliverLogged",
+                "showFiaToast('Session marked as delivered.');",
+                true);
+        }
+
+        protected void DeliverHistoryRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (!string.Equals(e.CommandName, "undoDeliver", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            if (!EnsureHelperRole(out var helperId))
+            {
+                return;
+            }
+
+            var snapshot = Convert.ToString(e.CommandArgument ?? string.Empty);
+            if (string.IsNullOrWhiteSpace(snapshot))
+            {
+                return;
+            }
+
+            if (TryUndoDeliveredSession(helperId, snapshot, out var courseTitle))
+            {
+                // Remove from in-memory history and refresh panels.
+                RemoveDeliverSnapshotFromHistory(snapshot);
+
+                try
+                {
+                    BindDeliverableCourses(helperId);
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                try
+                {
+                    BindDeliverHistory(helperId);
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                try
+                {
+                    var details = string.Format(
+                        "Helper undid a delivered teaching session log for \"{0}\".",
+                        courseTitle);
+
+                    UniversityAuditLogger.AppendForCurrentUser(
+                        this,
+                        "Helper Delivered Session (Undo)",
+                        details);
+                }
+                catch
+                {
+                }
+
+
+                ClientScript.RegisterStartupScript(
+                    GetType(),
+                    "DeliverUndoOk",
+                    "showFiaToast('Your delivered session log has been undone.');",
+                    true);
+            }
+            else
+            {
+                ClientScript.RegisterStartupScript(
+                    GetType(),
+                    "DeliverUndoFail",
+                    "showFiaToast('Undo is no longer available for that session log.');",
+                    true);
+            }
         }
     }
 }

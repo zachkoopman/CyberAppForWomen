@@ -1,0 +1,15 @@
+<helperMessages>
+  <conversation id="fb1e89f638e9415eb4fec2b7362b0156" participantId="2d51448fbd2544ce8e0a0543b135c885" participantName="new" helperId="429c338c0567409e8bd5945d28a30bce" helperName="Alex" helperEmail="A@gmail.com" topic="2FA" createdOn="2025-11-18T03:40:51.2536975Z" lastUpdated="2025-11-18T04:35:13.4543263Z">
+    <message from="participant" senderName="new" ts="2025-11-18T03:40:51.2536975Z">Can we meet soon.</message>
+    <message from="Helper" sentOn="2025-11-18T04:35:13.4543263Z">Sure.</message>
+  </conversation>
+  <conversation id="f4ed296a005b4254ae9915eda790defe" participantId="2d51448fbd2544ce8e0a0543b135c885" participantName="new" helperId="429c338c0567409e8bd5945d28a30bce" helperName="Alex" helperEmail="A@gmail.com" topic="Hello" createdOn="2025-11-28T00:50:12.2742805Z" lastUpdated="2025-11-28T03:08:18.8364528Z">
+    <message from="participant" senderName="new" ts="2025-11-28T00:50:12.2742805Z">I need help ASAP!</message>
+    <message from="participant" senderName="new" ts="2025-11-28T00:50:22.4749581Z">I am free Thursday at 9:00 AM</message>
+    <message from="Helper" sentOn="2025-11-28T03:08:18.8364528Z">Yes we can meet then.</message>
+  </conversation>
+  <conversation id="430a834b4ae042aa917721fb4e95c2ae" participantId="bf47b8cadf5b44e9a8b15bb95c1bbb36" participantName="new" helperId="429d338c0568409e8bd5945d28a30bce" helperName="Mandy" helperEmail="h@gmail.com" topic="help test" createdOn="2025-11-28T03:15:58.9276644Z" lastUpdated="2025-11-28T03:16:20.5562046Z">
+    <message from="participant" senderName="new" ts="2025-11-28T03:15:58.9276644Z">test</message>
+    <message from="Helper" sentOn="2025-11-28T03:16:20.5562046Z">test reply</message>
+  </conversation>
+</helperMessages>

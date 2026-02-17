@@ -319,18 +319,6 @@
       <!-- Helper workspace content -->
       <div class="helper-main">
 
-        <!-- Existing intro card -->
-        <div class="helper-card">
-          <h2 class="helper-card-title">
-            Your Helper Workspace is wired up
-          </h2>
-          <p class="helper-card-body">
-            This is a starter view to confirm Helper logins, identity, and branding.
-            In the next sprints, this space will surface your upcoming sessions, waitlists,
-            1:1 Help Logs, and certification progress so everything you need is just one click away.
-          </p>
-        </div>
-
         <!-- Certification progress card -->
         <div class="helper-card">
           <h2 class="helper-card-title">
@@ -348,14 +336,10 @@
               <span class="icon">🛡️</span>
               <span>Open certification progress</span>
             </a>
-            <a href="<%: ResolveUrl("~/Account/Participant/Home.aspx") %>" class="helper-link-btn helper-link-secondary">
-              <span class="icon">▶</span>
-              <span>Preview participant microcourses</span>
-            </a>
           </div>
         </div>
 
-        <!-- NEW: Schedule card -->
+        <!-- Schedule card -->
         <div class="helper-card">
           <h2 class="helper-card-title">
             Your upcoming sessions
@@ -374,26 +358,25 @@
           </div>
         </div>
 
-                <!-- NEW: 1:1 Help card -->
-      <div class="helper-card">
-        <h2 class="helper-card-title">
-          1:1 Help Sessions
-          <span class="badge-mini">Support</span>
-        </h2>
-        <p class="helper-card-body">
-          One-on-one help sessions are where you sit with a participant to walk through
-          real tasks like setting up two-factor authentication, updating privacy settings,
-          or installing password managers. This view shows all of the participants who are
-          assigned to you so you always know who you are supporting.
-        </p>
-        <div class="helper-card-actions">
-          <a href="<%: ResolveUrl("~/Account/Helper/OneOnOneHelp.aspx") %>" class="helper-link-btn">
-            <span class="icon">🤝</span>
-            <span>See assigned participants</span>
-          </a>
+        <!-- 1:1 Help card -->
+        <div class="helper-card">
+          <h2 class="helper-card-title">
+            1:1 Help Sessions
+            <span class="badge-mini">Support</span>
+          </h2>
+          <p class="helper-card-body">
+            One-on-one help sessions are where you sit with a participant to walk through
+            real tasks like setting up two-factor authentication, updating privacy settings,
+            or installing password managers. This view shows all of the participants who are
+            assigned to you so you always know who you are supporting.
+          </p>
+          <div class="helper-card-actions">
+            <a href="<%: ResolveUrl("~/Account/Helper/OneOnOneHelp.aspx") %>" class="helper-link-btn">
+              <span class="icon">🤝</span>
+              <span>See assigned participants</span>
+            </a>
+          </div>
         </div>
-      </div>
-
 
       </div>
 

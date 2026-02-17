@@ -99,15 +99,61 @@
   </session>
   <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="ec4ab3b5356e414196dc1c9a8843bc45">
     <enrolled>
-      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-14T12:29:32.8047599Z" admitted="true" admittedAt="2025-11-15T06:56:52.0241524Z" />
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-14T12:29:32.8047599Z" admitted="true" admittedAt="2025-11-18T06:09:52.0901253Z" />
     </enrolled>
     <waitlist />
   </session>
   <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="eb03ffa34daa4716ad1d95cdb0e42b01">
     <enrolled>
-      <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36" ts="2025-11-15T06:56:09.4676760Z" />
+      <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36" ts="2025-11-15T06:56:09.4676760Z" admitted="true" admittedAt="2025-11-18T06:09:05.0425555Z" />
     </enrolled>
     <waitlist>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-28T00:49:56.1359088Z" />
     </waitlist>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="e3a15fb51c5e4f2d81f944c4a09ca9da">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="24eeba089b0241e59510664a6e1aed2e">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="1299e4769fd94473aa05db2987b18bb1">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="ed8ba734f2204141902c669be6c87371">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-28T00:49:52.1089419Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="08228e2e60ee45ab99bf5ab72691aee7">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-11-28T03:10:44.1752582Z" admitted="true" admittedAt="2025-11-28T03:11:06.2293102Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="c8ac3781090240b4949fa4846c6a8a4c" id="0416b2c650374aceb0afd784453b83e3">
+    <enrolled>
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="c8ac3781090240b4949fa4846c6a8a4c" id="d1013e665527409fa6a1fe44f902bad5">
+    <enrolled>
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2025-12-02T07:42:35.6479469Z" />
+    </enrolled>
+    <waitlist />
+  </session>
+  <session eventId="fb3b012d5cc6418bb7b1a09438fb7ef7" id="9becc71c453e461da7a03f70f1582299">
+    <enrolled>
+      <user id="24ff68a5f72d4b61873db9045034bede" ts="2026-01-21T22:53:04.9342348Z" admitted="true" admittedAt="2026-01-29T09:37:22.7925651Z" />
+      <user id="2d51448fbd2544ce8e0a0543b135c885" ts="2026-01-29T09:36:32.5724743Z" admitted="true" admittedAt="2026-01-29T09:37:22.7925651Z" />
+    </enrolled>
+    <waitlist />
   </session>
 </enrollments>

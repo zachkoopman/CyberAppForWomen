@@ -8,231 +8,652 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Poppins:wght@600&display=swap" rel="stylesheet" />
 
   <style>
-    /* ========= Design tokens (brand colors, text colors, focus ring) ========= */
-    :root{--fia-pink:#f06aa9;--fia-blue:#2a99db;--fia-teal:#45c3b3;--ink:#1c1c1c;--muted:#6b7280;--ring:rgba(42,153,219,.25)}
+    :root{
+      --fia-pink:#f06aa9;
+      --fia-blue:#2a99db;
+      --fia-teal:#45c3b3;
+      --ink:#1c1c1c;
+      --muted:#6b7280;
+      --bg:#f3f5fb;
+      --card-bg:#ffffff;
+      --card-border:#e2e8f0;
+      --ring:rgba(42,153,219,.25);
+    }
 
-    /* ========= Base layout ========= */
-    *{box-sizing:border-box} html,body{height:100%}
+    *{
+      box-sizing:border-box;
+    }
+
+    html,body{
+      height:100%;
+    }
+
     body{
       margin:0;
-      font-family:Lato,Arial,sans-serif;
-      background:linear-gradient(135deg,#fff,#f9fbff);
-      color:var(--ink)
+      font-family:Lato, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0 0, rgba(240,106,169,0.10), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(42,153,219,0.10), transparent 55%),
+        var(--bg);
+      color:var(--ink);
     }
 
-    /* ========= Page wrapper ========= */
     .wrap{
       min-height:100vh;
-      padding:24px;
-      max-width:1100px;
-      margin:0 auto
+      padding:24px 16px 40px;
+      max-width:1120px;
+      margin:0 auto;
     }
 
-    /* ========= Header bar (brand + welcome + sign-out) ========= */
-    .header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
-    .brand{display:flex;align-items:center;gap:10px}
-    .badge{
-      width:42px;height:42px;border-radius:12px;
+    /* ---------- Hero header ---------- */
+    .page-header{
+      border-radius:24px;
+      padding:20px 22px 22px;
+      background:
+        radial-gradient(circle at 0 0, rgba(240,106,169,0.15), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(69,195,179,0.20), transparent 55%),
+        linear-gradient(120deg,#fbfbff,#f3f7ff);
+      border:1px solid rgba(226,232,240,0.9);
+      box-shadow:0 18px 40px rgba(15,23,42,0.10);
+      margin-bottom:24px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:18px;
+    }
+
+    .page-header-main{
+      max-width:620px;
+    }
+
+    .page-eyebrow{
+      font-size:0.8rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:#6b7280;
+      font-weight:700;
+      margin-bottom:4px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .page-eyebrow-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:22px;
+      height:22px;
+      border-radius:999px;
       background:linear-gradient(135deg,var(--fia-pink),var(--fia-blue));
-      display:grid;place-items:center;color:#fff;font-family:Poppins
+      color:#fff;
+      font-size:0.7rem;
+      font-family:Poppins,system-ui,sans-serif;
     }
-    h1{font-family:Poppins;margin:0;font-size:1.35rem}
-    .hello{color:var(--muted);font-size:.95rem}
 
-    /* ========= Content cards & typography ========= */
-    .cards{display:grid;grid-template-columns:1fr;gap:16px}
+    .page-title{
+      margin:0;
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:1.7rem;
+      background:linear-gradient(135deg,var(--fia-blue),var(--fia-pink));
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+
+    .page-sub{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .page-admin-line{
+      margin-top:8px;
+      font-size:0.9rem;
+      color:#4b5563;
+    }
+
+    .page-header-side{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:flex-end;
+      flex-shrink:0;
+    }
+
+    /* UPDATED: more FIA color for the “scope” chip */
+    .page-chip{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(42,153,219,0.55);
+      background:
+        radial-gradient(circle at 0 0, rgba(240,106,169,0.18), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(69,195,179,0.20), transparent 55%),
+        #f0f9ff;
+      font-size:.8rem;
+      color:#0f172a;
+      max-width:260px;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn{
+      border-radius:999px;
+      padding:10px 16px;
+      font-weight:700;
+      font-family:Poppins, system-ui, sans-serif;
+      cursor:pointer;
+      font-size:.85rem;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+      border:0;
+    }
+
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(135deg,var(--fia-blue),var(--fia-teal));
+      box-shadow:0 10px 26px rgba(37,99,235,0.18);
+    }
+
+    .btn-secondary{
+      background:#ffffff;
+      border:1px solid rgba(148,163,184,0.7);
+      color:#1f2933;
+      box-shadow:0 8px 18px rgba(15,23,42,0.06);
+    }
+
+    .header-btn-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    /* ---------- Layout grid below hero ---------- */
+    .layout-grid{
+      display:grid;
+      grid-template-columns:minmax(0,2fr) minmax(0,1.4fr);
+      gap:18px;
+      align-items:flex-start;
+    }
+
+    @media (max-width:900px){
+      .page-header{
+        flex-direction:column-reverse;
+        align-items:flex-start;
+      }
+      .page-header-side{
+        align-items:flex-start;
+      }
+      .layout-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* ---------- Cards & typography ---------- */
     .card{
-      background:#fff;border:1px solid #e8eef7;border-radius:20px;
-      box-shadow:0 12px 36px rgba(42,153,219,.08);padding:20px
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:20px;
+      box-shadow:0 14px 30px rgba(15,23,42,0.05);
+      padding:20px 20px 22px;
+      margin-bottom:16px;
     }
-    .card h2{font-family:Poppins;margin:0 0 8px 0;font-size:1.15rem}
-    .sub{color:var(--muted);margin:0 0 12px 0}
 
-    /* ========= Form controls ========= */
-    label{font-weight:600;font-family:Poppins;font-size:.95rem}
-    input[type=text], input[type=url], textarea, select{
-      width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e5e7eb
+    .card-title{
+      font-family:Poppins, system-ui, sans-serif;
+      margin:0 0 6px 0;
+      font-size:1.15rem;
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
-    textarea{min-height:110px;resize:vertical}
-    input:focus, textarea:focus, select:focus{outline:0;box-shadow:0 0 0 5px var(--ring);border-color:var(--fia-blue)}
 
-    /* Two-column form grid (collapses on small screens) */
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media (max-width:800px){.grid{grid-template-columns:1fr}}
+    .card-pill{
+      padding:3px 8px;
+      border-radius:999px;
+      font-size:.75rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      background:linear-gradient(135deg, rgba(42,153,219,0.12), rgba(240,106,169,0.12));
+      color:#374151;
+    }
 
-    /* Buttons */
-    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-family:Poppins;cursor:pointer}
-    .primary{color:#fff;background:linear-gradient(135deg,var(--fia-blue),var(--fia-teal))}
-    .link{background:#fff;border:2px solid var(--fia-blue);color:var(--fia-blue)}
+    .card-sub{
+      color:var(--muted);
+      margin:0 0 12px 0;
+      font-size:.9rem;
+    }
 
-    /* Helper styles */
-    .note{background:#f6f7fb;border:1px solid #e8eef7;border-radius:12px;padding:12px;color:var(--muted);font-size:.95rem}
-    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f6f7fb;border:1px solid #e8eef7;margin-right:8px;font-size:.9rem}
-    .list li{margin:.35rem 0}
-    .val{color:#c21d1d;font-size:.9rem;margin-top:4px}
-    .fieldset{border:1px dashed #e5e7eb;border-radius:14px;padding:12px}
-    .cbgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    @media (max-width:800px){.cbgrid{grid-template-columns:1fr}}
+    .note{
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:10px 12px;
+      color:var(--muted);
+      font-size:.9rem;
+      margin-bottom:10px;
+    }
 
-    /* Stacked one-per-line CheckBoxList for prerequisites */
-    .cblist table{ width:100%; border-collapse:collapse; }
+    /* ---------- Form controls ---------- */
+    label{
+      font-weight:600;
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:.9rem;
+      display:block;
+      margin-bottom:4px;
+      color:#111827;
+    }
+
+    input[type=text],
+    input[type=url],
+    textarea,
+    select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid #e5e7eb;
+      font-family:inherit;
+      font-size:.9rem;
+    }
+
+    textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+
+    input[type=text]:focus,
+    input[type=url]:focus,
+    textarea:focus,
+    select:focus{
+      outline:0;
+      box-shadow:0 0 0 3px var(--ring);
+      border-color:var(--fia-blue);
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    @media (max-width:800px){
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .btnrow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .val{
+      color:#c21d1d;
+      font-size:.9rem;
+      margin-top:4px;
+      display:block;
+    }
+
+    .fieldset{
+      border:1px dashed #e5e7eb;
+      border-radius:14px;
+      padding:12px;
+      margin-top:4px;
+    }
+
+    .cbgrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+
+    @media (max-width:800px){
+      .cbgrid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* Prereq / rules checkbox lists, stacked one per line */
+    .cblist table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
     .cblist td{
-     padding:8px 6px;
-    border-bottom:1px dashed #e5e7eb;
-    vertical-align:middle;
+      padding:8px 6px;
+      border-bottom:1px dashed #e5e7eb;
+      vertical-align:middle;
     }
-    .cblist input{ margin-right:8px; }
+
+    .cblist input{
+      margin-right:8px;
+    }
+
+    .nav-card-list{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+        /* ---------- Security alert banner ---------- */
+    .security-alert{
+      border-radius:18px;
+      padding:12px 16px;
+      background:#fff7ed;
+      border:1px solid #f97316;
+      color:#7c2d12;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+      box-shadow:0 10px 26px rgba(248,113,22,0.25);
+    }
+
+    .security-alert-main{
+      font-size:.9rem;
+    }
+
+    .security-alert-title{
+      font-family:Poppins, system-ui, sans-serif;
+      font-weight:600;
+      margin-bottom:4px;
+      font-size:1rem;
+    }
+
+    .security-alert-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      background:#fed7aa;
+      color:#7c2d12;
+      margin-right:6px;
+    }
+
+
   </style>
 </head>
 
 <body>
-<form id="form1" runat="server">
-  <div class="wrap">
+  <form id="form1" runat="server">
+    <div class="wrap">
 
-    <!-- ========================== Header ========================== -->
-    <div class="header">
-      <div class="brand">
-        <div class="badge">FIA</div>
+      <!-- Hero header -->
+      <div class="page-header">
+        <div class="page-header-main">
+          <div class="page-eyebrow">
+            <span class="page-eyebrow-pill">FIA</span>
+            <span>Super Admin workspace</span>
+          </div>
+          <h1 class="page-title">Super Admin Home</h1>
+          <p class="page-sub">
+            Create and maintain microcourses, connect certification rules, and open system tools
+            for audit and configuration across all universities.
+          </p>
+          <div class="page-admin-line">
+            Signed in as <strong><asp:Literal ID="WelcomeName" runat="server" /></strong>
+          </div>
+        </div>
+
+        <div class="page-header-side">
+          <div class="page-chip">
+            Manage global content, rules, and security for every FIA campus from one place.
+          </div>
+          <div class="header-btn-row">
+            <asp:Button
+              ID="BtnLogout"
+              runat="server"
+              Text="Sign out"
+              CssClass="btn btn-secondary"
+              OnClick="BtnLogout_Click"
+              CausesValidation="false" />
+          </div>
+        </div>
+      </div>
+
+         <!-- SECURITY ALERT: only shown when there is new critical activity -->
+      <asp:Panel ID="SecurityAlertPanel" runat="server" Visible="false">
+        <div class="security-alert">
+          <div class="security-alert-main">
+            <div class="security-alert-title">
+              <span class="security-alert-badge">Security</span>
+              New critical activity detected
+            </div>
+            <div>
+              We’ve detected new critical activity patterns in the system audit log
+              since your last review. Please open the System audit log to investigate.
+            </div>
+          </div>
+          <div>
+            <a class="btn btn-primary"
+               href="<%: ResolveUrl("~/Account/SuperAdmin/SuperAdminAudit.aspx") %>">
+              Review audit log
+            </a>
+          </div>
+        </div>
+      </asp:Panel>
+
+      <!-- Main layout: left = microcourse form, right = nav cards -->
+      <div class="layout-grid">
+
+        <!-- Left: microcourse creation form -->
         <div>
-          <h1>Super Admin Home</h1>
-          <div class="hello">
-            Welcome, <asp:Literal ID="WelcomeName" runat="server" />.
-          </div>
-        </div>
-      </div>
+          <div class="card">
+            <div class="card-title">
+              Add a new microcourse
+              <span class="card-pill">Catalog</span>
+            </div>
+            <p class="card-sub">
+              Define a clear title, summary, and metadata so University Admins can easily adopt and schedule
+              this cybersecurity microcourse on their campus.
+            </p>
 
-      <!-- Sign-out (no validation on click) -->
-      <div>
-        <asp:Button
-          ID="BtnLogout"
-          runat="server"
-          Text="Sign out"
-          CssClass="btn link"
-          OnClick="BtnLogout_Click"
-          CausesValidation="false"/>
-      </div>
-    </div>
+            <div class="note">
+              Keep titles concrete (e.g., “Safe Online Banking Practices”) and summaries focused on what
+              participants will be able to do afterward.
+            </div>
 
-    <div class="cards">
-      <!-- ===================== Microcourse Creation ===================== -->
-      <div class="card">
-        <h2>Add a new microcourse</h2>
-        <p class="sub">Consistent fields help University Admins understand and adopt content quickly.</p>
+            <div class="form-grid">
+              <!-- Title -->
+              <div>
+                <label for="Title">Title</label>
+                <asp:TextBox ID="Title" runat="server" />
+                <asp:RequiredFieldValidator
+                  runat="server"
+                  ControlToValidate="Title"
+                  CssClass="val"
+                  ErrorMessage="Title is required."
+                  Display="Dynamic" />
+              </div>
 
-        <div class="grid">
-          <!-- Title -->
-          <div>
-            <label for="Title">Title</label>
-            <asp:TextBox ID="Title" runat="server" />
-            <asp:RequiredFieldValidator runat="server" ControlToValidate="Title" CssClass="val"
-              ErrorMessage="Title is required." Display="Dynamic" />
-          </div>
+              <!-- Duration -->
+              <div>
+                <label for="Duration">Duration</label>
+                <asp:TextBox ID="Duration" runat="server" />
+                <asp:RequiredFieldValidator
+                  runat="server"
+                  ControlToValidate="Duration"
+                  CssClass="val"
+                  ErrorMessage="Duration is required."
+                  Display="Dynamic" />
+              </div>
 
-          <!-- Duration -->
-          <div>
-            <label for="Duration">Duration</label>
-            <asp:TextBox ID="Duration" runat="server" />
-            <asp:RequiredFieldValidator runat="server" ControlToValidate="Duration" CssClass="val"
-              ErrorMessage="Duration is required." Display="Dynamic" />
-          </div>
+              <!-- Summary -->
+              <div style="grid-column:1/-1">
+                <label for="Summary">Summary</label>
+                <asp:TextBox ID="Summary" runat="server" TextMode="MultiLine" />
+                <asp:RequiredFieldValidator
+                  runat="server"
+                  ControlToValidate="Summary"
+                  CssClass="val"
+                  ErrorMessage="Summary is required."
+                  Display="Dynamic" />
+              </div>
 
-          <!-- Summary -->
-          <div style="grid-column:1/-1">
-            <label for="Summary">Summary</label>
-            <asp:TextBox ID="Summary" runat="server" TextMode="MultiLine" />
-            <asp:RequiredFieldValidator runat="server" ControlToValidate="Summary" CssClass="val"
-              ErrorMessage="Summary is required." Display="Dynamic" />
-          </div>
+              <!-- External link -->
+              <div style="grid-column:1/-1">
+                <label for="ExternalLink">External link (slides / video / PDF)</label>
+                <asp:TextBox ID="ExternalLink" runat="server" TextMode="Url" />
+              </div>
 
-          <!-- External link -->
-          <div style="grid-column:1/-1">
-            <label for="ExternalLink">External link (slides / video / PDF)</label>
-            <asp:TextBox ID="ExternalLink" runat="server" TextMode="Url" />
-          </div>
+              <!-- Tags -->
+              <div>
+                <label for="Tags">Tags (comma-separated)</label>
+                <asp:TextBox ID="Tags" runat="server" />
+              </div>
 
-          <!-- Tags -->
-          <div>
-            <label for="Tags">Tags (comma-separated)</label>
-            <asp:TextBox ID="Tags" runat="server" />
-          </div>
+              <!-- Status -->
+              <div>
+                <label for="Status">Status</label>
+                <asp:DropDownList ID="Status" runat="server">
+                  <asp:ListItem Text="Draft" Value="Draft" />
+                  <asp:ListItem Text="Published" Value="Published" />
+                  <asp:ListItem Text="Deprecated" Value="Deprecated" />
+                </asp:DropDownList>
+              </div>
 
-          <!-- Status -->
-          <div>
-            <label for="Status">Status</label>
-            <asp:DropDownList ID="Status" runat="server">
-              <asp:ListItem Text="Draft" Value="Draft" />
-              <asp:ListItem Text="Published" Value="Published" />
-              <asp:ListItem Text="Deprecated" Value="Deprecated" />
-            </asp:DropDownList>
-          </div>
+              <!-- Certification rules multi-select -->
+              <div style="grid-column:1/-1">
+                <label>Certification rules required (multi-select)</label>
+                <div class="fieldset">
+                  <!-- UPDATED: stacked, one-per-line rules -->
+                  <asp:CheckBoxList
+                    ID="RulesList"
+                    runat="server"
+                    CssClass="cblist"
+                    RepeatLayout="Table"
+                    RepeatDirection="Vertical"
+                    RepeatColumns="1"
+                    CellPadding="0"
+                    CellSpacing="0" />
+                  <div class="note" style="margin-top:8px;">
+                    Selected rules become prerequisites Helpers must satisfy to be certified for this microcourse.
+                  </div>
+                </div>
+              </div>
 
-          <!-- Certification rules multi-select (checkbox list) -->
-          <div style="grid-column:1/-1">
-            <label>Certification rules required (multi-select)</label>
-            <div class="fieldset">
-              <asp:CheckBoxList ID="RulesList" runat="server" CssClass="cbgrid" RepeatLayout="Flow" />
-              <div class="note" style="margin-top:8px">
-                Selected rules become prerequisites users must satisfy to complete this microcourse.
+              <!-- Prerequisites from existing microcourses -->
+              <div style="grid-column:1/-1">
+                <label>Prerequisites (existing microcourses)</label>
+                <div class="fieldset">
+                  <asp:CheckBoxList
+                    ID="PrereqList"
+                    runat="server"
+                    CssClass="cblist"
+                    RepeatLayout="Table"
+                    RepeatDirection="Vertical"
+                    RepeatColumns="1"
+                    CellPadding="0"
+                    CellSpacing="0" />
+                  <div class="note" style="margin-top:8px;">
+                    Choose any microcourses learners should complete before starting this one.
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- ========= NEW: Prerequisites from Catalog ========= -->
-          <div style="grid-column:1/-1">
-            <label>Prerequisites (existing microcourses)</label>
-            <div class="fieldset">
-              <!-- Clean two-column checkbox grid; each item shows Title (ID) -->
-              <asp:CheckBoxList
-    ID="PrereqList"
-    runat="server"
-    CssClass="cblist"
-    RepeatLayout="Table"
-    RepeatDirection="Vertical"
-    RepeatColumns="1"
-    CellPadding="0"
-    CellSpacing="0" />
+            <!-- Actions -->
+            <div class="btnrow">
+              <asp:Button
+                ID="BtnSaveMicrocourse"
+                runat="server"
+                Text="Save microcourse"
+                CssClass="btn btn-primary"
+                OnClick="BtnSaveMicrocourse_Click" />
+              <asp:Button
+                ID="BtnClear"
+                runat="server"
+                Text="Clear"
+                CssClass="btn btn-secondary"
+                OnClick="BtnClear_Click"
+                CausesValidation="false" />
+            </div>
 
-              <div class="note" style="margin-top:8px">
-                Choose any microcourses learners must complete before starting this one.
-              </div>
+            <!-- Status / error message -->
+            <div style="margin-top:10px;">
+              <asp:Label ID="FormMessage" runat="server" EnableViewState="false" />
             </div>
           </div>
-          <!-- ========= END NEW ========= -->
-
         </div>
 
-        <!-- Actions: save/clear microcourse -->
-        <div class="btnrow">
-          <asp:Button ID="BtnSaveMicrocourse" runat="server" Text="Save microcourse" CssClass="btn primary" OnClick="BtnSaveMicrocourse_Click" />
-          <asp:Button ID="BtnClear" runat="server" Text="Clear" CssClass="btn link" OnClick="BtnClear_Click" CausesValidation="false" />
+        <!-- Right: navigation / tools cards -->
+        <div class="nav-card-list">
+          <!-- Manage existing microcourses -->
+          <div class="card">
+            <div class="card-title">
+              Manage existing microcourses
+              <span class="card-pill">Catalog tools</span>
+            </div>
+            <p class="card-sub">
+              Open the full microcourse list to edit content, adjust status, and review connected rules or prerequisites.
+            </p>
+            <a class="btn btn-secondary" href="<%: ResolveUrl("~/Account/SuperAdmin/SuperAdminMicrocourses.aspx") %>">
+              Open microcourse manager
+            </a>
+          </div>
+
+          <!-- Certification Rules -->
+          <div class="card">
+            <div class="card-title">
+              Certification rules
+              <span class="card-pill">Requirements</span>
+            </div>
+            <p class="card-sub">
+              Create and edit certification rules that define quiz scores, teaching sessions, 1:1 help, and expiry
+              for each Helper certification.
+            </p>
+            <a class="btn btn-secondary" href="<%: ResolveUrl("~/Account/SuperAdmin/CertificationRules.aspx") %>">
+              Open certification rules
+            </a>
+          </div>
+
+            <!-- NEW: Create University Admin accounts -->
+          <div class="card">
+            <div class="card-title">
+              Create University Admin
+              <span class="card-pill">Access</span>
+            </div>
+            <p class="card-sub">
+              Add a new University Admin account and link them to the correct campus so they can manage helpers,
+              events, and participant activity locally.
+            </p>
+            <a class="btn btn-secondary"
+               href="<%: ResolveUrl("~/Account/SuperAdmin/CreateUniversityAdmin.aspx") %>">
+              Open Create University Admin
+            </a>
+          </div>
+
+          <!-- System Audit Log -->
+          <div class="card">
+            <div class="card-title">
+              System audit log
+              <span class="card-pill">Security</span>
+            </div>
+            <p class="card-sub">
+              View a read-only, filterable audit log across all universities for security review and troubleshooting.
+            </p>
+            <a class="btn btn-secondary" href="<%: ResolveUrl("~/Account/SuperAdmin/SuperAdminAudit.aspx") %>">
+              Open audit log
+            </a>
+          </div>
         </div>
 
-        <!-- Vertical spacing preserved exactly as provided -->
-        <p />
-        <p />
-        <p />
-        <p />
-        <p />
-        <p />
 
-        <!-- ===================== Manage Certification Rules ===================== -->
-        <div class="card">
-          <h2 style="margin-top:0">Certification rules</h2>
-          <p class="sub">Create, edit, and set prerequisites for certification requirements.</p>
-          <p />
-          <p />
-          <a class="btn link" href="<%: ResolveUrl("~/Account/SuperAdmin/CertificationRules.aspx") %>">Open Certification Rules</a>
-        </div>
 
-        <!-- General message area (status/errors), viewstate off to avoid stale text -->
-        <asp:Label ID="FormMessage" runat="server" EnableViewState="false" />
       </div>
     </div>
-  </div>
-</form>
+  </form>
 </body>
 </html>
+
 
 
 

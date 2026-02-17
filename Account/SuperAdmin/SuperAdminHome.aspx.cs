@@ -5,6 +5,9 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
+using System.Globalization;
+using System.Web;
+
 
 namespace CyberApp_FIA.Account
 {
@@ -23,6 +26,9 @@ namespace CyberApp_FIA.Account
         // Path to certification rules datastore (XML with <certRules><rule .../></certRules>)
         private string RulesXmlPath => Server.MapPath("~/App_Data/certificationRules.xml");
 
+        // Path to the main university audit log used for critical activity
+        private string AuditXmlPath => Server.MapPath("~/App_Data/Audit_Log/UnvAdminAudit.xml");
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -40,7 +46,10 @@ namespace CyberApp_FIA.Account
 
                 // Populate choices
                 BindRuleChoices();
-                BindPrereqChoices();   // NEW
+                BindPrereqChoices();
+
+                // Check for new critical activity since last time they opened the audit log
+                UpdateSecurityAlert();
             }
         }
 
@@ -201,6 +210,114 @@ namespace CyberApp_FIA.Account
             PrereqList.DataValueField = "Value";
             PrereqList.DataBind();
         }
+
+        // =========================
+        // Security alert helpers (critical activity)
+        // =========================
+
+        /// <summary>
+        /// Show/hide the big security banner depending on whether there are
+        /// critical-ish audit entries newer than the last time the admin
+        /// opened the System Audit Log. Uses a cookie so it survives logout/login.
+        /// </summary>
+        private void UpdateSecurityAlert()
+        {
+            var latestCriticalUtc = GetLatestCriticalEventUtc();
+            if (!latestCriticalUtc.HasValue)
+            {
+                SecurityAlertPanel.Visible = false;
+                return;
+            }
+
+            // Default: they've never seen anything
+            DateTime lastSeenUtc = DateTime.MinValue;
+
+            // Read last-seen value from cookie instead of Session
+            var cookie = Request.Cookies["FIA_LastCriticalSeenUtc"];
+            if (cookie != null)
+            {
+                if (DateTime.TryParse(
+                        cookie.Value,
+                        null,
+                        DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                        out var parsed))
+                {
+                    lastSeenUtc = parsed;
+                }
+            }
+
+            // Only show if there's something newer than what they've already reviewed
+            SecurityAlertPanel.Visible = latestCriticalUtc.Value > lastSeenUtc;
+        }
+
+
+        /// <summary>
+        /// Lightweight definition of "critical activity" for the banner.
+        /// We treat certain audit types (session changes, sign-in failures, etc.)
+        /// as critical-ish and return the newest timestamp among them.
+        /// </summary>
+        private DateTime? GetLatestCriticalEventUtc()
+        {
+            if (!File.Exists(AuditXmlPath))
+            {
+                return null;
+            }
+
+            // Base audit types we consider "critical-ish"
+            var criticalTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Session Updated",
+                "Session Deleted",
+                "Session Created",
+                "Event Created",
+                "Event Deleted",
+                "Sign In Failed (Bad Password)",
+                "Sign In Failed (Unknown Email)",
+                "Helper Delivered Session",
+                "Helper 1:1 Help Session"
+            };
+
+            DateTime? latest = null;
+
+            try
+            {
+                var doc = new XmlDocument();
+                doc.Load(AuditXmlPath);
+
+                var nodes = doc.SelectNodes("/auditLog/entry");
+                foreach (XmlElement entry in nodes)
+                {
+                    var type = entry.GetAttribute("type");
+                    if (string.IsNullOrWhiteSpace(type) || !criticalTypes.Contains(type))
+                    {
+                        continue;
+                    }
+
+                    var tsRaw = entry.GetAttribute("timestamp");
+                    if (!DateTime.TryParse(
+                            tsRaw,
+                            null,
+                            DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                            out var tsUtc))
+                    {
+                        continue;
+                    }
+
+                    if (!latest.HasValue || tsUtc > latest.Value)
+                    {
+                        latest = tsUtc;
+                    }
+                }
+            }
+            catch
+            {
+                // Fail-safe: if anything goes wrong, treat as "no critical events"
+                return null;
+            }
+
+            return latest;
+        }
+
 
         // =========================
         // Helpers: XML element builders

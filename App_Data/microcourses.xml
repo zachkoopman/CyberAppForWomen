@@ -11,16 +11,14 @@
       <tag>settings</tag>
       <tag>social-media</tag>
     </tags>
-    <requiredRules>
-      <rule id="Quiz" />
-    </requiredRules>
-    <prerequisites />
     <startTime>
     </startTime>
     <endTime>
     </endTime>
     <maxParticipants>
     </maxParticipants>
+    <requiredRules />
+    <prerequisites />
   </course>
   <course id="550051f55dad499c850dc2e94289a941" status="Published" createdAt="2025-11-14T00:07:24.1651000Z" createdBy="lauren@fia.org">
     <title>Phishing Awareness And Email Security</title>
@@ -101,22 +99,24 @@
     <maxParticipants>
     </maxParticipants>
   </course>
-  <course id="83b7b2cadf3446d3a81d4e9836cd5982" status="Draft" createdAt="2025-11-14T00:11:13.0735684Z" createdBy="lauren@fia.org">
+  <course id="83b7b2cadf3446d3a81d4e9836cd5982" status="Published" createdAt="2025-11-14T00:11:13.0735684Z" createdBy="lauren@fia.org">
     <title>Password Management And Security</title>
     <summary>Participants learn best practices for creating strong, unique passwords and using password managers. The module covers common mistakes like password reuse and offers techniques for generating memorable yet secure passwords.</summary>
     <duration>10 Min</duration>
     <externalLink>https://classroom.google.com/c/NzcwNzQ3NTE2NDE1?cjc=lhcaf4yf</externalLink>
     <tags />
-    <requiredRules>
-      <rule id="Easy Rule" />
-    </requiredRules>
-    <prerequisites />
     <startTime>
     </startTime>
     <endTime>
     </endTime>
     <maxParticipants>
     </maxParticipants>
+    <requiredRules>
+      <rule id="4" />
+    </requiredRules>
+    <prerequisites>
+      <course id="154085e49eb7427b95e967c0af05c870" />
+    </prerequisites>
   </course>
   <course id="a0e70ced9b0649b68eb6128b2ed2ad7c" status="Published" createdAt="2025-11-14T00:11:59.3231811Z" createdBy="lauren@fia.org">
     <title>Managing Digital Footprint</title>

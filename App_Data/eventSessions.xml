@@ -1,57 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <eventSessions>
-  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="47688e66f35047c5b5878fe4ec44cb8c">
-    <courseId>c-0002</courseId>
-    <start>2025-10-23T06:39:00.0000000Z</start>
-    <end>2025-10-26T06:39:00.0000000Z</end>
-    <room>MU 201</room>
-    <helper>Tracy</helper>
-    <capacity>5</capacity>
-  </session>
-  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="39caf8188abf4601af57fcd484c45a36">
-    <courseId>c-0002</courseId>
-    <start>
-    </start>
-    <end>
-    </end>
-    <room>
-    </room>
-    <helper>
-    </helper>
-    <capacity>
-    </capacity>
-  </session>
-  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="5802d669a5cb4a0882d25c3901f90fe0">
-    <courseId>c-0002</courseId>
-    <start>2025-10-16T07:11:00.0000000Z</start>
-    <end>2025-10-16T07:17:00.0000000Z</end>
-    <room>
-    </room>
-    <helper>Tracy</helper>
-    <capacity>6</capacity>
-  </session>
-  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="f194871291e2465e92f49bec464ff8f2">
-    <courseId>c-0002</courseId>
-    <start>2025-10-16T07:12:00.0000000Z</start>
-    <end>2025-10-16T11:55:00.0000000Z</end>
-    <room>
-    </room>
-    <helper>
-    </helper>
-    <capacity>
-    </capacity>
-  </session>
-  <session eventId="a8c2766fe860463a9d5d600adcbd8c10" id="a34f582032de469c825facf84ddd06b9">
-    <courseId>c-0002</courseId>
-    <start>2025-10-16T07:08:00.0000000Z</start>
-    <end>2025-10-16T07:16:00.0000000Z</end>
-    <room>
-    </room>
-    <helper>
-    </helper>
-    <capacity>
-    </capacity>
-  </session>
   <session eventId="8962f12f5a5e4a09b8427bd560c93360" id="03aebf35d4684419b85b0f226d4bcb2a">
     <courseId>c-0002</courseId>
     <start>2025-11-01T00:26:00.0000000Z</start>
@@ -272,13 +220,14 @@
     <helper>Zach</helper>
     <capacity>1</capacity>
   </session>
-  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="ec4ab3b5356e414196dc1c9a8843bc45">
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="ec4ab3b5356e414196dc1c9a8843bc45" edited="true">
     <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
-    <start>2025-11-26T08:50:00.0000000Z</start>
-    <end>2025-11-26T09:00:00.0000000Z</end>
+    <start>2025-11-28T22:15:00.0000000Z</start>
+    <end>2025-11-28T22:17:00.0000000Z</end>
     <room>https://asu.zoom.us/j/82855533981</room>
-    <helper>h@gmail.com</helper>
+    <helper>newh@gmail.com</helper>
     <capacity>5</capacity>
+    <editedAt>2025-11-29T06:29:42.6711085Z</editedAt>
   </session>
   <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="eb03ffa34daa4716ad1d95cdb0e42b01">
     <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
@@ -286,7 +235,83 @@
     <end>2025-11-30T22:04:00.0000000Z</end>
     <room>
     </room>
+    <helper>A@gmail.com</helper>
+    <capacity>1</capacity>
+    <editedAt>2025-11-29T05:13:16.4499645Z</editedAt>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="e3a15fb51c5e4f2d81f944c4a09ca9da">
+    <courseId>0c1e0fd46a0244ad8176b65ea44b05f1</courseId>
+    <start>2025-11-30T06:12:00.0000000Z</start>
+    <end>2025-11-30T06:36:00.0000000Z</end>
+    <room>https://zoom.com</room>
     <helper>h@gmail.com</helper>
     <capacity>1</capacity>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="ed8ba734f2204141902c669be6c87371">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2025-11-28T22:15:00.0000000Z</start>
+    <end>2025-11-28T22:25:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>A@gmail.com</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="943c5c93e1054080a2a6b2ce18f02965" edited="true">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2025-11-26T21:15:00.0000000Z</start>
+    <end>2025-11-26T21:25:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>k@gmail.com</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="24eeba089b0241e59510664a6e1aed2e">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2025-11-20T21:25:00.0000000Z</start>
+    <end>2025-11-20T21:35:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>k@gmail.com</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="1299e4769fd94473aa05db2987b18bb1">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2025-11-20T21:40:00.0000000Z</start>
+    <end>2025-11-20T21:50:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>k@gmail.com</helper>
+    <capacity>1</capacity>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="3a58ec938467440bb23b1d6d52841731" edited="true">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2025-11-28T22:16:00.0000000Z</start>
+    <end>2025-11-28T22:19:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>k@gmail.com</helper>
+    <capacity>1</capacity>
+    <editedAt>2025-11-29T06:32:21.7469902Z</editedAt>
+  </session>
+  <session eventId="f44c95fcdb764b1ebf1af411792367b6" id="08228e2e60ee45ab99bf5ab72691aee7">
+    <courseId>550051f55dad499c850dc2e94289a941</courseId>
+    <start>2025-12-04T03:09:00.0000000Z</start>
+    <end>2025-12-07T03:09:00.0000000Z</end>
+    <room>
+    </room>
+    <helper>k@gmail.com</helper>
+    <capacity>1</capacity>
+    <editedAt>2025-11-29T05:12:52.1775126Z</editedAt>
+  </session>
+  <session eventId="fb3b012d5cc6418bb7b1a09438fb7ef7" id="9becc71c453e461da7a03f70f1582299">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2026-01-30T22:49:00.0000000Z</start>
+    <end>2026-02-06T22:49:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>h@gmail.com</helper>
+    <capacity>3</capacity>
+  </session>
+  <session eventId="fb3b012d5cc6418bb7b1a09438fb7ef7" id="3792b9eec2ce4a93bb4971279e641ea2">
+    <courseId>f98b4b69dc334c9496ca948351e843b7</courseId>
+    <start>2026-02-11T22:51:00.0000000Z</start>
+    <end>2026-02-21T22:51:00.0000000Z</end>
+    <room>https://zoom.com</room>
+    <helper>k@gmail.com</helper>
+    <capacity>2</capacity>
   </session>
 </eventSessions>

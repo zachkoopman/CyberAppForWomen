@@ -125,6 +125,196 @@
       font-size:.95rem;
     }
 
+    /* Mark session delivered block */
+    .deliver-shell{
+      margin-bottom:20px;
+      padding:16px 18px 18px;
+      border-radius:18px;
+      border:1px solid var(--card-border);
+      background:
+        radial-gradient(circle at 0 0, rgba(240,106,169,0.12), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(42,153,219,0.14), transparent 55%),
+        linear-gradient(135deg,#ffffff,#f6f9ff);
+      box-shadow:0 14px 30px rgba(15,23,42,0.06);
+    }
+
+    .deliver-eyebrow{
+      font-size:0.75rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:#6b7280;
+      font-weight:700;
+      margin-bottom:2px;
+    }
+
+    .deliver-title{
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:1.1rem;
+      font-weight:600;
+      color:#111827;
+      margin:0;
+    }
+
+    .deliver-sub{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:.9rem;
+      max-width:640px;
+    }
+
+    .deliver-form{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:minmax(0,2.1fr) minmax(0,3fr) auto;
+      gap:12px;
+      align-items:flex-end;
+    }
+
+    .deliver-field-group{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .deliver-label{
+      font-size:.8rem;
+      font-weight:600;
+      color:#4b5563;
+    }
+
+    .deliver-select{
+      width:100%;
+      border-radius:999px;
+      border:1px solid #d1d5db;
+      padding:7px 11px;
+      font-size:.9rem;
+      background:#ffffff;
+      outline:none;
+    }
+
+    .deliver-select:focus{
+      border-color:var(--fia-blue);
+      box-shadow:0 0 0 2px rgba(42,153,219,0.25);
+    }
+
+    .deliver-notes{
+      width:100%;
+      border-radius:12px;
+      border:1px solid #d1d5db;
+      padding:7px 10px;
+      font-size:.9rem;
+      resize:vertical;
+      min-height:40px;
+      max-height:120px;
+      outline:none;
+    }
+
+    .deliver-notes:focus{
+      border-color:var(--fia-pink);
+      box-shadow:0 0 0 2px rgba(240,106,169,0.2);
+    }
+
+    .deliver-submit{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding:9px 14px;
+      border-radius:999px;
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:.85rem;
+      font-weight:600;
+      background:linear-gradient(135deg,var(--fia-pink),var(--fia-blue));
+      color:#fff;
+      box-shadow:0 8px 18px rgba(15,23,42,0.18);
+      white-space:nowrap;
+    }
+
+    .deliver-submit:focus{
+      outline:none;
+      box-shadow:0 0 0 3px rgba(42,153,219,0.35);
+    }
+
+    /* New: recent delivered sessions history */
+    .deliver-history{
+      margin-top:16px;
+      padding-top:10px;
+      border-top:1px dashed rgba(148,163,184,0.6);
+    }
+
+    .deliver-history-header{
+      font-size:.8rem;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:#6b7280;
+      margin-bottom:6px;
+    }
+
+    .deliver-history-empty{
+      font-size:.85rem;
+      color:var(--muted);
+    }
+
+    .deliver-history-list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .deliver-history-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:12px;
+      background:linear-gradient(135deg,rgba(42,153,219,0.05),rgba(240,106,169,0.06));
+      border:1px solid rgba(209,213,219,0.8);
+    }
+
+    .deliver-history-main{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+
+    .deliver-history-title{
+      font-size:.9rem;
+      font-weight:600;
+      color:#111827;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .deliver-history-meta{
+      font-size:.8rem;
+      color:var(--muted);
+    }
+
+    .deliver-history-undo{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding:5px 10px;
+      border-radius:999px;
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:.78rem;
+      font-weight:600;
+      background:#ffffff;
+      color:var(--fia-blue);
+      border:1px solid rgba(191,219,254,1);
+      box-shadow:0 6px 14px rgba(15,23,42,0.08);
+      white-space:nowrap;
+      flex-shrink:0;
+    }
+
+    .deliver-history-undo:focus{
+      outline:none;
+      box-shadow:0 0 0 2px rgba(59,130,246,0.5);
+    }
+
     /* Schedule cards */
     .schedule-shell{
       background:linear-gradient(135deg,#ffffff,#f9fbff);
@@ -319,6 +509,23 @@
       z-index:9999;
     }
 
+    .fia-toast-undo{
+      margin-left:10px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.85);
+      background:rgba(255,255,255,0.06);
+      color:#ffffff;
+      font-size:.78rem;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .fia-toast-undo:focus{
+      outline:none;
+      box-shadow:0 0 0 2px rgba(255,255,255,0.6);
+    }
+
     @media (max-width:640px){
       .page-header{
         flex-direction:column-reverse;
@@ -331,10 +538,17 @@
       .session-value{
         text-align:left;
       }
+      .deliver-form{
+        grid-template-columns:1fr;
+        align-items:stretch;
+      }
+      .deliver-history-item{
+        align-items:flex-start;
+      }
     }
   </style>
 
-  <!-- Define showFiaToast early so startup scripts can call it -->
+  <!-- Simple FIA toast helper -->
   <script type="text/javascript">
       function showFiaToast(message) {
           var box = document.getElementById('fiaToast');
@@ -371,6 +585,77 @@
           <span class="icon">←</span>
           <span>Back to Helper Home</span>
         </a>
+      </div>
+
+      <!-- Mark session delivered block + recent history -->
+      <div class="deliver-shell">
+        <div>
+          <div class="deliver-eyebrow">Certification progress</div>
+          <h2 class="deliver-title">Mark a session as delivered</h2>
+          <p class="deliver-sub">
+            Quickly log that you delivered a microcourse session so your teaching counts toward certification.
+            You can add a short note that only admins will see.
+          </p>
+        </div>
+        <div class="deliver-form">
+          <div class="deliver-field-group">
+            <span class="deliver-label">Course</span>
+            <asp:DropDownList ID="DeliverCourseDropDown"
+                              runat="server"
+                              CssClass="deliver-select" />
+          </div>
+          <div class="deliver-field-group">
+            <span class="deliver-label">Notes (optional)</span>
+            <asp:TextBox ID="DeliverNotesTextBox"
+                         runat="server"
+                         CssClass="deliver-notes"
+                         TextMode="MultiLine"
+                         Rows="2"
+                         placeholder="Any quick context you want University Admins to see."></asp:TextBox>
+          </div>
+          <div class="deliver-field-group">
+            <asp:Button ID="DeliverSubmitButton"
+                        runat="server"
+                        CssClass="deliver-submit"
+                        Text="Log delivered session"
+                        OnClick="DeliverSubmitButton_Click" />
+          </div>
+        </div>
+
+        <!-- New: recent delivered sessions with per-row undo -->
+        <div class="deliver-history">
+          <div class="deliver-history-header">Recent delivered sessions</div>
+          <asp:PlaceHolder ID="DeliverHistoryEmpty" runat="server">
+            <div class="deliver-history-empty">
+              Once you log delivered sessions, the last three will show here with quick undo.
+            </div>
+          </asp:PlaceHolder>
+
+          <asp:Repeater ID="DeliverHistoryRepeater"
+                        runat="server"
+                        OnItemCommand="DeliverHistoryRepeater_ItemCommand">
+            <HeaderTemplate>
+              <div class="deliver-history-list">
+            </HeaderTemplate>
+            <ItemTemplate>
+              <div class="deliver-history-item">
+                <div class="deliver-history-main">
+                  <div class="deliver-history-title"><%# Eval("CourseTitle") %></div>
+                  <div class="deliver-history-meta"><%# Eval("WhenLabel") %></div>
+                </div>
+                <asp:Button ID="UndoDeliverItemButton"
+                            runat="server"
+                            CssClass="deliver-history-undo"
+                            Text="Undo"
+                            CommandName="undoDeliver"
+                            CommandArgument='<%# Eval("Snapshot") %>' />
+              </div>
+            </ItemTemplate>
+            <FooterTemplate>
+              </div>
+            </FooterTemplate>
+          </asp:Repeater>
+        </div>
       </div>
 
       <div class="schedule-shell">
@@ -487,3 +772,5 @@
   </form>
 </body>
 </html>
+
+

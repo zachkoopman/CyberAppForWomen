@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
+using CyberApp_FIA.Services;
+
 
 namespace CyberApp_FIA.Participant
 {
@@ -18,8 +20,13 @@ namespace CyberApp_FIA.Participant
         private string EventCoursesXmlPath => Server.MapPath("~/App_Data/eventCourses.xml");
         private string EventSessionsXmlPath => Server.MapPath("~/App_Data/eventSessions.xml");
         private string EnrollmentsXmlPath => Server.MapPath("~/App_Data/enrollments.xml");
-
         private string CompletionsXmlPath => Server.MapPath("~/App_Data/completions.xml");
+
+        // NEW: users file for one-time session deletion notices
+        private string UsersXmlPath => Server.MapPath("~/App_Data/users.xml");
+
+        // NEW: helper one-on-one conversations
+        private string HelperMessagesXmlPath => Server.MapPath("~/App_Data/helperMessages.xml");
 
         private static readonly object EnrollmentsLock = new object();
         private static readonly object CompletionsLock = new object();
@@ -88,8 +95,11 @@ namespace CyberApp_FIA.Participant
 
                 LoadEventHeader(eventId);
 
-                // NEW: load assigned Helper pill in the header (if any)
-                LoadAssignedHelperChip(CurrentUserId());
+                // NEW: show one-time notice if an admin deleted a session this participant was in
+                LoadSessionDeletionNotice(CurrentUserId());
+
+                // NEW: load assigned Helper one-on-one support section (if any)
+                LoadAssignedHelperSupport(CurrentUserId());
 
                 EnsureXmlDoc(EnrollmentsXmlPath, "enrollments");
                 EnsureXmlDoc(CompletionsXmlPath, "completions");
@@ -125,13 +135,25 @@ namespace CyberApp_FIA.Participant
 
         /// <summary>
         /// Looks up the participant's assigned Helper in users.xml and, if found,
-        /// shows a pill in the header with the Helper's first name.
+        /// shows the one-on-one support section and binds any existing conversations.
+        /// Also stores helper id/name/email in Session for other pages.
         /// </summary>
-        private void LoadAssignedHelperChip(string userId)
+        private void LoadAssignedHelperSupport(string userId)
         {
-            // Default to hidden / empty if anything fails.
-            HelperPill.Visible = false;
+            // Default hidden/empty.
+            HelperSupportPanel.Visible = false;
             HelperName.Text = string.Empty;
+
+            ConversationsEmpty.Visible = false;
+            ConversationsRepeater.DataSource = null;
+            ConversationsRepeater.DataBind();
+
+            StartHelperMessageBtn.Visible = false;
+
+            // Clear any previous helper session values
+            Session["AssignedHelperId"] = null;
+            Session["AssignedHelperName"] = null;
+            Session["AssignedHelperEmail"] = null;
 
             try
             {
@@ -150,11 +172,12 @@ namespace CyberApp_FIA.Participant
                 if (me == null)
                     return;
 
+                // NEW: read assignedHelperId from the participant node
                 var helperId = me.GetAttribute("assignedHelperId");
                 if (string.IsNullOrWhiteSpace(helperId))
                     return;
 
-                // Find the Helper row.
+                // Find the Helper row using that id
                 var helper = (XmlElement)doc.SelectSingleNode($"/users/user[@id='{helperId}' and @role='Helper']");
                 if (helper == null)
                     return;
@@ -171,15 +194,180 @@ namespace CyberApp_FIA.Participant
                 if (string.IsNullOrWhiteSpace(firstName))
                     return;
 
+                // Helper email (for message XML, etc.)
+                var helperEmail = helper["email"]?.InnerText ?? string.Empty;
+
+                // Store in Session so HelperMessage / HelperConversation can use them
+                Session["AssignedHelperId"] = helperId;
+                Session["AssignedHelperName"] = firstName;
+                Session["AssignedHelperEmail"] = helperEmail;
+
+                // Update UI
                 HelperName.Text = Server.HtmlEncode(firstName);
-                HelperPill.Visible = true;
+                StartHelperMessageBtn.Text = "Send message to " + firstName;
+                StartHelperMessageBtn.Visible = true;
+
+                HelperSupportPanel.Visible = true;
+
+                // Bind any existing conversations for this participant + helper pair.
+                BindHelperConversations(userId, helperId);
             }
             catch
             {
-                // Soft-fail: header helper pill is non-critical.
-                HelperPill.Visible = false;
+                // Soft-fail: helper support is non-critical.
+                HelperSupportPanel.Visible = false;
                 HelperName.Text = string.Empty;
+                Session["AssignedHelperId"] = null;
+                Session["AssignedHelperName"] = null;
+                Session["AssignedHelperEmail"] = null;
             }
+        }
+
+        /// <summary>
+        /// If users.xml has a <sessionDeletionNotice> for this participant,
+        /// show a top-of-page indicator and clear the notice so it only appears once.
+        /// </summary>
+        private void LoadSessionDeletionNotice(string userId)
+        {
+            SessionDeletionNoticePH.Visible = false;
+            SessionDeletionNoticeText.Text = string.Empty;
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(userId))
+                    return;
+
+                if (!File.Exists(UsersXmlPath))
+                    return;
+
+                var doc = new XmlDocument();
+                doc.Load(UsersXmlPath);
+
+                var me = doc.SelectSingleNode($"/users/user[@id='{userId}']") as XmlElement;
+                if (me == null)
+                    return;
+
+                var notice = me["sessionDeletionNotice"] as XmlElement;
+                if (notice == null)
+                    return;
+
+                var microTitle = notice.GetAttribute("microcourseTitle");
+                var startIso = notice.GetAttribute("startUtc");
+
+                if (string.IsNullOrWhiteSpace(microTitle))
+                    microTitle = "a session";
+
+                string message;
+                if (!string.IsNullOrWhiteSpace(startIso) &&
+                    DateTime.TryParse(
+                        startIso,
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                        out var startUtc))
+                {
+                    var startLocal = DateTime.SpecifyKind(startUtc, DateTimeKind.Utc).ToLocalTime();
+                    var when = startLocal.ToString("ddd, MMM d • h:mm tt");
+                    message =
+                        $"A session for \"{microTitle}\" on {when} was deleted by your university admin. " +
+                        "Please choose another time that works for you.";
+                }
+                else
+                {
+                    message =
+                        $"A session for \"{microTitle}\" was deleted by your university admin. " +
+                        "Please choose another time that works for you.";
+                }
+
+                SessionDeletionNoticeText.Text = Server.HtmlEncode(message);
+                SessionDeletionNoticePH.Visible = true;
+
+                // Clear the notice so it does not keep showing forever.
+                me.RemoveChild(notice);
+                doc.Save(UsersXmlPath);
+            }
+            catch
+            {
+                // If anything goes wrong, just fail silently; this banner is non-critical.
+                SessionDeletionNoticePH.Visible = false;
+                SessionDeletionNoticeText.Text = string.Empty;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Reads helperMessages.xml and binds conversation cards for the participant/helper pair.
+        /// Each card shows the topic and sent date and links to the conversation page.
+        /// </summary>
+        private void BindHelperConversations(string participantId, string helperId)
+        {
+            ConversationsEmpty.Visible = false;
+            ConversationsRepeater.DataSource = null;
+            ConversationsRepeater.DataBind();
+
+            if (string.IsNullOrWhiteSpace(participantId) || string.IsNullOrWhiteSpace(helperId))
+            {
+                ConversationsEmpty.Visible = true;
+                return;
+            }
+
+            if (!File.Exists(HelperMessagesXmlPath))
+            {
+                ConversationsEmpty.Visible = true;
+                return;
+            }
+
+            var rows = new List<object>();
+            var doc = new XmlDocument();
+            doc.Load(HelperMessagesXmlPath);
+
+            foreach (XmlElement conv in doc.SelectNodes($"/helperMessages/conversation[@participantId='{participantId}' and @helperId='{helperId}']"))
+            {
+                var topic = conv.GetAttribute("topic") ?? "";
+                var createdOnStr = conv.GetAttribute("createdOn");
+                var lastUpdatedStr = conv.GetAttribute("lastUpdated");
+
+                DateTime createdOnUtc;
+                DateTime lastUpdatedUtc;
+
+                if (!DateTime.TryParse(createdOnStr, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out createdOnUtc))
+                {
+                    DateTime.TryParse(createdOnStr, out createdOnUtc);
+                }
+
+                if (!DateTime.TryParse(lastUpdatedStr, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out lastUpdatedUtc))
+                {
+                    lastUpdatedUtc = createdOnUtc;
+                }
+
+                var createdLocal = DateTime.SpecifyKind(createdOnUtc, DateTimeKind.Utc).ToLocalTime();
+                var lastLocal = DateTime.SpecifyKind(lastUpdatedUtc, DateTimeKind.Utc).ToLocalTime();
+                var id = conv.GetAttribute("id") ?? "";
+
+                var url = ResolveUrl("~/Account/Participant/HelperConversation.aspx?id=" + HttpUtility.UrlEncode(id));
+
+                rows.Add(new
+                {
+                    Topic = topic,
+                    CreatedOnLocal = createdLocal,
+                    LastUpdatedLocal = lastLocal,
+                    ConversationUrl = url
+                });
+            }
+
+            if (rows.Count == 0)
+            {
+                ConversationsEmpty.Visible = true;
+                return;
+            }
+
+            ConversationsEmpty.Visible = false;
+            ConversationsRepeater.DataSource = rows
+                .OrderByDescending(r => (DateTime)r.GetType().GetProperty("LastUpdatedLocal").GetValue(r, null))
+                .ToList();
+            ConversationsRepeater.DataBind();
         }
 
         private Dictionary<string, HashSet<string>> LoadCourseTags()
@@ -570,7 +758,7 @@ namespace CyberApp_FIA.Participant
                 var isEnrolled = IsUserEnrolled(eventId, sessionId, userId);
                 var isWaitlisted = IsUserWaitlisted(eventId, sessionId, userId);
 
-                var waitlistPosition = isWaitlisted ? GetWaitlistPosition(eventId, sessionId, userId) : 0; // NEW
+                var waitlistPosition = isWaitlisted ? GetWaitlistPosition(eventId, sessionId, userId) : 0;
 
                 var prereqsByCourse = prereqsByCourseId;
                 prereqsByCourse.TryGetValue(courseId, out var prereqList);
@@ -621,7 +809,7 @@ namespace CyberApp_FIA.Participant
                     isFull,
                     isEnrolled,
                     isWaitlisted,
-                    waitlistPosition,  // NEW
+                    waitlistPosition,
                     courseId,
                     prereqMet,
                     missingPrereqId,
@@ -644,6 +832,9 @@ namespace CyberApp_FIA.Participant
             var docSess = new XmlDocument(); docSess.Load(EventSessionsXmlPath);
             var docEnr = LoadEnrollmentsDoc();
 
+            // NEW: capture all enrolled intervals to detect conflicts across "My Sessions".
+            var myIntervals = GetUserEnrolledIntervals(eventId, userId);
+
             foreach (XmlElement sesNode in docEnr.SelectNodes($"/enrollments/session[@eventId='{eventId}']"))
             {
                 var sid = sesNode.GetAttribute("id");
@@ -657,9 +848,26 @@ namespace CyberApp_FIA.Participant
                 if (s == null) continue;
 
                 var courseId = s["courseId"]?.InnerText ?? "";
+
+                // Parse current start/end for the session (UTC → local)
                 var startIso = s["start"]?.InnerText ?? "";
-                DateTime.TryParse(startIso, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var startUtc);
+                var endIso = s["end"]?.InnerText ?? "";
+
+                DateTime.TryParse(
+                    startIso,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                    out var startUtc);
+
+                DateTime.TryParse(
+                    endIso,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                    out var endUtc);
+
                 var startLocal = DateTime.SpecifyKind(startUtc, DateTimeKind.Utc).ToLocalTime();
+                var endLocal = DateTime.SpecifyKind(endUtc, DateTimeKind.Utc).ToLocalTime();
+
                 var room = s["room"]?.InnerText ?? "";
                 var helperName = s["helper"]?.InnerText ?? "";
 
@@ -667,10 +875,46 @@ namespace CyberApp_FIA.Participant
                 titles.TryGetValue(courseId, out var title);
                 var microcourseTitle = string.IsNullOrWhiteSpace(title) ? "(untitled)" : title;
 
+                // --- NEW: detect & describe a time change for this session ---
+                bool timeChanged = false;
+                string timeChangedMessage = string.Empty;
+
+                var timeChangeNode = s["timeChange"] as XmlElement;
+                if (timeChangeNode != null)
+                {
+                    var oldStartIso = timeChangeNode["oldStart"]?.InnerText ?? "";
+                    var oldEndIso = timeChangeNode["oldEnd"]?.InnerText ?? "";
+
+                    if (!string.IsNullOrWhiteSpace(oldStartIso) && !string.IsNullOrWhiteSpace(oldEndIso))
+                    {
+                        if (DateTime.TryParse(
+                                oldStartIso,
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                                out var oldStartUtc) &&
+                            DateTime.TryParse(
+                                oldEndIso,
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                                out var oldEndUtc))
+                        {
+                            var oldStartLocal = DateTime.SpecifyKind(oldStartUtc, DateTimeKind.Utc).ToLocalTime();
+                            var oldEndLocal = DateTime.SpecifyKind(oldEndUtc, DateTimeKind.Utc).ToLocalTime();
+
+                            timeChanged = true;
+                            timeChangedMessage =
+                                $"The time for “{microcourseTitle}” was updated: " +
+                                $"was {oldStartLocal:ddd, MMM d • h:mm tt}–{oldEndLocal:h:mm tt}, " +
+                                $"now {startLocal:ddd, MMM d • h:mm tt}–{endLocal:h:mm tt}.";
+                        }
+                    }
+                }
+
                 // compute waitlist position for "My Sessions" when applicable
                 var waitlistPosition = isWaitlisted ? GetWaitlistPosition(eventId, sid, userId) : 0;
 
-                // NEW: Only participants the Helper has "admitted" see the room link.
+
+                // Only participants the Helper has "admitted" see the room link.
                 bool isAdmitted = false;
                 if (isEnrolled)
                 {
@@ -684,6 +928,45 @@ namespace CyberApp_FIA.Participant
 
                 bool canSeeRoom = !string.IsNullOrWhiteSpace(room) && isEnrolled && isAdmitted;
 
+                // --- NEW: detect conflicts vs other enrolled sessions ---
+                bool hasConflict = false;
+                string conflictMessage = string.Empty;
+                string replacementUrl = string.Empty;
+
+                var thisInterval = myIntervals
+                    .FirstOrDefault(m => string.Equals(m.SessionId, sid, StringComparison.OrdinalIgnoreCase));
+
+                if (thisInterval != null)
+                {
+                    foreach (var other in myIntervals)
+                    {
+                        // Skip comparing the session to itself
+                        if (string.Equals(other.SessionId, sid, StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        if (Overlaps(thisInterval, other))
+                        {
+                            hasConflict = true;
+
+                            var mLocalStart = DateTime.SpecifyKind(other.StartUtc, DateTimeKind.Utc).ToLocalTime();
+                            var mLocalEnd = DateTime.SpecifyKind(other.EndUtc, DateTimeKind.Utc).ToLocalTime();
+
+                            conflictMessage =
+                                $"It overlaps with your other session “{other.Title}” " +
+                                $"({mLocalStart:ddd, MMM d • h:mm tt}–{mLocalEnd:h:mm tt}).";
+
+                            var returnQs = Request.Url.Query ?? "";
+                            replacementUrl = ResolveUrl(
+                                $"~/Account/Participant/Replacements.aspx?eventId={HttpUtility.UrlEncode(eventId)}" +
+                                $"&sessionId={HttpUtility.UrlEncode(sid)}" +
+                                $"&return={HttpUtility.UrlEncode(returnQs)}"
+                            );
+                            break;
+                        }
+                    }
+                }
+
+
                 rows.Add(new
                 {
                     microcourseTitle,
@@ -694,7 +977,12 @@ namespace CyberApp_FIA.Participant
                     isEnrolled,
                     isWaitlisted,
                     waitlistPosition,
-                    canSeeRoom
+                    canSeeRoom,
+                    timeChanged,
+                    timeChangedMessage,
+                    hasConflict,
+                    conflictMessage,
+                    replacementUrl
                 });
             }
 
@@ -750,9 +1038,9 @@ namespace CyberApp_FIA.Participant
                 {
                     ok = TryMarkComplete(eventId, sessionId, userId, out msg);
                 }
-                else if (string.Equals(e.CommandName, "unenroll", StringComparison.OrdinalIgnoreCase)) // NEW
+                else if (string.Equals(e.CommandName, "unenroll", StringComparison.OrdinalIgnoreCase))
                 {
-                    ok = TryUnenroll(eventId, sessionId, userId, out msg); // NEW
+                    ok = TryUnenroll(eventId, sessionId, userId, out msg);
                 }
                 else
                 {
@@ -772,6 +1060,7 @@ namespace CyberApp_FIA.Participant
                     var filters = ReadFiltersFromQuery();
                     BindSessions(eventId, filters);
                     BindMySessions(eventId, userId);
+                    // helper conversations are bound in initial load only; no change here
                 }
             }
         }
@@ -907,8 +1196,29 @@ namespace CyberApp_FIA.Participant
                 ses.SelectSingleNode("enrolled").AppendChild(u);
 
                 SaveEnrollmentsDoc(doc);
+
+                // INSERT: audit log for Participant Enroll
+                try
+                {
+                    var courseId = GetCourseIdForSession(eventId, sessionId);
+                    var titles = LoadCourseTitles();
+                    titles.TryGetValue(courseId ?? string.Empty, out var title);
+                    var safeTitle = string.IsNullOrWhiteSpace(title) ? "(untitled microcourse)" : title;
+
+                    UniversityAuditLogger.AppendForCurrentUser(
+                        this,
+                        "Participant Enroll",
+                        $"Participant enrolled in session for \"{safeTitle}\" (eventId={eventId}, sessionId={sessionId})."
+                    );
+                }
+                catch
+                {
+                    // Best-effort only
+                }
+
                 message = "Enrolled successfully!";
                 return true;
+
             }
         }
 
@@ -945,8 +1255,28 @@ namespace CyberApp_FIA.Participant
                 ses.SelectSingleNode("waitlist").AppendChild(u);
 
                 SaveEnrollmentsDoc(doc);
+
+                // INSERT: audit log for Participant Waitlist
+                try
+                {
+                    var courseId = GetCourseIdForSession(eventId, sessionId);
+                    var titles = LoadCourseTitles();
+                    titles.TryGetValue(courseId ?? string.Empty, out var title);
+                    var safeTitle = string.IsNullOrWhiteSpace(title) ? "(untitled microcourse)" : title;
+
+                    UniversityAuditLogger.AppendForCurrentUser(
+                        this,
+                        "Participant Waitlist",
+                        $"Participant joined the waitlist for \"{safeTitle}\" (eventId={eventId}, sessionId={sessionId}, position={newPosition})."
+                    );
+                }
+                catch
+                {
+                }
+
                 message = $"Added to waitlist. Your position is {newPosition}.";
                 return true;
+
             }
         }
 
@@ -976,10 +1306,31 @@ namespace CyberApp_FIA.Participant
 
                 SaveEnrollmentsDoc(doc);
 
-                if (!string.IsNullOrWhiteSpace(courseId)) { MarkCourseCompleted(userId, courseId); }
+                if (!string.IsNullOrWhiteSpace(courseId))
+                {
+                    MarkCourseCompleted(userId, courseId);
+                }
+
+                // INSERT: audit log for Participant Completion
+                try
+                {
+                    var titles = LoadCourseTitles();
+                    titles.TryGetValue(courseId ?? string.Empty, out var title);
+                    var safeTitle = string.IsNullOrWhiteSpace(title) ? "(untitled microcourse)" : title;
+
+                    UniversityAuditLogger.AppendForCurrentUser(
+                        this,
+                        "Participant Completion",
+                        $"Participant marked session complete for \"{safeTitle}\" (eventId={eventId}, sessionId={sessionId})."
+                    );
+                }
+                catch
+                {
+                }
 
                 message = "Marked complete. Your seat was freed (and the next waitlisted participant was enrolled). Prerequisite checks updated.";
                 return true;
+
             }
         }
 
@@ -1019,21 +1370,68 @@ namespace CyberApp_FIA.Participant
                     }
 
                     SaveEnrollmentsDoc(doc);
+
+                    // INSERT: audit log for Participant Unenroll (enrolled branch)
+                    try
+                    {
+                        var courseId = GetCourseIdForSession(eventId, sessionId);
+                        var titles = LoadCourseTitles();
+                        titles.TryGetValue(courseId ?? string.Empty, out var title);
+                        var safeTitle = string.IsNullOrWhiteSpace(title) ? "(untitled microcourse)" : title;
+
+                        UniversityAuditLogger.AppendForCurrentUser(
+                            this,
+                            "Participant Unenroll",
+                            $"Participant unenrolled from session for \"{safeTitle}\" (eventId={eventId}, sessionId={sessionId})."
+                        );
+                    }
+                    catch
+                    {
+                    }
+
                     message = "You have been unenrolled.";
                     return true;
+
                 }
                 else
                 {
-                    // Was waitlisted: simply remove from waitlist
                     waitNode.ParentNode.RemoveChild(waitNode);
                     SaveEnrollmentsDoc(doc);
+
+                    // INSERT: audit log for Participant Unenroll (waitlist branch)
+                    try
+                    {
+                        var courseId = GetCourseIdForSession(eventId, sessionId);
+                        var titles = LoadCourseTitles();
+                        titles.TryGetValue(courseId ?? string.Empty, out var title);
+                        var safeTitle = string.IsNullOrWhiteSpace(title) ? "(untitled microcourse)" : title;
+
+                        UniversityAuditLogger.AppendForCurrentUser(
+                            this,
+                            "Participant Unenroll",
+                            $"Participant removed themselves from the waitlist for \"{safeTitle}\" (eventId={eventId}, sessionId={sessionId})."
+                        );
+                    }
+                    catch
+                    {
+                    }
+
                     message = "Removed from the waitlist.";
                     return true;
+
                 }
             }
         }
+
+        // NEW: navigate to helper message page
+        protected void StartHelperMessageBtn_Click(object sender, EventArgs e)
+        {
+            var url = ResolveUrl("~/Account/Participant/HelperMessage.aspx");
+            Response.Redirect(url, endResponse: true);
+        }
     }
 }
+
 
 
 

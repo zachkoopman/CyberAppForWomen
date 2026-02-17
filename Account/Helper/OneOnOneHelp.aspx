@@ -122,6 +122,206 @@
       font-size:.95rem;
     }
 
+    /* Log 1:1 help shell */
+    .log-shell{
+      margin-bottom:20px;
+      padding:16px 18px 18px;
+      border-radius:18px;
+      border:1px solid var(--card-border);
+      background:
+        radial-gradient(circle at 0 0, rgba(240,106,169,0.12), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(42,153,219,0.14), transparent 55%),
+        linear-gradient(135deg,#ffffff,#f6f9ff);
+      box-shadow:0 14px 30px rgba(15,23,42,0.06);
+    }
+
+    .log-eyebrow{
+      font-size:0.75rem;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:#6b7280;
+      font-weight:700;
+      margin-bottom:2px;
+    }
+
+    .log-title{
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:1.1rem;
+      font-weight:600;
+      color:#111827;
+      margin:0;
+    }
+
+    .log-sub{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:.9rem;
+      max-width:640px;
+    }
+
+    .log-form{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:minmax(0,2.1fr) minmax(0,3fr) auto;
+      gap:12px;
+      align-items:flex-end;
+    }
+
+    .log-field-group{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .log-label{
+      font-size:.8rem;
+      font-weight:600;
+      color:#4b5563;
+    }
+
+    .log-select{
+      width:100%;
+      border-radius:999px;
+      border:1px solid #d1d5db;
+      padding:7px 11px;
+      font-size:.9rem;
+      background:#ffffff;
+      outline:none;
+    }
+
+    .log-select:focus{
+      border-color:var(--fia-blue);
+      box-shadow:0 0 0 2px rgba(42,153,219,0.25);
+    }
+
+    .log-notes{
+      width:100%;
+      border-radius:12px;
+      border:1px solid #d1d5db;
+      padding:7px 10px;
+      font-size:.9rem;
+      resize:vertical;
+      min-height:40px;
+      max-height:120px;
+      outline:none;
+    }
+
+    .log-notes:focus{
+      border-color:var(--fia-pink);
+      box-shadow:0 0 0 2px rgba(240,106,169,0.2);
+    }
+
+    .log-submit{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding:9px 14px;
+      border-radius:999px;
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:.85rem;
+      font-weight:600;
+      background:linear-gradient(135deg,var(--fia-pink),var(--fia-blue));
+      color:#fff;
+      box-shadow:0 8px 18px rgba(15,23,42,0.18);
+      white-space:nowrap;
+    }
+
+    .log-submit:focus{
+      outline:none;
+      box-shadow:0 0 0 3px rgba(42,153,219,0.35);
+    }
+
+    .log-status{
+      margin-top:8px;
+      font-size:.85rem;
+      color:#4b5563;
+    }
+
+    .log-status-error{
+      color:#b91c1c;
+    }
+
+    /* Recent help history */
+    .log-history{
+      margin-top:16px;
+      padding-top:10px;
+      border-top:1px dashed rgba(148,163,184,0.6);
+    }
+
+    .log-history-header{
+      font-size:.8rem;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:#6b7280;
+      margin-bottom:6px;
+    }
+
+    .log-history-empty{
+      font-size:.85rem;
+      color:var(--muted);
+    }
+
+    .log-history-list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .log-history-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:12px;
+      background:linear-gradient(135deg,rgba(42,153,219,0.05),rgba(240,106,169,0.06));
+      border:1px solid rgba(209,213,219,0.8);
+    }
+
+    .log-history-main{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+
+    .log-history-title{
+      font-size:.9rem;
+      font-weight:600;
+      color:#111827;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .log-history-meta{
+      font-size:.8rem;
+      color:var(--muted);
+    }
+
+    .log-history-undo{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding:5px 10px;
+      border-radius:999px;
+      font-family:Poppins, system-ui, sans-serif;
+      font-size:.78rem;
+      font-weight:600;
+      background:#ffffff;
+      color:var(--fia-blue);
+      border:1px solid rgba(191,219,254,1);
+      box-shadow:0 6px 14px rgba(15,23,42,0.08);
+      white-space:nowrap;
+      flex-shrink:0;
+    }
+
+    .log-history-undo:focus{
+      outline:none;
+      box-shadow:0 0 0 2px rgba(59,130,246,0.5);
+    }
+
     /* Shell for participants list */
     .participants-shell{
       background:linear-gradient(135deg,#ffffff,#f9fbff);
@@ -197,6 +397,13 @@
       opacity:0.75;
     }
 
+    .participant-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+
     .participant-name{
       font-family:Poppins, system-ui, sans-serif;
       font-size:1rem;
@@ -219,9 +426,65 @@
       margin-top:2px;
     }
 
+    /* Message indicator */
+    .msg-indicator{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:3px 8px;
+      border-radius:999px;
+      font-size:.72rem;
+      font-weight:600;
+      background:linear-gradient(135deg, rgba(240,106,169,0.10), rgba(42,153,219,0.08));
+      color:#7a103a;
+      border:1px solid rgba(240,106,169,0.35);
+      white-space:nowrap;
+    }
+
+    .msg-dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--fia-pink);
+    }
+
+    .participant-actions{
+      margin-top:8px;
+      display:flex;
+      gap:8px;
+      padding-inline-start:2px;
+    }
+
+    .btn-convo{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:7px 11px;
+      border-radius:999px;
+      border:1px solid #dbeafe;
+      background:linear-gradient(135deg,#eff6ff,#ffffff);
+      font-size:.85rem;
+      font-weight:600;
+      color:#1d4ed8;
+      text-decoration:none;
+      box-shadow:0 8px 18px rgba(15,23,42,0.06);
+    }
+
+    .btn-convo:hover{
+      border-color:#bfdbfe;
+      box-shadow:0 10px 22px rgba(15,23,42,0.10);
+    }
+
     @media (max-width:640px){
       .page-header{
         flex-direction:column-reverse;
+        align-items:flex-start;
+      }
+      .log-form{
+        grid-template-columns:1fr;
+        align-items:stretch;
+      }
+      .log-history-item{
         align-items:flex-start;
       }
     }
@@ -251,6 +514,80 @@
         </a>
       </div>
 
+      <!-- Log a 1:1 help session -->
+      <div class="log-shell">
+        <div>
+          <div class="log-eyebrow">Certification progress</div>
+          <h2 class="log-title">Log a one-on-one help session</h2>
+          <p class="log-sub">
+            Track one-to-one help you gave for a microcourse category so your support work counts toward certification.
+            Add a short note about what you helped with.
+          </p>
+        </div>
+
+        <div class="log-form">
+          <div class="log-field-group">
+            <span class="log-label">Microcourse category</span>
+            <asp:DropDownList ID="HelpCourseDropDown"
+                              runat="server"
+                              CssClass="log-select" />
+          </div>
+          <div class="log-field-group">
+            <span class="log-label">What did you help with?</span>
+            <asp:TextBox ID="HelpDetailsTextBox"
+                         runat="server"
+                         CssClass="log-notes"
+                         TextMode="MultiLine"
+                         Rows="2"
+                         placeholder="Example: Helped Abby set stronger privacy settings on Instagram."></asp:TextBox>
+          </div>
+          <div class="log-field-group">
+            <asp:Button ID="HelpSubmitButton"
+                        runat="server"
+                        CssClass="log-submit"
+                        Text="Log one-to-one help"
+                        OnClick="HelpSubmitButton_Click" />
+          </div>
+        </div>
+
+        <asp:Label ID="HelpStatusLabel" runat="server" CssClass="log-status" />
+
+        <div class="log-history">
+          <div class="log-history-header">Recent one-to-one help</div>
+
+          <asp:PlaceHolder ID="HelpHistoryEmpty" runat="server">
+            <div class="log-history-empty">
+              Once you log help sessions, the last three will show here with quick undo.
+            </div>
+          </asp:PlaceHolder>
+
+          <asp:Repeater ID="HelpHistoryRepeater"
+                        runat="server"
+                        OnItemCommand="HelpHistoryRepeater_ItemCommand">
+            <HeaderTemplate>
+              <div class="log-history-list">
+            </HeaderTemplate>
+            <ItemTemplate>
+              <div class="log-history-item">
+                <div class="log-history-main">
+                  <div class="log-history-title"><%# Eval("CourseTitle") %></div>
+                  <div class="log-history-meta"><%# Eval("WhenLabel") %></div>
+                </div>
+                <asp:Button ID="UndoHelpItemButton"
+                            runat="server"
+                            CssClass="log-history-undo"
+                            Text="Undo"
+                            CommandName="undoHelp"
+                            CommandArgument='<%# Eval("Snapshot") %>' />
+              </div>
+            </ItemTemplate>
+            <FooterTemplate>
+              </div>
+            </FooterTemplate>
+          </asp:Repeater>
+        </div>
+      </div>
+
       <!-- Participants shell -->
       <div class="participants-shell">
         <div class="participants-header">
@@ -260,6 +597,7 @@
         <p class="participants-sub">
           Each card shows a participant’s first name and email address so you can
           quickly reach out, schedule time, or look them up in another system.
+          When a participant has sent you messages, you’ll see a small indicator next to their name.
         </p>
 
         <!-- Empty state -->
@@ -278,18 +616,39 @@
 
           <ItemTemplate>
             <div class="participant-card">
-              <div class="participant-name">
-                <%# Eval("FirstName") %>
+              <div class="participant-header">
+                <div class="participant-name">
+                  <%# Eval("FirstName") %>
+                </div>
+
+                <asp:PlaceHolder ID="HasConvoPH" runat="server"
+                                 Visible='<%# (bool)Eval("HasConversation") %>'>
+                  <span class="msg-indicator" title="This participant has sent you messages.">
+                    <span class="msg-dot"></span>
+                    <span>Messages</span>
+                  </span>
+                </asp:PlaceHolder>
               </div>
+
               <div class="participant-email">
                 <%# Eval("Email") %>
               </div>
+
               <asp:PlaceHolder ID="UniversityPH" runat="server"
                                Visible='<%# !string.IsNullOrWhiteSpace(Convert.ToString(Eval("University"))) %>'>
                 <div class="participant-meta">
                   <%# Eval("University") %>
                 </div>
               </asp:PlaceHolder>
+
+              <div class="participant-actions">
+                <asp:HyperLink ID="ConversationsLink"
+                               runat="server"
+                               CssClass="btn-convo"
+                               NavigateUrl='<%# Eval("ConversationsUrl") %>'>
+                  Conversations
+                </asp:HyperLink>
+              </div>
             </div>
           </ItemTemplate>
 
@@ -303,4 +662,6 @@
   </form>
 </body>
 </html>
+
+
 

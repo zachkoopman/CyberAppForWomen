@@ -60,6 +60,51 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.Literal EventStatus;
 
         /// <summary>
+        /// TxtEventName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtEventName;
+
+        /// <summary>
+        /// TxtEventDescription control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtEventDescription;
+
+        /// <summary>
+        /// BtnSaveEventMeta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnSaveEventMeta;
+
+        /// <summary>
+        /// BtnDeleteEvent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnDeleteEvent;
+
+        /// <summary>
+        /// EventMetaMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label EventMetaMessage;
+
+        /// <summary>
         /// NoCoursesPH control.
         /// </summary>
         /// <remarks>
@@ -157,6 +202,24 @@ namespace CyberApp_FIA.Account
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnClearHelperFilters;
+
+        /// <summary>
+        /// SortByLastDelivered control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox SortByLastDelivered;
+
+        /// <summary>
+        /// SortByMostDelivered control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox SortByMostDelivered;
 
         /// <summary>
         /// NoHelpersPH control.

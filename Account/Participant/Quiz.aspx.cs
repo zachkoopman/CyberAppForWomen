@@ -151,9 +151,24 @@ namespace CyberApp_FIA.Account.Participant
 
             var result = _svc.ComputeAndSaveResult(UserKey, Selections);
 
+            // INSERT: audit log for Pre-Event Quiz completion (no score)
+            try
+            {
+                UniversityAuditLogger.AppendForCurrentUser(
+                    this,
+                    "Participant Pre-Event Quiz Completion",
+                    "Participant completed the pre-event cybersecurity quiz."
+                );
+            }
+            catch
+            {
+                // Best-effort only; quiz flow should never fail from logging.
+            }
+
             // Show summary
             PanelQuestion.Visible = false;
             PanelComplete.Visible = true;
+
 
             // v2 overall is 0–10; v1 is 0–100; show what the engine produced
             LblOverall.Text = $"Overall Score: <strong>{result.OverallScore}</strong>";

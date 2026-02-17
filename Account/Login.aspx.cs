@@ -4,6 +4,7 @@ using System.Text;
 using System.Web.UI;
 using System.Xml;
 using System.Security.Cryptography;
+using CyberApp_FIA.Services;
 
 namespace CyberApp_FIA.Account
 {
@@ -54,9 +55,53 @@ namespace CyberApp_FIA.Account
             // If not found, do not reveal whether the email exists—return a generic failure message.
             if (userNode == null)
             {
+                // --- AUDIT: log failed sign-in where the email does NOT exist in users.xml ---
+                try
+                {
+                    var auditPath = Server.MapPath("~/App_Data/Audit_Log/UnvAdminAudit.xml");
+
+                    // Ensure directory + file exist
+                    var auditDir = Path.GetDirectoryName(auditPath);
+                    if (!string.IsNullOrEmpty(auditDir) && !Directory.Exists(auditDir))
+                    {
+                        Directory.CreateDirectory(auditDir);
+                    }
+
+                    var auditDoc = new XmlDocument();
+                    if (File.Exists(auditPath))
+                    {
+                        auditDoc.Load(auditPath);
+                    }
+                    else
+                    {
+                        auditDoc.LoadXml("<?xml version='1.0' encoding='utf-8'?><auditLog version='1'></auditLog>");
+                    }
+
+                    var entry = auditDoc.CreateElement("entry");
+                    entry.SetAttribute("id", "log-" + Guid.NewGuid().ToString("N"));
+                    entry.SetAttribute("university", ""); // unknown – email not found
+                    entry.SetAttribute("role", "Unknown");
+                    entry.SetAttribute("type", "Sign In Failed (Unknown Email)");
+                    entry.SetAttribute("timestamp", DateTime.UtcNow.ToString("o"));
+                    entry.SetAttribute("email", emailLower);   // the attempted email
+                    entry.SetAttribute("firstName", "");       // unknown
+
+                    var detailsEl = auditDoc.CreateElement("details");
+                    detailsEl.InnerText = "Sign-in attempt with an email address that does not exist in users.xml.";
+                    entry.AppendChild(detailsEl);
+
+                    auditDoc.DocumentElement.AppendChild(entry);
+                    auditDoc.Save(auditPath);
+                }
+                catch
+                {
+                    // Best-effort only; never block login failure flow if audit logging breaks.
+                }
+
                 FormMessage.Text = "<span style='color:#c21d1d'>Invalid email or password.</span>";
                 return;
             }
+
 
             // Retrieve stored salt and hash from the XML node. Both must be present.
             var saltB64 = userNode["passwordSalt"]?.InnerText ?? "";
@@ -87,23 +132,97 @@ namespace CyberApp_FIA.Account
             // Compare hashes using a constant-time routine to reduce timing side-channel leakage.
             if (!SecureEquals(storedHash, enteredHash))
             {
+                // --- AUDIT: log failed password attempt for an existing account ---
+                try
+                {
+                    // userNode is non-null here (email exists in users.xml)
+                    var userElement = (XmlElement)userNode;
+                    var roleAttr = userElement.GetAttribute("role") ?? "";
+                    var uni = userNode["university"]?.InnerText ?? "";
+                    var firstName = userNode["firstName"]?.InnerText ?? "";
+
+                    var auditPath = Server.MapPath("~/App_Data/Audit_Log/UnvAdminAudit.xml");
+
+                    // Ensure directory + file exist
+                    var auditDir = Path.GetDirectoryName(auditPath);
+                    if (!string.IsNullOrEmpty(auditDir) && !Directory.Exists(auditDir))
+                    {
+                        Directory.CreateDirectory(auditDir);
+                    }
+
+                    var auditDoc = new XmlDocument();
+                    if (File.Exists(auditPath))
+                    {
+                        auditDoc.Load(auditPath);
+                    }
+                    else
+                    {
+                        auditDoc.LoadXml("<?xml version='1.0' encoding='utf-8'?><auditLog version='1'></auditLog>");
+                    }
+
+                    var entry = auditDoc.CreateElement("entry");
+                    entry.SetAttribute("id", "log-" + Guid.NewGuid().ToString("N"));
+                    entry.SetAttribute("university", uni);
+                    entry.SetAttribute("role", string.IsNullOrWhiteSpace(roleAttr) ? "Unknown" : roleAttr);
+                    entry.SetAttribute("type", "Sign In Failed (Bad Password)");
+                    entry.SetAttribute("timestamp", DateTime.UtcNow.ToString("o"));
+                    entry.SetAttribute("email", emailLower);
+                    entry.SetAttribute("firstName", firstName);
+
+                    var detailsEl = auditDoc.CreateElement("details");
+                    detailsEl.InnerText = "Incorrect password entered for existing account during sign in.";
+                    entry.AppendChild(detailsEl);
+
+                    auditDoc.DocumentElement.AppendChild(entry);
+                    auditDoc.Save(auditPath);
+                }
+                catch
+                {
+                    // Best-effort only; never block login failure flow if audit logging breaks.
+                }
+
                 FormMessage.Text = "<span style='color:#c21d1d'>Invalid email or password.</span>";
                 return;
             }
 
+
             // --- Authentication succeeded ---
             // Extract id and role attributes from the <user> element for session initialization.
-            var id = ((XmlElement)userNode).GetAttribute("id");
-            var role = ((XmlElement)userNode).GetAttribute("role");
+            var element = (XmlElement)userNode;
+            var id = element.GetAttribute("id");
+            var role = element.GetAttribute("role");
 
-            // Minimal session initialization for prototype purposes.
-            // Note: Consider setting session cookie flags (HttpOnly, Secure, SameSite) in web.config.
+            // Minimal session initialization.
             Session["UserId"] = id;
             Session["Role"] = role;
             Session["Email"] = emailLower;
 
             // Optionally load the user's university (may be empty for some roles).
             Session["University"] = userNode["university"]?.InnerText ?? "";
+
+            // --- AUDIT: log sign-in for all primary roles into University Admin audit log ---
+            var normalizedRole = (role ?? string.Empty).Trim();
+
+            // Previously this only logged Participant/Helper; now it also logs UniversityAdmin and SuperAdmin.
+            if (normalizedRole.Equals("Participant", StringComparison.OrdinalIgnoreCase) ||
+                normalizedRole.Equals("Helper", StringComparison.OrdinalIgnoreCase) ||
+                normalizedRole.Equals("UniversityAdmin", StringComparison.OrdinalIgnoreCase) ||
+                normalizedRole.Equals("SuperAdmin", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    // This writes an <entry> into UnivAdminAudit.xml with the current user's university, role, etc.
+                    UniversityAuditLogger.AppendForCurrentUser(
+                        this,
+                        "Sign In",
+                        $"{normalizedRole} signed in."
+                    );
+                }
+                catch
+                {
+                    // Audit logging is best-effort; never block login.
+                }
+            }
 
             // Role-based routing to post-login landing pages.
             // Default falls back to Participant flow if role is missing or unrecognized.
@@ -113,10 +232,10 @@ namespace CyberApp_FIA.Account
                     Response.Redirect("~/Account/SuperAdmin/SuperAdminHome.aspx");
                     break;
                 case "universityadmin":
-                    Response.Redirect("~/Account/UniversityAdmin/UniversityAdminHome.aspx"); // (make later)
+                    Response.Redirect("~/Account/UniversityAdmin/UniversityAdminHome.aspx");
                     break;
                 case "helper":
-                    Response.Redirect("~/Account/Helper/Home.aspx"); // (make later)
+                    Response.Redirect("~/Account/Helper/Home.aspx");
                     break;
                 case "participant":
                 default:

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helperNotes>
+  <!--
+    Helper notes are appended here by Helper/Schedule.aspx when a helper
+    marks a session as delivered.
+
+    Example shape (you can delete this example if you want an empty file):
+
+    <note helperId="429d338c0568409e8bd5945d28a30bce"
+          courseId="0c1e0fd46a0244ad8176b65ea44b05f1"
+          courseTitle="Recognizing Malicious Mobile Apps"
+          tsUtc="2025-11-18T06:10:00.0000000Z">
+      <text>First pilot session went well, lots of Q&amp;A on app permissions.</text>
+    </note>
+  -->
+  <note helperId="429d338c0568409e8bd5945d28a30bce" courseId="154085e49eb7427b95e967c0af05c870" courseTitle="2FA Setup And Mangement" tsUtc="2025-11-18T07:19:06.9130262Z">
+    <text>note test</text>
+  </note>
+  <note helperId="429d338c0568409e8bd5945d28a30bce" courseId="154085e49eb7427b95e967c0af05c870" courseTitle="2FA Setup And Mangement" tsUtc="2025-11-18T07:19:27.9820335Z">
+    <text>note test 2</text>
+  </note>
+  <note helperId="429d338c0568409e8bd5945d28a30bce" courseId="154085e49eb7427b95e967c0af05c870" courseTitle="2FA Setup And Mangement" tsUtc="2025-11-18T07:20:00.1534853Z">
+    <text>
+    </text>
+  </note>
+  <note helperId="429d338c0568409e8bd5945d28a30bce" courseId="154085e49eb7427b95e967c0af05c870" courseTitle="2FA Setup And Mangement" tsUtc="2025-11-18T07:20:07.2784004Z">
+    <text>
+    </text>
+  </note>
+  <note helperId="429d338c0568409e8bd5945d28a30bce" courseId="ba9ef2af382e4f8e80e2c4357c7993b1" courseTitle="Safe Use of Public Computers and Wi-Fi" tsUtc="2025-11-18T07:29:21.5815180Z">
+    <text>ll</text>
+  </note>
+  <note helperId="789d338c0568409e8bd5945d28a30lop" courseId="f98b4b69dc334c9496ca948351e843b7" courseTitle="Enhancing Social Media Privacy Settings" tsUtc="2025-11-18T09:39:13.7701602Z">
+    <text>
+    </text>
+  </note>
+  <note helperId="429c338c0567409e8bd5945d28a30bce" courseId="154085e49eb7427b95e967c0af05c870" courseTitle="2FA Setup And Mangement" tsUtc="2025-11-28T03:07:51.5722525Z">
+    <text>I helped user u with 2FA</text>
+  </note>
+  <note helperId="429d338c0568409e8bd5945d28a30bce" courseId="550051f55dad499c850dc2e94289a941" courseTitle="Phishing Awareness And Email Security" tsUtc="2025-11-28T04:16:50.6519467Z">
+    <text>Helped lead phishing class.</text>
+  </note>
+  <note helperId="429d338c0568409e8bd5945d28a30bce" courseId="0c1e0fd46a0244ad8176b65ea44b05f1" courseTitle="Recognizing Malicious Mobile Apps" tsUtc="2025-11-28T14:30:06.9243429Z">
+    <text>ll</text>
+  </note>
+  <note helperId="789d338c0568409e8bd5945d28a30lop" courseId="caebb3c577994d098c5086f17c4f7464" courseTitle="Safe Online Banking Practices" tsUtc="2025-11-28T23:29:03.3503884Z">
+    <text>cacacac</text>
+  </note>
+</helperNotes>

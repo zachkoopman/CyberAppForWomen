@@ -1,272 +1,405 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UniversityAdminHome.aspx.cs" Inherits="CyberApp_FIA.Account.UniversityAdminHome" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true"
+    CodeBehind="UniversityAdminHome.aspx.cs"
+    Inherits="CyberApp_FIA.Account.UniversityAdminHome" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-  <title>FIA • University Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Poppins:wght@600&display=swap" rel="stylesheet" />
+  <title>FIA • University Admin Home</title>
+  <meta charset="utf-8" />
 
-  <style>
-    /* =========================================================================
-       Design tokens (brand colors, text colors, focus ring)
-       ========================================================================= */
-    :root{ --fia-pink:#f06aa9; --fia-blue:#2a99db; --fia-teal:#45c3b3; --ink:#1c1c1c; --muted:#6b7280; --ring:rgba(42,153,219,.25) }
+  <!-- FIA fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Poppins:wght@600&display=swap"
+    rel="stylesheet" />
 
-    /* Base layout */
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
+  <style type="text/css">
+    :root{
+      --fia-pink:#f06aa9;
+      --fia-blue:#2a99db;
+      --fia-teal:#45c3b3;
+      --ink:#1e2640;
+      --muted:#5b6477;
+      --bg:#f3f5fb;
+      --card-border:#e2e8f0;
+      --ring:rgba(42,153,219,.25);
+    }
+
     body{
+      font-family:Lato, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin:0;
-      font-family:Lato,Arial,sans-serif;
-      background:linear-gradient(135deg,#fff,#f9fbff);
+      padding:0;
+      background:
+        radial-gradient(circle at 0 0, rgba(240,106,169,0.10), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(42,153,219,0.10), transparent 55%),
+        var(--bg);
       color:var(--ink);
     }
 
-    /* Page wrapper centers content and limits width */
-    .wrap{
-      min-height:100vh;
-      padding:24px;
-      max-width:1000px;
+    .fia-shell{
+      max-width:1100px;
       margin:0 auto;
+      padding:24px 16px 48px 16px;
     }
 
-    /* Header (brand + sign-out) */
-    .header{
+    /* Header */
+    .fia-header{
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
+      margin-bottom:24px;
       gap:14px;
-      margin-bottom:16px;
     }
-    .brand{ display:flex; align-items:center; gap:10px }
-    .badge{
-      width:42px; height:42px; border-radius:12px;
+
+    .fia-header-title{
+      font-size:1.5rem;
+      font-weight:600;
+      font-family:Poppins, system-ui, sans-serif;
+      margin:0;
+      background:linear-gradient(135deg,var(--fia-blue),var(--fia-pink));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .fia-subtitle{
+      font-size:0.85rem;
+      color:var(--muted);
+      margin-top:4px;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:6px;
+    }
+
+    .fia-badge{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 10px;
+      border-radius:999px;
       background:linear-gradient(135deg,var(--fia-pink),var(--fia-blue));
-      display:grid; place-items:center;
-      color:#fff; font-family:Poppins;
+      color:#ffffff;
+      font-size:0.72rem;
+      font-weight:600;
+      letter-spacing:.04em;
+      text-transform:uppercase;
     }
-    h1{ font-family:Poppins; margin:0; font-size:1.35rem }
-    .hello{ color:var(--muted); font-size:.95rem }
 
-    /* Card container used for form blocks and lists */
-    .card{
-      background:#fff;
-      border:1px solid #e8eef7;
+    /* Buttons */
+    .fia-btn{
+      border:none;
+      border-radius:999px;
+      padding:9px 16px;
+      font-size:0.85rem;
+      cursor:pointer;
+      background:linear-gradient(135deg,#f06aa9,#2a99db);
+      color:#fff;
+      font-family:Poppins, system-ui, sans-serif;
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+    }
+
+    .fia-btn-secondary{
+      border:1px solid #d0d5e6;
+      background:#ffffff;
+      color:#1e2640;
+      box-shadow:0 8px 18px rgba(15,23,42,0.06);
+    }
+
+    /* Layout rows + cards */
+    .fia-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      margin-bottom:24px;
+    }
+
+    .fia-card{
+      background:#ffffff;
       border-radius:20px;
-      box-shadow:0 12px 36px rgba(42,153,219,.08);
-      padding:20px;
-      margin-bottom:16px;
+      padding:16px 18px 18px 18px;
+      box-shadow:0 12px 32px rgba(15,23,42,0.06);
+      flex:1 1 260px;
+      min-width:260px;
+      border:1px solid var(--card-border);
     }
-    .card h2{ font-family:Poppins; margin:0 0 8px 0; font-size:1.15rem }
-    .sub{ color:var(--muted); margin:0 0 12px 0 }
 
-    /* Form controls */
-    label{ font-weight:600; font-family:Poppins; font-size:.95rem }
-    input[type=text], input[type=date], textarea{
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid #e5e7eb;
+    .fia-card-title{
+      font-size:1rem;
+      font-weight:600;
+      color:#1e2640;
+      margin-bottom:4px;
+      font-family:Poppins, system-ui, sans-serif;
     }
-    textarea{ min-height:110px; resize:vertical }
-    input:focus, textarea:focus{
+
+    .fia-card-body{
+      font-size:0.85rem;
+      color:#4b5563;
+      margin-bottom:12px;
+    }
+
+    /* Form grid + inputs */
+    .fia-form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px 16px;
+      margin-top:12px;
+    }
+
+    .fia-form-grid .full{
+      grid-column:1 / -1;
+    }
+
+    .fia-label{
+      display:block;
+      font-size:0.78rem;
+      font-weight:600;
+      color:#4b5563;
+      margin-bottom:4px;
+      font-family:Poppins, system-ui, sans-serif;
+    }
+
+    .fia-input,
+    .fia-textarea{
+      width:100%;
+      box-sizing:border-box;
+      border-radius:12px;
+      border:1px solid #d0d5e6;
+      padding:9px 11px;
+      font-size:0.85rem;
+      font-family:inherit;
+      background:#ffffff;
+    }
+
+    .fia-textarea{
+      resize:vertical;
+      min-height:60px;
+    }
+
+    .fia-input:focus,
+    .fia-textarea:focus{
       outline:0;
-      box-shadow:0 0 0 5px var(--ring);
+      box-shadow:0 0 0 3px var(--ring);
       border-color:var(--fia-blue);
     }
 
-    /* Two-column grid for form fields; collapses on small screens */
-    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px }
-    @media (max-width:800px){ .grid{ grid-template-columns:1fr } }
-
-    /* Buttons */
-    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px }
-    .btn{
-      border:0;
-      border-radius:12px;
-      padding:12px 18px;
-      font-weight:700;
-      font-family:Poppins;
-      cursor:pointer;
+    .fia-form-actions{
+      margin-top:12px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
     }
-    .primary{ color:#fff; background:linear-gradient(135deg,var(--fia-blue),var(--fia-teal)) }
-    .link{ background:#fff; border:2px solid var(--fia-blue); color:var(--fia-blue) }
 
-    /* Validation and info */
-    .val{ color:#c21d1d; font-size:.9rem; margin-top:4px }
-    .note{
-      background:#f6f7fb;
-      border:1px solid #e8eef7;
-      border-radius:12px;
-      padding:12px;
+    .fia-form-message{
+      font-size:0.78rem;
+      margin-top:6px;
       color:var(--muted);
-      font-size:.95rem;
+    }
+
+    /* Events */
+    .fia-section-title{
+      font-size:0.95rem;
+      font-weight:600;
+      color:#1e2640;
+      margin:4px 0 8px 0;
+      font-family:Poppins, system-ui, sans-serif;
+    }
+
+    .fia-empty{
+      font-size:0.85rem;
+      color:#6b7280;
+      margin-top:8px;
+    }
+
+    .fia-event-list{
+      margin-top:8px;
+    }
+
+    .fia-event-row{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid #e2e8f0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:0.85rem;
+      margin-bottom:8px;
+      background-color:#ffffff;
+    }
+
+    .fia-event-main{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .fia-event-name{
+      font-weight:600;
+      color:#111827;
+    }
+
+    .fia-event-meta{
+      font-size:0.8rem;
+      color:#6b7280;
+      margin-top:2px;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:6px;
+    }
+
+    .fia-chip{
+      padding:3px 9px;
+      border-radius:999px;
+      font-size:0.72rem;
+      border:1px solid rgba(148,163,184,0.6);
+      color:#374151;
+      background:linear-gradient(135deg,rgba(42,153,219,0.08),rgba(240,106,169,0.08));
+    }
+
+    @media (max-width:768px){
+      .fia-form-grid{
+        grid-template-columns:1fr;
+      }
+      .fia-header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
     }
   </style>
 </head>
-
 <body>
   <form id="form1" runat="server">
-    <div class="wrap">
+    <asp:HiddenField ID="UniversityValue" runat="server" />
 
-      <!-- ===============================================================
-           Page header: product brand + welcome + sign-out
-           =============================================================== -->
-      <div class="header">
-        <div class="brand">
-          <div class="badge">FIA</div>
-          <div>
-            <h1>University Admin Home</h1>
-            <div class="hello">
-              Welcome, <asp:Literal ID="WelcomeName" runat="server" />.
-            </div>
+    <div class="fia-shell">
+      <!-- Header -->
+      <div class="fia-header">
+        <div>
+          <div class="fia-header-title">
+            University Admin Home
+          </div>
+          <div class="fia-subtitle">
+            <span>Welcome, <asp:Literal ID="WelcomeName" runat="server" /></span>
+            <span class="fia-badge">
+              University:
+              <asp:Literal ID="UniversityDisplay" runat="server" />
+            </span>
           </div>
         </div>
-
-        <!-- Sign-out button (no validation on click) -->
         <div>
-          <asp:Button
-            ID="BtnLogout"
-            runat="server"
-            Text="Sign out"
-            CssClass="btn link"
-            OnClick="BtnLogout_Click"
-            CausesValidation="false" />
+          <asp:Button ID="BtnLogout" runat="server"
+            Text="Log out"
+            CssClass="fia-btn fia-btn-secondary"
+            OnClick="BtnLogout_Click" />
         </div>
       </div>
 
-      <!-- ===============================================================
-           Create Cyberfair Event (form card)
-           =============================================================== -->
-      <div class="card">
-        <h2>Create a new Cyberfair event</h2>
-        <p class="sub">This event will host your selected microcourses.</p>
+      <!-- Row: Audit log + helper section -->
+      <div class="fia-row">
+        <!-- Audit log navigation -->
+        <div class="fia-card">
+          <div class="fia-card-title">Helper Audit &amp; Activity</div>
+          <div class="fia-card-body">
+            Review helper logs and microcourse activity scoped to your university.
+          </div>
+          <asp:Button ID="BtnOpenAudit" runat="server"
+            Text="Open Audit Log"
+            CssClass="fia-btn"
+            OnClick="BtnOpenAudit_Click" />
+        </div>
 
-        <div class="grid">
-          <!-- Predefined, read-only university display + hidden value for submission -->
-          <div style="grid-column:1/-1">
-            <label>University</label>
-            <div class="note" style="font-weight:600;">
-              <asp:Literal ID="UniversityDisplay" runat="server" />
+        <!-- Add Helper navigation -->
+        <div class="fia-card">
+          <div class="fia-card-title">Add New Helper</div>
+          <div class="fia-card-body">
+            Create a helper account for your university by entering their basic details on the next screen.
+          </div>
+          <asp:Button ID="BtnAddHelper" runat="server"
+            Text="Add Helper for My University"
+            CssClass="fia-btn"
+            OnClick="BtnAddHelper_Click" />
+        </div>
+      </div>
+
+      <!-- Event creation + list -->
+      <div class="fia-row">
+        <!-- Create event -->
+        <div class="fia-card">
+          <div class="fia-card-title">Create Cyberfair Event</div>
+          <div class="fia-card-body">
+            Add a new cyberfair event for your university with a simple name, date, and description.
+          </div>
+
+          <div class="fia-form-grid">
+            <div class="full">
+              <label class="fia-label" for="EventName">Event name</label>
+              <asp:TextBox ID="EventName" runat="server" CssClass="fia-input"></asp:TextBox>
             </div>
-            <asp:HiddenField ID="UniversityValue" runat="server" />
+            <div>
+              <label class="fia-label" for="EventDate">Event date</label>
+              <asp:TextBox ID="EventDate" runat="server" CssClass="fia-input" TextMode="Date"></asp:TextBox>
+            </div>
+            <div class="full">
+              <label class="fia-label" for="Description">Description</label>
+              <asp:TextBox ID="Description" runat="server" CssClass="fia-textarea" TextMode="MultiLine"></asp:TextBox>
+            </div>
           </div>
 
-          <!-- Event date -->
-          <div>
-            <label for="EventDate">Event date</label>
-            <asp:TextBox ID="EventDate" runat="server" TextMode="Date" />
-            <asp:RequiredFieldValidator
-              runat="server"
-              ControlToValidate="EventDate"
-              CssClass="val"
-              ErrorMessage="Date is required."
-              Display="Dynamic" />
+          <div class="fia-form-actions">
+            <asp:Button ID="BtnCreateEvent" runat="server"
+              Text="Create event"
+              CssClass="fia-btn"
+              OnClick="BtnCreateEvent_Click" />
+            <asp:Button ID="BtnClear" runat="server"
+              Text="Clear"
+              CssClass="fia-btn fia-btn-secondary"
+              CausesValidation="false"
+              OnClick="BtnClear_Click" />
           </div>
 
-          <!-- Event name -->
-          <div>
-            <label for="EventName">Event name</label>
-            <asp:TextBox ID="EventName" runat="server" Placeholder="e.g., Fall Cyberfair 2025" />
-            <asp:RequiredFieldValidator
-              runat="server"
-              ControlToValidate="EventName"
-              CssClass="val"
-              ErrorMessage="Event name is required."
-              Display="Dynamic" />
-          </div>
-
-          <!-- Description -->
-          <div style="grid-column:1/-1">
-            <label for="Description">Description</label>
-            <asp:TextBox
-              ID="Description"
-              runat="server"
-              TextMode="MultiLine"
-              Placeholder="Brief description for participants and helpers..." />
-            <asp:RequiredFieldValidator
-              runat="server"
-              ControlToValidate="Description"
-              CssClass="val"
-              ErrorMessage="Description is required."
-              Display="Dynamic" />
+          <div class="fia-form-message">
+            <asp:Literal ID="FormMessage" runat="server" />
           </div>
         </div>
 
-        <!-- Submit / Clear buttons -->
-        <div class="btnrow">
-          <asp:Button
-            ID="BtnCreateEvent"
-            runat="server"
-            Text="Create event"
-            CssClass="btn primary"
-            OnClick="BtnCreateEvent_Click" />
-          <asp:Button
-            ID="BtnClear"
-            runat="server"
-            Text="Clear"
-            CssClass="btn link"
-            OnClick="BtnClear_Click"
-            CausesValidation="false" />
+        <!-- Event list -->
+        <div class="fia-card">
+          <div class="fia-section-title">Upcoming Events for Your University</div>
+
+          <asp:Panel ID="NoEventsPlaceholder" runat="server" Visible="false" CssClass="fia-empty">
+            No events have been created yet. Once you add events, they’ll show up here.
+          </asp:Panel>
+
+          <div class="fia-event-list">
+            <asp:Repeater ID="EventsRepeater" runat="server">
+              <ItemTemplate>
+                <div class="fia-event-row">
+                  <div class="fia-event-main">
+                    <span class="fia-event-name"><%# Eval("name") %></span>
+                    <span class="fia-event-meta">
+                      <span>Date: <%# Eval("dateHuman") %></span>
+                      <span class="fia-chip">
+                        Status: Published
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <a href="<%# Eval("manageUrl") %>"
+                       style="font-size:12px; text-decoration:none; color:#2563eb;">
+                      Manage
+                    </a>
+                  </div>
+                </div>
+              </ItemTemplate>
+            </asp:Repeater>
+          </div>
         </div>
-
-        <!-- Inline status/error message area -->
-        <asp:Label ID="FormMessage" runat="server" EnableViewState="false" />
-
-        <p></p>
-        <p></p>
-
-        <!-- =============================================================
-             Your Events (list of existing events for this university)
-             ============================================================= -->
-        <div class="card">
-          <h2>Your events</h2>
-          <p class="sub">Manage existing Cyberfairs linked to your university.</p>
-
-          <!-- Empty state shown when there are no events -->
-          <asp:PlaceHolder ID="NoEventsPlaceholder" runat="server" Visible="false">
-            <div class="note">No events yet. Create one above.</div>
-          </asp:PlaceHolder>
-
-          <!-- Events table rendered via Repeater -->
-          <asp:Repeater ID="EventsRepeater" runat="server">
-            <HeaderTemplate>
-              <div style="overflow:auto">
-                <table style="width:100%; border-collapse:collapse">
-                  <thead>
-                    <tr>
-                      <th style="text-align:left; padding:8px; border-bottom:1px solid #e8eef7;">Name</th>
-                      <th style="text-align:left; padding:8px; border-bottom:1px solid #e8eef7;">Date</th>
-                      <th style="text-align:left; padding:8px; border-bottom:1px solid #e8eef7;">Status</th>
-                      <th style="text-align:left; padding:8px; border-bottom:1px solid #e8eef7;">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-            </HeaderTemplate>
-
-            <ItemTemplate>
-              <tr>
-                <td style="padding:8px; border-bottom:1px solid #f0f3f9;"><%# Eval("name") %></td>
-                <td style="padding:8px; border-bottom:1px solid #f0f3f9;"><%# Eval("dateHuman") %></td>
-                <td style="padding:8px; border-bottom:1px solid #f0f3f9;"><span class="pill"><%# Eval("status") %></span></td>
-                <td style="padding:8px; border-bottom:1px solid #f0f3f9;">
-                  <a href='<%# Eval("manageUrl") %>'>Manage</a>
-                </td>
-              </tr>
-            </ItemTemplate>
-
-            <FooterTemplate>
-                  </tbody>
-                </table>
-              </div>
-            </FooterTemplate>
-          </asp:Repeater>
-        </div> <!-- /card: Your events -->
-
-      </div> <!-- /card: Create event -->
-
-    </div> <!-- /wrap -->
+      </div>
+    </div>
   </form>
 </body>
 </html>

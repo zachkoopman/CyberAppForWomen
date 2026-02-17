@@ -20,6 +20,9 @@ namespace CyberApp_FIA.Account
         /// </summary>
         private string XmlPath => Server.MapPath("~/App_Data/users.xml");
 
+        private string AuditXmlPath => Server.MapPath("~/App_Data/Audit_Log/UnvAdminAudit.xml");
+
+
         /// <summary>
         /// Click handler for the "Sign Up" button.
         /// Validates inputs, double-checks consent, hashes password with per-user salt,
@@ -102,6 +105,16 @@ namespace CyberApp_FIA.Account
             doc.DocumentElement.AppendChild(user);
             doc.Save(XmlPath);
 
+            // Write audit log entry that the account was created and consent accepted.
+            WriteAccountCreatedAuditEntry(
+                userId: id,
+                email: Email.Text.Trim().ToLowerInvariant(),
+                firstName: FirstName.Text.Trim(),
+                role: Role.Value,                      // e.g., "Participant"
+                consentIp: Request.UserHostAddress ?? "",
+                consentAtUtc: consentAt               // same UTC timestamp you used for consentAcceptedAt
+            );
+
             // Inform the user and navigate to the login page.
             // Note: Since Response.Redirect occurs immediately, this success message won't be seen on the current page.
             FormMessage.Text = "<span style='color:#0a7a3c'>Account created! You can sign in now.</span>";
@@ -152,6 +165,68 @@ namespace CyberApp_FIA.Account
             var node = doc.SelectSingleNode($"/users/user[translate(email,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{email.ToLower()}']");
             return node != null;
         }
+
+        // Creates the UnvAdminAudit.xml store if it does not exist.
+        private void EnsureAuditXml()
+        {
+            var dir = Path.GetDirectoryName(AuditXmlPath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            if (!File.Exists(AuditXmlPath))
+            {
+                var init = "<?xml version='1.0' encoding='utf-8'?><auditLog version='1'></auditLog>";
+                File.WriteAllText(AuditXmlPath, init, Encoding.UTF8);
+            }
+        }
+
+        /// <summary>
+        /// Writes an audit entry that a new account was created and consent was accepted.
+        /// </summary>
+        private void WriteAccountCreatedAuditEntry(
+            string userId,
+            string email,
+            string firstName,
+            string role,
+            string consentIp,
+            string consentAtUtc)
+        {
+            try
+            {
+                EnsureAuditXml();
+
+                var doc = new XmlDocument();
+                doc.Load(AuditXmlPath);
+
+                var entry = doc.CreateElement("entry");
+                entry.SetAttribute("id", "log-" + Guid.NewGuid().ToString("N"));
+
+                // NOTE: adjust this if you later capture university at sign-up.
+                entry.SetAttribute("university", "Arizona State University");
+
+                entry.SetAttribute("role", string.IsNullOrWhiteSpace(role) ? "Participant" : role);
+                entry.SetAttribute("type", "Account Created");
+                entry.SetAttribute("timestamp", DateTime.UtcNow.ToString("o"));
+                entry.SetAttribute("email", email ?? string.Empty);
+                entry.SetAttribute("firstName", firstName ?? string.Empty);
+
+                var details = doc.CreateElement("details");
+                details.InnerText =
+                    $"New {entry.GetAttribute("role")} account created (userId={userId}). " +
+                    $"Consent accepted at {consentAtUtc} UTC from IP {consentIp}.";
+                entry.AppendChild(details);
+
+                doc.DocumentElement.AppendChild(entry);
+                doc.Save(AuditXmlPath);
+            }
+            catch
+            {
+                // Fail-safe: never block sign-up on audit logging.
+            }
+        }
+
 
         /// <summary>
         /// Utility: creates an element with text content, safely defaulting nulls to empty string.

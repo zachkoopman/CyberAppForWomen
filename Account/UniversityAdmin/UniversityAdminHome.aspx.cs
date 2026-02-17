@@ -4,6 +4,7 @@ using System.IO;
 using System.Web.UI;
 using System.Xml;
 using System.Collections.Generic;
+using CyberApp_FIA.Services;
 
 namespace CyberApp_FIA.Account
 {
@@ -12,6 +13,8 @@ namespace CyberApp_FIA.Account
     /// - Gates access to users with the "UniversityAdmin" role.
     /// - Displays the admin's university and lists that university's events.
     /// - Allows creating new events stored in ~/App_Data/events.xml.
+    /// - Provides navigation into the university-scoped audit log.
+    /// - NEW: Provides navigation to the "Add Helper" page for this university.
     /// </summary>
     public partial class UniversityAdminHome : Page
     {
@@ -73,10 +76,28 @@ namespace CyberApp_FIA.Account
         }
 
         /// <summary>
+        /// Navigates to the University Admin audit log page where the admin can
+        /// review helper progress and general activity for their university.
+        /// </summary>
+        protected void BtnOpenAudit_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Account/UniversityAdmin/UniversityAdminAudit.aspx");
+        }
+
+        /// <summary>
+        /// NEW: Navigates to the page where this University Admin can add helpers
+        /// for their own university.
+        /// </summary>
+        protected void BtnAddHelper_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Account/UniversityAdmin/UniversityAdminAddHelper.aspx");
+        }
+
+        /// <summary>
         /// Creates a new event for the admin's university:
         /// - Validates inputs
         /// - Ensures events.xml exists
-        /// - Appends a new <event> with metadata, description, and date (ISO 8601 UTC midnight)
+        /// - Appends a new &lt;event&gt; with metadata, description, and date (ISO 8601 UTC midnight)
         /// - Rebinds the event list
         /// </summary>
         protected void BtnCreateEvent_Click(object sender, EventArgs e)
@@ -111,8 +132,8 @@ namespace CyberApp_FIA.Account
             doc.Load(EventsXmlPath);
 
             var ev = doc.CreateElement("event");
-            ev.SetAttribute("id", Guid.NewGuid().ToString("N"));        // Compact unique id
-            ev.SetAttribute("status", "Draft");                         // Future: Published, Archived, etc.
+            ev.SetAttribute("id", Guid.NewGuid().ToString("N"));         // Compact unique id
+            ev.SetAttribute("status", "Draft");                          // Future: Published, Archived, etc.
             ev.SetAttribute("createdAt", DateTime.UtcNow.ToString("o")); // Audit timestamp (UTC ISO 8601)
             ev.SetAttribute("createdBy", (Session["Email"] as string) ?? "universityadmin@unknown"); // Audit actor
 
@@ -128,6 +149,23 @@ namespace CyberApp_FIA.Account
             // Persist to disk.
             doc.DocumentElement.AppendChild(ev);
             doc.Save(EventsXmlPath);
+
+            // AUDIT: log Cyberfair event creation by university admin
+            try
+            {
+                var eventId = ev.GetAttribute("id");
+                var details =
+                    $"Cyberfair event created: eventId={eventId}, university=\"{uni}\", date={eventDateIso}.";
+                UniversityAuditLogger.AppendForCurrentUser(
+                    this,
+                    "Event Created",
+                    details);
+            }
+            catch
+            {
+                // best-effort only; do not block UI if audit logging fails
+            }
+
 
             // Inform user, clear input fields (but keep the fixed university), and refresh the list.
             FormMessage.Text = "<span style='color:#0a7a3c'>Cyberfair event created.</span>";

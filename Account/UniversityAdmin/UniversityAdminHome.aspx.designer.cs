@@ -24,6 +24,15 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
+        /// UniversityValue control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField UniversityValue;
+
+        /// <summary>
         /// WelcomeName control.
         /// </summary>
         /// <remarks>
@@ -31,15 +40,6 @@ namespace CyberApp_FIA.Account
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal WelcomeName;
-
-        /// <summary>
-        /// BtnLogout control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnLogout;
 
         /// <summary>
         /// UniversityDisplay control.
@@ -51,22 +51,31 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.Literal UniversityDisplay;
 
         /// <summary>
-        /// UniversityValue control.
+        /// BtnLogout control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField UniversityValue;
+        protected global::System.Web.UI.WebControls.Button BtnLogout;
 
         /// <summary>
-        /// EventDate control.
+        /// BtnOpenAudit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox EventDate;
+        protected global::System.Web.UI.WebControls.Button BtnOpenAudit;
+
+        /// <summary>
+        /// BtnAddHelper control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnAddHelper;
 
         /// <summary>
         /// EventName control.
@@ -76,6 +85,15 @@ namespace CyberApp_FIA.Account
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox EventName;
+
+        /// <summary>
+        /// EventDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox EventDate;
 
         /// <summary>
         /// Description control.
@@ -111,7 +129,7 @@ namespace CyberApp_FIA.Account
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label FormMessage;
+        protected global::System.Web.UI.WebControls.Literal FormMessage;
 
         /// <summary>
         /// NoEventsPlaceholder control.
@@ -120,7 +138,7 @@ namespace CyberApp_FIA.Account
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder NoEventsPlaceholder;
+        protected global::System.Web.UI.WebControls.Panel NoEventsPlaceholder;
 
         /// <summary>
         /// EventsRepeater control.

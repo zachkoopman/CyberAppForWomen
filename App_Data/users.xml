@@ -47,7 +47,7 @@
     <consentIp>
     </consentIp>
   </user>
-  <user id="24ff68a5f72d4b61873db9045034bede" role="Participant">
+  <user id="24ff68a5f72d4b61873db9045034bede" role="Participant" assignedHelperId="789d338c0568409e8bd5945d28a30lop">
     <firstName>Zachary</firstName>
     <lastName>Koopman</lastName>
     <email>koopmanzachary@gmail.com</email>
@@ -57,13 +57,14 @@
     <createdAt>2025-10-08T03:46:29.0649964Z</createdAt>
     <consentAcceptedAt>2025-10-08T03:46:29.0649964Z</consentAcceptedAt>
     <consentIp>::1</consentIp>
-    <lastEventId>eead57b6e0474159957c2e7c8fcf46ab</lastEventId>
+    <lastEventId>fb3b012d5cc6418bb7b1a09438fb7ef7</lastEventId>
   </user>
   <user id="9273fc4468a142489a1f822e267472d9" role="Participant">
-    <firstName>test1</firstName>
-    <lastName>test1</lastName>
-    <email>zkoopman@asu.edu</email>
+    <firstName>Gvavzr3+1ZufZLaCXEvTJZzyEKtpv7Z1gx12SAWAoHA=</firstName>
+    <lastName>Lkod89ws+2doxDFcLaCXCJALxapaDZpvgx12SaoxaAqp=</lastName>
+    <email>Fosa1lax+dldwoPDLXixaalePdX877wdixACQPCXLocaop=</email>
     <university>
+		Arizona State University
     </university>
     <passwordHash>ZulPl0GUEAVO6/NYMs4/RCeEsUDhKmppzFK0NiMbpYI=</passwordHash>
     <passwordSalt>E/zwiTa5dric5IF1rYd0fA==</passwordSalt>
@@ -117,7 +118,7 @@
     <consentAcceptedAt>2025-10-21T23:47:56.5553545Z</consentAcceptedAt>
     <consentIp>::1</consentIp>
   </user>
-  <user id="2d51448fbd2544ce8e0a0543b135c885" role="Participant">
+  <user id="2d51448fbd2544ce8e0a0543b135c885" role="Participant" assignedHelperId="429c338c0567409e8bd5945d28a30bce">
     <firstName>new</firstName>
     <lastName>u</lastName>
     <email>u@gmail.com</email>
@@ -127,7 +128,7 @@
     <createdAt>2025-10-22T21:49:43.1560957Z</createdAt>
     <consentAcceptedAt>2025-10-22T21:49:43.1560957Z</consentAcceptedAt>
     <consentIp>::1</consentIp>
-    <lastEventId>f44c95fcdb764b1ebf1af411792367b6</lastEventId>
+    <lastEventId>fb3b012d5cc6418bb7b1a09438fb7ef7</lastEventId>
   </user>
   <user id="f2aa41a1fd1b47d2a40311ae099cc8be" role="Participant">
     <firstName>1</firstName>
@@ -141,7 +142,7 @@
     <consentIp>::1</consentIp>
     <lastEventId>9f1548b213724512a934ddbb3e1ac48d</lastEventId>
   </user>
-  <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36" role="Participant">
+  <user id="bf47b8cadf5b44e9a8b15bb95c1bbb36" role="Participant" assignedHelperId="429d338c0568409e8bd5945d28a30bce">
     <firstName>new</firstName>
     <lastName>e</lastName>
     <email>n@gmail.com</email>
@@ -153,7 +154,7 @@
     <consentIp>::1</consentIp>
     <lastEventId>f44c95fcdb764b1ebf1af411792367b6</lastEventId>
   </user>
-  <user id="e0ec60e0c5444913acc631486ac8980d" role="Participant">
+  <user id="e0ec60e0c5444913acc631486ac8980d" role="Participant" assignedHelperId="429c338c0567409e8bd5945d28a30bce">
     <firstName>2</firstName>
     <lastName>2</lastName>
     <email>2@gmail.com</email>
@@ -236,5 +237,94 @@
     <consentAcceptedAt>2025-11-03T03:04:09.9772288Z</consentAcceptedAt>
     <consentIp>::1</consentIp>
     <lastEventId>eead57b6e0474159957c2e7c8fcf46ab</lastEventId>
+  </user>
+  <user id="789d338c0568409e8bd5945d28a30lop" role="Helper">
+    <firstName>Kaitlyn</firstName>
+    <lastName>Koopman</lastName>
+    <email>k@gmail.com</email>
+    <university>Arizona State University</university>
+    <passwordHash>Da6SgvLqivf+eoWnbQXw/bumOHGz7ZXinIttc1GL5cE=</passwordHash>
+    <passwordSalt>l1wCiH15U23LX4hRLpE3Jw==</passwordSalt>
+    <createdAt>2025-12-03T03:04:09.9772288Z</createdAt>
+    <consentAcceptedAt>2025-12-03T03:04:09.9772288Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+    <lastEventId>eead57b6e0474159957c2e7c8fcf46ab</lastEventId>
+  </user>
+  <user id="8645a052450840958d5accfb74a02e89" role="Helper">
+    <firstName>percy</firstName>
+    <lastName>kop</lastName>
+    <email>newh@gmail.com</email>
+    <university>Arizona State University</university>
+    <passwordHash>jHqhHgkSinGYbXrePFLbpdfYgck8GmTw/6PzZEwshQM=</passwordHash>
+    <passwordSalt>YpdGZbBs/XCluqJ21wCDSA==</passwordSalt>
+    <createdAt>2025-11-29T00:37:04.8786356Z</createdAt>
+    <consentAcceptedAt>2025-11-29T00:37:04.8786356Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+  <user id="6eec5327542a472b97566900754a8693" role="Helper">
+    <firstName>lop</firstName>
+    <lastName>lop</lastName>
+    <email>lop@gmail.com</email>
+    <university>Arizona State University</university>
+    <passwordHash>NleBwwAyGvXl8m3hZ+eRTTeq5B4olEbA3BAWvnGVlNY=</passwordHash>
+    <passwordSalt>fQxoOZY7tJeNKujgseVJlA==</passwordSalt>
+    <createdAt>2025-11-29T00:39:53.2349789Z</createdAt>
+    <consentAcceptedAt>2025-11-29T00:39:53.2349789Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+  <user id="6f8b035bb1ab4f4091ad155fbde2984a" role="UniversityAdmin">
+    <firstName>Unv</firstName>
+    <lastName>2</lastName>
+    <email>unv@gmail.com</email>
+    <university>Arizona State University</university>
+    <passwordHash>eDEsFnI8rq2bxVhnh4aB1hIuCH+6QJ3Ebgp0CR4vwkE=</passwordHash>
+    <passwordSalt>1OBz+UNaYkfy4QeU5codMw==</passwordSalt>
+    <createdAt>2025-11-29T02:40:30.6146961Z</createdAt>
+  </user>
+  <user id="2be8746acc274bbb9dba766854e8f716" role="UniversityAdmin">
+    <firstName>tester</firstName>
+    <lastName>admin</lastName>
+    <email>testasu@gmail.com</email>
+    <university>Arizona State University</university>
+    <passwordHash>/NUbFB7ifT2uzvZrQg3WH1oI2jDXRrMWfWda4VD4WQo=</passwordHash>
+    <passwordSalt>CvUmPd+3dbQ5PEElXqYn/w==</passwordSalt>
+    <createdAt>2025-11-29T02:45:59.8073826Z</createdAt>
+    <consentAcceptedAt>2025-11-29T02:45:59.8073826Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+  <user id="8e3d49bc08ab431a89865716a9f9325c" role="UniversityAdmin">
+    <firstName>test2</firstName>
+    <lastName>ad</lastName>
+    <email>testgcu@gmail.com</email>
+    <university>Grand Canyon University</university>
+    <passwordHash>jXRuIA1rDdgwwfdZ7vQq72sbGCDa+vaRJWk9vuNXAaQ=</passwordHash>
+    <passwordSalt>QLcFHmiKGCph1xvQq3I4Qw==</passwordSalt>
+    <createdAt>2025-11-29T02:46:20.2352951Z</createdAt>
+    <consentAcceptedAt>2025-11-29T02:46:20.2352951Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+  <user id="46cfa18fd9804e548cd6b12d9c2dfd79" role="Participant">
+    <firstName>log</firstName>
+    <lastName>test</lastName>
+    <email>log@gmail.com</email>
+    <university>
+    </university>
+    <passwordHash>qygUptMxYHpuDmgzfwNI+0fNvGxOz1q55fm0f+VJuyE=</passwordHash>
+    <passwordSalt>yp4Onh7H0OHO1fZE5gpeKg==</passwordSalt>
+    <createdAt>2025-12-02T08:38:00.1794816Z</createdAt>
+    <consentAcceptedAt>2025-12-02T08:38:00.1794816Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+  </user>
+  <user id="b6f83a654fcc48d5b87d77977a57f127" role="Participant" assignedHelperId="8645a052450840958d5accfb74a02e89">
+    <firstName>qtest1</firstName>
+    <lastName>q</lastName>
+    <email>qtest1@gmail.com</email>
+    <university>Arizona State University</university>
+    <passwordHash>6gBusfI7nrSId6bZ1HOjr8gQ0Dtt5O8drHnRzfY5J24=</passwordHash>
+    <passwordSalt>3ChabORhLvniVvNCaO+c0g==</passwordSalt>
+    <createdAt>2026-01-29T09:34:15.0455470Z</createdAt>
+    <consentAcceptedAt>2026-01-29T09:34:15.0455470Z</consentAcceptedAt>
+    <consentIp>::1</consentIp>
+    <lastEventId>fb3b012d5cc6418bb7b1a09438fb7ef7</lastEventId>
   </user>
 </users>

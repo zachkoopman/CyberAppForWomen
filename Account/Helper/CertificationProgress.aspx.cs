@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
+using CyberApp_FIA.Services;
+
 
 namespace CyberApp_FIA.Helper
 {
@@ -119,6 +121,15 @@ namespace CyberApp_FIA.Helper
             public int QuizScore { get; set; }
             public int TeachingSessions { get; set; }
             public int HelpSessions { get; set; }
+
+            // Certification verification workflow
+            // Values: NotRequested | PendingReview | Verified | Questioned
+            public string VerificationStatus { get; set; }
+
+
+            // NEW: note fields
+            public string AdminNote { get; set; }
+            public string HelperNote { get; set; }
         }
 
         private sealed class ModuleStatus
@@ -157,6 +168,29 @@ namespace CyberApp_FIA.Helper
             public bool IsCertified { get; set; }
             public bool IsEligible { get; set; }
             public int SortKey { get; set; }
+
+            // Verification state (for display + buttons)
+            public string VerificationStatus { get; set; }
+
+            // Helper verification UI (small green check)
+            public string VerificationCssClass { get; set; }
+
+            // NEW: note fields for UI
+            public string AdminNote { get; set; }
+            public string HelperNote { get; set; }
+            public bool HasAdminNote { get; set; }
+            public bool HasHelperNote { get; set; }
+            public bool ShowAdminNoteForHelper { get; set; }
+
+            public bool TeachingOnHold { get; set; }
+            public bool HelpOnHold { get; set; }
+            public string TeachingReviewNote { get; set; }
+            public string HelpReviewNote { get; set; }
+
+
+            // Button visibility
+            public bool ShowConfirmButton { get; set; }
+            public bool ShowResubmitButton { get; set; }
 
             // Resources UI
             public string ExternalLink { get; set; }
@@ -217,6 +251,7 @@ namespace CyberApp_FIA.Helper
                     helperEl.AppendChild(courseEl);
                 }
 
+
                 XmlElement EnsureChild(XmlElement parent, string name, string defaultValue)
                 {
                     var n = parent[name] ?? doc.CreateElement(name);
@@ -262,6 +297,11 @@ namespace CyberApp_FIA.Helper
                 EnsureChild(courseEl, "isEligible", "false");
                 EnsureChild(courseEl, "isCertified", "false");
                 EnsureChild(courseEl, "resourcesConfirmed", "false");
+
+                // Verification workflow defaults
+                // NotRequested = helper has not yet pressed "I've reviewed the resources and passed the quiz".
+                EnsureChild(courseEl, "verificationStatus", "NotRequested");
+                EnsureChild(courseEl, "verificationUpdatedUtc", string.Empty);
 
                 var updatedEl = courseEl["lastUpdatedUtc"] ?? doc.CreateElement("lastUpdatedUtc");
                 if (string.IsNullOrEmpty(updatedEl.InnerText))
@@ -314,6 +354,40 @@ namespace CyberApp_FIA.Helper
             var certified = sorted.Where(m => m.IsCertified).ToList();
             var eligible = sorted.Where(m => m.IsEligible && !m.IsCertified).ToList();
             var notCertified = sorted.Where(m => !m.IsEligible && !m.IsCertified).ToList();
+
+            // Questioned / on-hold modules for the notification banner
+            var questioned = sorted
+                .Where(m => m.VerificationStatus != null &&
+                            m.VerificationStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (questioned.Any())
+            {
+                QuestionedNoticePH.Visible = true;
+
+                if (questioned.Count == 1)
+                {
+                    var title = questioned[0].Title;
+                    QuestionedNoticeText.Text =
+                        $"Your university admin is reviewing your quiz and logs for <strong>{Server.HtmlEncode(title)}</strong>. " +
+                        "While it’s on hold, this module won’t count toward eligibility or certification. " +
+                        "You can review your work and use the “Resubmit for verification” button on that microcourse when you’re ready.";
+                }
+                else
+                {
+                    var titles = string.Join(", ", questioned.Select(q => Server.HtmlEncode(q.Title)));
+                    QuestionedNoticeText.Text =
+                        "Your university admin is reviewing your quiz and logs for these microcourses: " +
+                        $"<strong>{titles}</strong>. While they’re on hold, they won’t count toward eligibility or certification. " +
+                        "You can review your work and use the “Resubmit for verification” buttons when you’re ready.";
+                }
+            }
+            else
+            {
+                QuestionedNoticePH.Visible = false;
+                QuestionedNoticeText.Text = string.Empty;
+            }
+
 
             NotCertifiedRepeater.DataSource = notCertified;
             NotCertifiedRepeater.DataBind();
@@ -439,7 +513,15 @@ namespace CyberApp_FIA.Helper
 
             if (string.IsNullOrWhiteSpace(helperId) || string.IsNullOrWhiteSpace(courseId))
             {
-                return new HelperProgressInfo { QuizScore = 0, TeachingSessions = 0, HelpSessions = 0 };
+                return new HelperProgressInfo
+                {
+                    QuizScore = 0,
+                    TeachingSessions = 0,
+                    HelpSessions = 0,
+                    VerificationStatus = "NotRequested",
+                    AdminNote = string.Empty,
+                    HelperNote = string.Empty
+                };
             }
 
             var doc = new XmlDocument();
@@ -454,17 +536,28 @@ namespace CyberApp_FIA.Helper
                 {
                     QuizScore = 0,
                     TeachingSessions = 0,
-                    HelpSessions = 0
+                    HelpSessions = 0,
+                    VerificationStatus = "NotRequested",
+                    AdminNote = string.Empty,
+                    HelperNote = string.Empty
                 };
             }
+
+            var status = node["verificationStatus"]?.InnerText ?? "NotRequested";
+            var adminNote = node["verificationAdminNote"]?.InnerText ?? string.Empty;
+            var helperNote = node["verificationHelperNote"]?.InnerText ?? string.Empty;
 
             return new HelperProgressInfo
             {
                 QuizScore = ParseIntSafe(node["quizScore"]?.InnerText, 0),
                 TeachingSessions = ParseIntSafe(node["teachingSessions"]?.InnerText, 0),
-                HelpSessions = ParseIntSafe(node["helpSessions"]?.InnerText, 0)
+                HelpSessions = ParseIntSafe(node["helpSessions"]?.InnerText, 0),
+                VerificationStatus = status,
+                AdminNote = adminNote,
+                HelperNote = helperNote
             };
         }
+
 
         private ModuleStatus BuildModuleStatus(MicrocourseInfo course, RuleInfo rule, HelperProgressInfo progress)
         {
@@ -476,6 +569,40 @@ namespace CyberApp_FIA.Helper
             var minHelp = hasRule ? rule.MinHelpSessions : 0;
             var expiryDays = hasRule ? rule.ExpiryDays : 0;
 
+            var teachingOnHold = false;
+            var helpOnHold = false;
+            var teachingReviewNote = string.Empty;
+            var helpReviewNote = string.Empty;
+
+            try
+            {
+                EnsureHelperProgressXml();
+                var doc = new XmlDocument();
+                doc.Load(HelperProgressXmlPath);
+
+                var helperId = Session["UserId"] as string ?? string.Empty;
+                var helperEl = (XmlElement)doc.SelectSingleNode($"/helperProgress/helper[@id='{helperId}']");
+                if (helperEl != null)
+                {
+                    var courseEl = (XmlElement)helperEl.SelectSingleNode($"./course[@id='{course.Id}']");
+                    if (courseEl != null)
+                    {
+                        teachingOnHold = (courseEl["teachingRevokedFlag"]?.InnerText ?? "false")
+                            .Equals("true", StringComparison.OrdinalIgnoreCase);
+                        helpOnHold = (courseEl["helpRevokedFlag"]?.InnerText ?? "false")
+                            .Equals("true", StringComparison.OrdinalIgnoreCase);
+
+                        teachingReviewNote = courseEl["teachingReviewAdminNote"]?.InnerText ?? string.Empty;
+                        helpReviewNote = courseEl["helpReviewAdminNote"]?.InnerText ?? string.Empty;
+                    }
+                }
+            }
+            catch
+            {
+                // Best-effort; certification logic should not break if we can't read flags.
+            }
+
+
             var extLink = course.ExternalLink ?? string.Empty;
             var hasExternal = !string.IsNullOrWhiteSpace(extLink);
             var viewerUrl = hasExternal
@@ -484,10 +611,31 @@ namespace CyberApp_FIA.Helper
                              + Server.UrlEncode(extLink))
                 : string.Empty;
 
+            // Verification state (for green check icon)
+            var verificationStatus = progress.VerificationStatus ?? "NotRequested";
+            var isQuestioned = verificationStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase);
+            var isVerified = verificationStatus.Equals("Verified", StringComparison.OrdinalIgnoreCase);
+            var verificationCssClass = isVerified ? "verified-show" : string.Empty;
+
+
+            // NEW: note flags
+            var adminNote = progress.AdminNote ?? string.Empty;
+            var helperNote = progress.HelperNote ?? string.Empty;
+            var hasAdminNote = !string.IsNullOrWhiteSpace(adminNote);
+            var hasHelperNote = !string.IsNullOrWhiteSpace(helperNote);
+
             // Quiz req + progress
             bool quizMet = requireQuiz
                 ? (passScore > 0 && progress.QuizScore >= passScore)
                 : true;
+
+            // If the admin has questioned this module, treat the quiz as not met
+            // until it is re-submitted and re-verified.
+            if (requireQuiz && isQuestioned)
+            {
+                quizMet = false;
+            }
+
 
             string quizReqText = requireQuiz
                 ? (quizMet
@@ -538,9 +686,19 @@ namespace CyberApp_FIA.Helper
             // Eligible to teach when quiz requirement is met, but not yet certified
             bool isEligible = hasRule && anyRequirementConfigured && quizMet && !isCertified;
 
+
+
             string statusLabel;
             string statusCss;
             string headerStatusCss;
+
+            if (isQuestioned)
+            {
+                // On-hold modules are shown in red with an explicit label
+                statusLabel = "On hold";
+                statusCss = "status-notcert";
+                headerStatusCss = "req-status-not";
+            }
 
             if (isCertified)
             {
@@ -630,6 +788,26 @@ namespace CyberApp_FIA.Helper
                 IsCertified = isCertified,
                 IsEligible = isEligible,
                 SortKey = sortKey,
+                // Verification state
+                VerificationStatus = verificationStatus,
+                VerificationCssClass = verificationCssClass,
+
+                TeachingOnHold = teachingOnHold,
+                HelpOnHold = helpOnHold,
+                TeachingReviewNote = teachingReviewNote,
+                HelpReviewNote = helpReviewNote,
+
+
+                // NEW: note plumbing for helper view
+                AdminNote = adminNote,
+                HelperNote = helperNote,
+                HasAdminNote = hasAdminNote,
+                HasHelperNote = hasHelperNote,
+                ShowAdminNoteForHelper = isQuestioned && hasAdminNote,
+
+                // Button logic: normal confirm unless on hold; on-hold shows resubmit
+                ShowConfirmButton = !isQuestioned,
+                ShowResubmitButton = isQuestioned,
 
                 ExternalLink = extLink,
                 HasExternalLink = hasExternal,
@@ -637,14 +815,15 @@ namespace CyberApp_FIA.Helper
             };
         }
 
-        /// <summary>
-        /// Handles "I’ve reviewed the resources and passed the quiz" button clicks.
-        /// Marks the Helper's quizScore for that course as at least the rule's passScore.
-        /// Also recalculates eligibility/certification and totals.
-        /// </summary>
         protected void RequirementsRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            if (e.CommandName != "confirmResources") return;
+            var isResubmission = string.Equals(e.CommandName, "resubmitVerification", StringComparison.OrdinalIgnoreCase);
+            var isConfirm = string.Equals(e.CommandName, "confirmResources", StringComparison.OrdinalIgnoreCase);
+
+            if (!isConfirm && !isResubmission)
+            {
+                return;
+            }
 
             var courseId = e.CommandArgument as string;
             var helperId = Session["UserId"] as string ?? string.Empty;
@@ -677,13 +856,24 @@ namespace CyberApp_FIA.Helper
                 passScore = 80;
             }
 
-            SaveQuizConfirmed(helperId, courseId, passScore);
+            string helperNote = string.Empty;
+            if (isResubmission)
+            {
+                var noteBox = (TextBox)e.Item.FindControl("HelperNoteText");
+                if (noteBox != null)
+                {
+                    helperNote = (noteBox.Text ?? string.Empty).Trim();
+                }
+            }
+
+            SaveQuizConfirmed(helperId, courseId, passScore, isResubmission, helperNote);
 
             // Refresh UI with updated progress.
             BindCertificationView();
         }
 
-        private void SaveQuizConfirmed(string helperId, string courseId, int passScore)
+
+        private void SaveQuizConfirmed(string helperId, string courseId, int passScore, bool isResubmission, string helperNote)
         {
             EnsureHelperProgressXml();
 
@@ -707,6 +897,13 @@ namespace CyberApp_FIA.Helper
                 helperEl.AppendChild(courseEl);
             }
 
+            // Use stored title if present so audit log is readable
+            var courseTitle = (courseEl["title"]?.InnerText ?? courseId).Trim();
+            if (string.IsNullOrEmpty(courseTitle))
+            {
+                courseTitle = courseId;
+            }
+
             XmlElement EnsureChild(string name, string valueIfMissing)
             {
                 var n = courseEl[name] ?? doc.CreateElement(name);
@@ -720,10 +917,37 @@ namespace CyberApp_FIA.Helper
             quizScoreNode.InnerText = passScore.ToString();
             if (quizScoreNode.ParentNode == null) courseEl.AppendChild(quizScoreNode);
 
-            // Optional: flag that resources were confirmed.
+            // Flag that resources were confirmed.
             var confirmedNode = courseEl["resourcesConfirmed"] ?? doc.CreateElement("resourcesConfirmed");
             confirmedNode.InnerText = "true";
             if (confirmedNode.ParentNode == null) courseEl.AppendChild(confirmedNode);
+
+            // Helper note for this submission (initial or resubmission)
+            var helperNoteNode = courseEl["verificationHelperNote"] ?? doc.CreateElement("verificationHelperNote");
+            helperNoteNode.InnerText = helperNote ?? string.Empty;
+            if (helperNoteNode.ParentNode == null) courseEl.AppendChild(helperNoteNode);
+
+            // Track whether this is an initial submission or resubmission
+            var submissionKindNode = courseEl["verificationSubmissionKind"] ?? doc.CreateElement("verificationSubmissionKind");
+            submissionKindNode.InnerText = isResubmission ? "Resubmission" : "Initial";
+            if (submissionKindNode.ParentNode == null) courseEl.AppendChild(submissionKindNode);
+
+            // Simple count of how many times the helper has submitted this module
+            var submissionCountNode = courseEl["verificationSubmissionCount"] ?? doc.CreateElement("verificationSubmissionCount");
+            int currentCount;
+            if (!int.TryParse(submissionCountNode.InnerText, out currentCount)) currentCount = 0;
+            currentCount++;
+            submissionCountNode.InnerText = currentCount.ToString();
+            if (submissionCountNode.ParentNode == null) courseEl.AppendChild(submissionCountNode);
+
+            // Kick off verification workflow: appears as PendingReview to admin
+            var verificationStatusNode = courseEl["verificationStatus"] ?? doc.CreateElement("verificationStatus");
+            verificationStatusNode.InnerText = "PendingReview";
+            if (verificationStatusNode.ParentNode == null) courseEl.AppendChild(verificationStatusNode);
+
+            var verificationUpdatedNode = courseEl["verificationUpdatedUtc"] ?? doc.CreateElement("verificationUpdatedUtc");
+            verificationUpdatedNode.InnerText = DateTime.UtcNow.ToString("o");
+            if (verificationUpdatedNode.ParentNode == null) courseEl.AppendChild(verificationUpdatedNode);
 
             var updatedNode = courseEl["lastUpdatedUtc"] ?? doc.CreateElement("lastUpdatedUtc");
             updatedNode.InnerText = DateTime.UtcNow.ToString("o");
@@ -735,14 +959,44 @@ namespace CyberApp_FIA.Helper
             EnsureChild("isEligible", "false");
             EnsureChild("isCertified", "false");
 
-            // Recalculate eligibility/certifications for all this helper's courses
+            // Recalculate eligibility/certifications
             RecalculateCertificationForHelper(doc, helperEl);
-
-            // Keep helper-level totals in sync (teaching/help + certified count)
             UpdateHelperTotals(doc, helperEl);
+
+            try
+            {
+                var actionText = isResubmission
+                    ? "re-submitted quiz completion for review"
+                    : "confirmed resources + quiz completion";
+
+                var details = string.Format(
+                    "Helper {0} for microcourse \"{1}\" (courseId={2}, passScore={3}%).",
+                    actionText,
+                    courseTitle,
+                    courseId,
+                    passScore);
+
+                if (!string.IsNullOrWhiteSpace(helperNote))
+                {
+                    var notePreview = helperNote;
+                    if (notePreview.Length > 180) notePreview = notePreview.Substring(0, 177) + "...";
+                    details += " Helper note: " + notePreview;
+                }
+
+                var auditType = isResubmission
+                    ? "Helper Quiz Completion Resubmission"
+                    : "Helper Quiz Completion";
+
+                UniversityAuditLogger.AppendForCurrentUser(this, auditType, details);
+            }
+            catch
+            {
+                // Never block helper progress if audit logging fails.
+            }
 
             doc.Save(HelperProgressXmlPath);
         }
+
 
         /// <summary>
         /// Recalculate <isEligible> and <isCertified> for each course for this helper
@@ -762,9 +1016,17 @@ namespace CyberApp_FIA.Helper
                 int teach = ParseIntSafe(c["teachingSessions"]?.InnerText, 0);
                 int help = ParseIntSafe(c["helpSessions"]?.InnerText, 0);
 
+                // New: pull verification status and treat Questioned as "quiz not met"
+                var verificationStatus = (c["verificationStatus"]?.InnerText ?? "NotRequested").Trim();
+
                 bool quizMet = requireQuiz
                     ? (passScore > 0 && quizScore >= passScore)
                     : true;
+
+                if (requireQuiz && verificationStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase))
+                {
+                    quizMet = false;
+                }
 
                 bool teachMet = teach >= minTeach;
                 bool helpMet = help >= minHelp;
@@ -783,6 +1045,7 @@ namespace CyberApp_FIA.Helper
                 if (isEligEl.ParentNode == null) c.AppendChild(isEligEl);
             }
         }
+
 
         /// <summary>
         /// Sums course-level progress into helper-level totals and stores them in /helper/totals.

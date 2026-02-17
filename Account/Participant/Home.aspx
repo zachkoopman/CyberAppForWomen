@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="CyberApp_FIA.Participant.Home" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="CyberApp_FIA.Participant.Home" MaintainScrollPositionOnPostBack="true" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
@@ -148,7 +148,7 @@
 
     /* Force helper name to FIA blue everywhere */
     .helper-chip strong { 
-    color: var(--fia-blue) !important;
+      color: var(--fia-blue) !important;
     }
 
     .info-bar{
@@ -237,16 +237,38 @@
       color:var(--ink); font-size:0.95rem; outline:none;
     }
     .input:focus{ border-color:#bfe6ff; box-shadow:0 0 0 4px var(--ring); background:#fff; }
-    .tags-wrap{
-      display:flex; flex-wrap:wrap; gap:8px; padding:10px;
-      border-radius:16px; border:1px solid #d7efe9;
-      background:linear-gradient(180deg,#e8fbf6,#ffffff);
-    }
+    /* --- CLEANER TAGS BOX + SPACING --- */
+.tags-wrap{
+  border-radius:12px;            /* box feel (not oval) */
+  padding:12px 14px;             /* more breathing room */
+  gap:0;                         /* we control spacing inside FilterTags */
+}
+
+.tags-wrap [id$="FilterTags"]{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 14px;                 /* more space: rows + columns */
+  max-width:100%;
+}
+
+.tags-wrap [id$="FilterTags"] > span{
+  padding:6px 10px;              /* slightly roomier pill */
+  margin:0 !important;
+}
+
     .tags-wrap span{
-      display:inline-flex; align-items:center; gap:6px;
-      padding:6px 10px; border-radius:999px; background:#fff;
-      border:1px solid rgba(69,195,179,.35); font-size:.9rem;
-    }
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+
+  border-radius:8px;              /* <-- boxy option (NOT pill) */
+  background:#fff;
+  border:1px solid rgba(69,195,179,.35);
+  font-size:.9rem;
+}
+
+     
     .filters-actions{ display:flex; gap:10px; }
     .filters-actions .btn{ min-width:108px; }
 
@@ -271,6 +293,51 @@
     }
     .alt-option:hover{ box-shadow:0 0 0 4px var(--ring); border-color:#cfe8ff; }
     .alt-actions{ display:flex; gap:8px; margin-top:8px; justify-content:flex-end; }
+
+    /* ---------- NEW: Helper one-on-one section ---------- */
+    .helper-1on1{
+      padding:18px 16px;
+      border-radius:20px;
+      border:1px solid var(--card-border);
+      background:linear-gradient(135deg,#fdf7ff,#f0f7fd);
+      box-shadow:0 10px 26px rgba(240,106,169,.07);
+    }
+    .helper-1on1-header{ margin-bottom:6px; }
+    .helper-1on1-header .section-title{ margin-bottom:4px; }
+
+    .conversation-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:14px;
+    }
+    .conversation-card{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--card-border);
+      background:#ffffff;
+      text-decoration:none;
+      color:inherit;
+      box-shadow:0 8px 20px rgba(42,153,219,.04);
+      transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .conversation-card:hover{
+      transform:translateY(-1px);
+      border-color:#d4e6f7;
+      box-shadow:0 12px 28px rgba(42,153,219,.10);
+    }
+    .conversation-title{
+      font-family:Poppins;
+      font-weight:600;
+      font-size:.98rem;
+    }
+    .conversation-meta{
+      font-size:.85rem;
+      color:var(--muted);
+    }
   </style>
 
   <script type="text/javascript">
@@ -418,10 +485,6 @@
           <div class="sub subchips">
             <span class="pill">University: <asp:Literal ID="University" runat="server" /></span>
             <span class="pill">Event: <asp:Literal ID="EventName" runat="server" /></span>
-            <!-- NEW: Assigned Helper pill -->
-            <span id="HelperPill" runat="server" class="pill" visible="false">
-              Helper: <asp:Literal ID="HelperName" runat="server" />
-            </span>
 
             <a class="pill pill-pink" href="<%: ResolveUrl("~/Account/Participant/SelectEvent.aspx?change=1") %>">
               Change event
@@ -435,8 +498,16 @@
               Sign out
             </asp:LinkButton>
           </div>
-        </div>
+              </div>
       </div>
+
+      <!-- NEW: Session deletion notice (shows when an admin deletes a session you were in) -->
+      <asp:PlaceHolder ID="SessionDeletionNoticePH" runat="server" Visible="false">
+        <div class="note" style="background:var(--note-pink); border-color:#ffd1e5; color:#7a103a;">
+          <strong>Session update:</strong>
+          <asp:Literal ID="SessionDeletionNoticeText" runat="server" />
+        </div>
+      </asp:PlaceHolder>
 
       <!-- Privacy note -->
       <div class="note">
@@ -444,10 +515,62 @@
         Your university sees only anonymized or aggregated insights—never your personal answers.
       </div>
 
+
       <br /><br />
       <%@ Register Src="~/Account/Participant/ParticipantScoreWidget.ascx" TagName="ParticipantScoreWidget" TagPrefix="fia" %>
       <fia:ParticipantScoreWidget ID="ScoreWidget" runat="server" />
       <br /><br />
+
+      <!-- ==== HELPER ONE-ON-ONE SUPPORT ==== -->
+      <asp:PlaceHolder ID="HelperSupportPanel" runat="server" Visible="false">
+        <div class="section">
+          <div class="helper-1on1">
+            <div class="helper-1on1-header">
+              <h2 class="section-title">
+                One-on-one support with
+                <span class="pill pill-pink"><asp:Literal ID="HelperName" runat="server" /></span>
+              </h2>
+              <p class="subtle">
+                Stuck on a topic, quiz, or example? You can send a message to your FIA Helper and request a short
+                one-on-one meeting. When you write, use a clear topic title, explain exactly what you need help with,
+                and share a few times you are available to meet.
+              </p>
+            </div>
+
+            <div class="cta-row" style="margin-top:10px;">
+              <asp:Button ID="StartHelperMessageBtn"
+                          runat="server"
+                          CssClass="btn btn-primary"
+                          Text="Send message"
+                          OnClick="StartHelperMessageBtn_Click" />
+            </div>
+
+            <asp:PlaceHolder ID="ConversationsEmpty" runat="server" Visible="false">
+              <p class="hint" style="margin-top:12px;">
+                You have not started a one-on-one conversation yet. After you send your first message, it will appear here.
+              </p>
+            </asp:PlaceHolder>
+
+            <asp:Repeater ID="ConversationsRepeater" runat="server">
+              <HeaderTemplate>
+                <div class="conversation-list">
+              </HeaderTemplate>
+              <ItemTemplate>
+                <a class="conversation-card" href='<%# Eval("ConversationUrl") %>'>
+                  <div class="conversation-title"><%# Eval("Topic") %></div>
+                  <div class="conversation-meta">
+                    Sent
+                    <span><%# Eval("CreatedOnLocal", "{0:MMM d, yyyy • h:mm tt}") %></span>
+                  </div>
+                </a>
+              </ItemTemplate>
+              <FooterTemplate>
+                </div>
+              </FooterTemplate>
+            </asp:Repeater>
+          </div>
+        </div>
+      </asp:PlaceHolder>
 
       <!-- ==== FILTERS ==== -->
       <div class="filters-card">
@@ -512,6 +635,17 @@
                   </div>
                 </div>
 
+                  <!-- NEW: Session time-change indicator -->
+<asp:PlaceHolder ID="TimeChangedPH" runat="server" Visible='<%# (bool)Eval("timeChanged") %>'>
+  <div class="card-sec">
+    <div class="conflict-note">
+      <strong>Session time updated.</strong>
+      <span><%# Eval("timeChangedMessage") %></span>
+    </div>
+  </div>
+</asp:PlaceHolder>
+
+
                 <div class="card-sec">
                   <div class="line">
                     <span class="label">Time</span>
@@ -529,6 +663,20 @@
                     </asp:PlaceHolder>
                   </div>
                 </div>
+
+                                <!-- NEW: Time conflict note for My Sessions (mirrors Available Sessions) -->
+              <asp:PlaceHolder ID="MyConflictPH" runat="server" Visible='<%# (bool)Eval("hasConflict") %>'>
+                <div class="card-sec">
+                  <div class="conflict-note">
+                    <strong>Time conflict.</strong>
+                    <%# Eval("conflictMessage") %>
+                    <div class="conflict-actions">
+                      <a class="btn btn-ghost" href="<%# Eval("replacementUrl") %>">See Replacements</a>
+                    </div>
+                  </div>
+                </div>
+              </asp:PlaceHolder>
+
 
                 <!-- Status -->
                 <asp:Literal ID="MyStatusBadge" runat="server"
@@ -684,4 +832,5 @@
   </form>
 </body>
 </html>
+
 

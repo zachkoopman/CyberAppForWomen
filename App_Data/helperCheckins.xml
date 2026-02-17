@@ -3,4 +3,9 @@
   <checkin helperId="123" helperName="Alex Rivera" eventId="cyberfair-2025" sessionId="session-001" tsUtc="2025-11-14T01:23:45.6789012Z" />
   <checkin helperId="429d338c0568409e8bd5945d28a30bce" helperName="" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="ec4ab3b5356e414196dc1c9a8843bc45" tsUtc="2025-11-15T05:49:31.4321241Z" />
   <checkin helperId="429d338c0568409e8bd5945d28a30bce" helperName="Mandy Demas" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="eb03ffa34daa4716ad1d95cdb0e42b01" tsUtc="2025-11-15T06:03:06.6634645Z" />
+  <checkin helperId="429d338c0568409e8bd5945d28a30bce" helperName="Mandy Demas" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="e3a15fb51c5e4f2d81f944c4a09ca9da" tsUtc="2025-11-18T06:15:59.4298558Z" />
+  <checkin helperId="789d338c0568409e8bd5945d28a30lop" helperName="Kaitlyn Koopman" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="24eeba089b0241e59510664a6e1aed2e" tsUtc="2025-11-18T09:35:04.5255179Z" />
+  <checkin helperId="789d338c0568409e8bd5945d28a30lop" helperName="Kaitlyn Koopman" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="1299e4769fd94473aa05db2987b18bb1" tsUtc="2025-11-28T02:20:29.0091157Z" />
+  <checkin helperId="789d338c0568409e8bd5945d28a30lop" helperName="Kaitlyn Koopman" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="3a58ec938467440bb23b1d6d52841731" tsUtc="2025-11-28T02:20:33.6884690Z" />
+  <checkin helperId="429d338c0568409e8bd5945d28a30bce" helperName="Mandy Demas" eventId="f44c95fcdb764b1ebf1af411792367b6" sessionId="943c5c93e1054080a2a6b2ce18f02965" tsUtc="2025-11-28T04:16:40.0222887Z" />
 </helperCheckins>
