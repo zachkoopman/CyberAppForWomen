@@ -1,1 +1,1 @@
-Sprint 8 contributions
+These are my Sprint 8 contributions in which I worked on research for optimizing the mobile version of our project, updating our project with these optimizations, and updating the Application Use Guide to match our current project
