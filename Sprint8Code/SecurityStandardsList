@@ -1,0 +1,212 @@
+Task #239
+Security Standards and Sensitive Data List
+
+Project: CyperAppForWomen
+Framework: ASP.NET Web Forms (.NET Framework 4.7)
+
+1. Purpose
+
+This document defines the security standards followed by the CyperAppForWomen web application and clearly identifies what data is considered sensitive within the system.
+
+The goal is to protect user privacy, prevent unauthorized access, and ensure secure handling of authentication and stored information.
+
+2. Authentication Standards
+
+The application enforces the following authentication controls:
+
+2.1 Password Storage
+
+Passwords are never stored in plaintext.
+
+Passwords are hashed using PBKDF2 (Rfc2898DeriveBytes).
+
+A unique, per-user cryptographic salt is generated at account creation.
+
+The hashing function uses:
+
+100,000 iterations
+
+256-bit derived key
+
+HMACSHA256
+
+Only the Base64-encoded salt and hash are stored in App_Data/users.xml.
+
+2.2 Login Validation
+
+User login is validated by recomputing the hash using the stored salt.
+
+Hash comparisons are performed using a constant-time comparison function to mitigate timing attacks.
+
+Login failure messages do not reveal whether the email exists.
+
+2.3 Session Management
+
+Session variables are initialized only after successful authentication.
+
+Session cookies are configured with:
+
+HttpOnly = true
+
+RequireSSL = true
+
+Sliding expiration is enabled with a 30-minute timeout.
+
+2.4 Forms Authentication
+
+ASP.NET Forms Authentication is used.
+
+Unauthorized users are denied access by default.
+
+Authentication mode is configured in Web.config.
+
+3. Authorization Standards
+
+The application uses role-based authorization.
+
+3.1 Default Deny Policy
+
+<deny users="?" /> is enforced.
+
+All anonymous access is blocked unless explicitly allowed.
+
+3.2 Role-Based Access Control
+
+After login, users are redirected based on their assigned role:
+
+SuperAdmin
+
+UniversityAdmin
+
+Helper
+
+Participant
+
+Authorization logic ensures users only access pages appropriate to their role.
+
+3.3 Restricted Directories
+
+The App_Data folder is not publicly accessible.
+
+IIS prevents direct HTTP access to sensitive data files.
+
+4. Data Storage Standards
+4.1 Sensitive Data Protection
+
+No plaintext passwords are stored.
+
+Password salts and hashes are stored separately.
+
+Sensitive data files are stored in App_Data.
+
+4.2 Configuration Security
+
+Debug mode is disabled in production (debug="false").
+
+No secrets or credentials are stored in Web.config.
+
+4.3 File Access Controls
+
+Sensitive XML files are stored outside public directories.
+
+Log files are stored inside App_Data.
+
+5. Logging Standards
+
+The application implements security logging for audit and monitoring purposes.
+
+5.1 Logged Events
+
+Successful login attempts
+
+Failed login attempts
+
+Authentication errors
+
+Account misconfiguration detection
+
+5.2 Logging Protections
+
+Logs are stored in App_Data/security.log.
+
+Logs do not store plaintext passwords.
+
+Logs include:
+
+UTC timestamp
+
+IP address
+
+Event description
+
+6. Privacy Standards
+
+The application follows data minimization and confidentiality principles.
+
+6.1 Data Minimization
+
+Only required data fields are collected.
+
+Passwords are never recoverable.
+
+6.2 Confidentiality
+
+Sensitive information is not exposed in error messages.
+
+Sensitive files are protected by IIS restrictions.
+
+Sessions expire automatically.
+
+7. Sensitive Data List
+
+The following data elements are classified as Sensitive Data and must be protected:
+
+Authentication Data
+
+Passwords
+
+Password hashes
+
+Password salts
+
+Session identifiers
+
+Personal Identifiable Information (PII)
+
+Email addresses
+
+Phone numbers
+
+University affiliation
+
+User IDs
+
+Full names (if collected)
+
+Notes or personal descriptions
+
+Authorization Data
+
+Role assignments
+
+Administrative privileges
+
+System Data
+
+IP addresses (logged)
+
+Audit logs
+
+8. Security Compliance Summary
+
+CyperAppForWomen enforces:
+
+✔ Secure password hashing (PBKDF2 + salt)
+✔ Role-based access control
+✔ Default deny authorization model
+✔ Secure cookie configuration
+✔ Sensitive file protection
+✔ Security event logging
+✔ Protection against timing attacks
+
+These standards collectively protect user authentication data, personal information, and system integrity.
