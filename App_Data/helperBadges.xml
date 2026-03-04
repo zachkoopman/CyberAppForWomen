@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helperBadges version="1">
+  <!--
+    <helper id="HELPER_ID">
+      <badge courseId="COURSE_ID"
+             courseTitle="COURSE_TITLE"
+             tier="Bronze|Silver|Gold"
+             image="~/HelperBronzeBadge/BronzeXxxHelper.png"
+             earnedOnUtc="2026-02-28T23:59:59.0000000Z"
+             teachingSessionsAtEarn="5|10|20" />
+    </helper>
+  -->
+  <helper id="429d338c0568409e8bd5945d28a30bce">
+    <badge courseId="f98b4b69dc334c9496ca948351e843b7" courseTitle="Enhancing Social Media Privacy Settings" tier="Bronze" image="~/HelperBronzeBadge/BronzeSocialMediaSettingsHelper.png" earnedOnUtc="2026-03-01T01:55:23.2032275Z" teachingSessionsAtEarn="5" />
+  </helper>
+</helperBadges>

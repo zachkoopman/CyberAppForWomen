@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<missingParticipantSessions>
+  <!--
+    Each <missing> entry represents a participant marked as a no-show for a specific session.
+    Suggested attributes (matches the “new xml for missing participant sessions” idea):
+      eventId        = the event (Cyberfair) id
+      sessionId      = the session id
+      participantId  = the participant user id
+      helperId       = the helper user id who marked the no-show
+      tsUtc          = when the no-show was recorded (UTC, ISO 8601 "o" format)
+  -->
+  <!-- Example row (remove if you want an empty base file):
+  <missing eventId="E1"
+           sessionId="S1"
+           participantId="P123"
+           helperId="H45"
+           tsUtc="2026-02-23T20:15:00.0000000Z" />
+  -->
+  <missing eventId="fb3b012d5cc6418bb7b1a09438fb7ef7" sessionId="c81a4ce180d449e5941f27a7538a88dd" participantId="04ce139733774fcdaf385068b52e5259" helperId="429d338c0568409e8bd5945d28a30bce" tsUtc="2026-02-24T04:55:24.3683438Z" ack="true" ackTsUtc="2026-02-24T05:13:23.5749375Z" />
+  <missing eventId="fb3b012d5cc6418bb7b1a09438fb7ef7" sessionId="c81a4ce180d449e5941f27a7538a88dd" participantId="f815677e858f4918ad9c32ca044fd737" helperId="429d338c0568409e8bd5945d28a30bce" tsUtc="2026-03-01T08:15:08.9545472Z" />
+  <missing eventId="fb3b012d5cc6418bb7b1a09438fb7ef7" sessionId="c81a4ce180d449e5941f27a7538a88dd" participantId="e0ec60e0c5444913acc631486ac8980d" helperId="429d338c0568409e8bd5945d28a30bce" tsUtc="2026-03-02T16:24:30.5067440Z" />
+</missingParticipantSessions>

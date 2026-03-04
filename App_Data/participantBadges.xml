@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<participantBadges version="1">
+  <!--
+    <user id="USER_ID">
+      <badge courseId="COURSE_ID"
+             courseTitle="COURSE_TITLE"
+             image="~/ParticipantBadges/SomeBadge.png"
+             awardedOnUtc="2026-02-28T20:10:00.0000000Z" />
+    </user>
+  -->
+  <user id="6507800a63cb4ac6970f2505167c1d40">
+    <badge courseId="550051f55dad499c850dc2e94289a941" courseTitle="Phishing Awareness And Email Security" image="~/ParticipantBadges/PhishingAwarenessBadge.png" awardedOnUtc="2026-02-28T23:02:28.3313431Z" />
+  </user>
+</participantBadges>
