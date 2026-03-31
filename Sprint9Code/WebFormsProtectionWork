@@ -1,0 +1,95 @@
+For this part of the project, I reviewed the cybersecurity best practices gathered from the Master’s student database and identified which protections were realistic and useful for the current FIA ASP.NET Web Forms application. The focus was on protections that fit the team’s actual codebase and storage model, especially around .aspx form inputs, .cs backend checks, session handling, role-based access, and safer display of user data. This work was meant to improve the security of the current FIA build without forcing a full rewrite of the system.
+
+Best Practices Review Applied to FIA
+
+I first reviewed the collected best practices and narrowed them down to the ones that made the most sense for this project. The strongest fits were input validation, output encoding, role checks on page load, safer query string handling, and stronger handling of session-based identity. Since FIA currently uses ASP.NET Web Forms with XML-backed data, the most useful protections were the ones that could be added directly to existing pages and code-behind files without breaking core workflows.
+
+Frontend Protections Added to .aspx Pages
+
+One area of work was making user-facing pages safer by tightening form inputs and reducing risk from unsafe displayed content. This included validating fields, limiting free-form inputs, and making sure displayed values were encoded before rendering.
+
+Example snippet used for safer displayed content:
+
+<asp:Label ID="lblParticipantName" runat="server" Text='<%# Server.HtmlEncode(Eval("FullName").ToString()) %>' />
+
+This was important on pages that display user-provided or database-loaded values, because names, notes, or other fields should not be rendered directly without encoding. Pages that especially needed this included participant account pages, helper account pages, session roster views, and University Admin detail pages where stored values are shown back to the user.
+
+Another useful frontend protection was limiting text input size and validating required fields:
+
+<asp:TextBox ID="txtReason" runat="server" MaxLength="250" />
+<asp:RequiredFieldValidator ID="rfvReason" runat="server"
+    ControlToValidate="txtReason"
+    ErrorMessage="Reason is required."
+    Display="Dynamic" />
+
+This helped reduce bad or overly large input and made forms safer and more controlled. It was especially relevant on pages where Helpers or Admins enter attendance notes, missing reasons, overrides, comments, or other short text explanations.
+
+Search and filter inputs also needed safer handling on frontend pages such as participant lists, session lists, and admin dashboards:
+
+<asp:TextBox ID="txtSearch" runat="server" MaxLength="100" />
+
+That change helped keep search inputs smaller and more predictable before the backend processed them.
+
+Backend Protections Added to .cs Files
+
+On the backend side, I focused on code-behind protections that better controlled requests, roles, and data access. One major area was role-based access checks in Page_Load() so users cannot simply type in a URL and access a page meant for another role.
+
+Example role check snippet:
+
+protected void Page_Load(object sender, EventArgs e)
+{
+    if (Session["UserRole"] == null || !Session["UserRole"].ToString().Equals("UniversityAdmin", StringComparison.OrdinalIgnoreCase))
+    {
+        Response.Redirect("~/Welcome_Page.aspx");
+        return;
+    }
+
+    if (!IsPostBack)
+    {
+        LoadPageData();
+    }
+}
+
+This type of protection was especially needed on University Admin pages, Super Admin pages, Helper-only workflow pages, and participant-only account pages. It helps make sure users stay within their allowed part of the site.
+
+Another backend protection was safer query string handling. Instead of trusting raw values from the URL, the code checks for missing or blank values before using them:
+
+string participantKey = (Request.QueryString["participantKey"] ?? string.Empty).Trim();
+
+if (string.IsNullOrWhiteSpace(participantKey))
+{
+    lblError.Text = "Invalid participant selection.";
+    pnlError.Visible = true;
+    return;
+}
+
+This was important on detail pages such as participant detail views, session detail pages, or any page that loads a record based on a query string parameter.
+
+I also added safer input checking for numeric admin override fields and similar backend form processing:
+
+private int? ParseStrictNonNegativeInt(string value)
+{
+    int parsed;
+    if (int.TryParse(value, out parsed) && parsed >= 0)
+    {
+        return parsed;
+    }
+
+    return null;
+}
+
+This kind of validation was useful anywhere an admin could manually adjust numbers, such as participant stat overrides, badge counts, attendance-related totals, or similar admin correction tools.
+
+Another important improvement was encoding or sanitizing text before displaying it in backend-generated messages:
+
+lblError.Text = HttpUtility.HtmlEncode(message);
+
+This helps prevent unsafe content from being reflected directly into the page when showing errors, warnings, or record notes.
+
+Pages That Most Needed These Protections
+
+These protections were most relevant on pages that either accept direct user input or display stored user-related content. For FIA, that especially included login and sign-up related pages, participant account and progress pages, helper schedule and attendance pages, roster pages, session swap and unenroll flows, University Admin participant lists and detail pages, and any pages that allow notes, filters, or manual corrections. These pages deal with the highest amount of user-controlled input and therefore had the most need for stronger frontend and backend protection.
+
+Why This Work Mattered
+
+This work helped reduce common web risks in a way that fit the current FIA system. Instead of only discussing security in theory, I applied protections that made forms safer, made displayed content less risky, and made page access more consistent with role rules already expected in the application. The result was a more secure and better-controlled site that still matched the team’s current Web Forms structure and project timeline.
