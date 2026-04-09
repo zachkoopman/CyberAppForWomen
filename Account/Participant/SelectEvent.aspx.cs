@@ -36,21 +36,44 @@ namespace CyberApp_FIA.Participant
                 if (!bypass)
                 {
                     var userId = Session["UserId"] as string; // key by user ID
+                    var email = (string)Session["Email"] ?? string.Empty;
+
                     var lastEvent = LoadLastEventIdForUser(userId);
-                    if (!string.IsNullOrWhiteSpace(lastEvent) && EventExists(lastEvent))
+                    if (!string.IsNullOrWhiteSpace(lastEvent))
                     {
-                        Session["EventId"] = lastEvent;
-                        Response.Redirect("~/Account/Participant/Home.aspx");
-                        return;
+                        if (EventExists(lastEvent))
+                        {
+                            // Event is still valid: scope them into it and go straight to Home
+                            Session["EventId"] = lastEvent;
+                            Response.Redirect("~/Account/Participant/Home.aspx");
+                            return;
+                        }
+                        else
+                        {
+                            // Event no longer exists in events.xml:
+                            // - Clear the stale lastEventId from the user's profile
+                            // - Clear the current EventId from the session
+                            // - Show a notification that their event was removed
+                            ClearLastEventIdForUser(userId, email);
+                            Session["EventId"] = null;
+
+                            // One-time notification on the Select Event page
+                            ClientScript.RegisterStartupScript(
+                                this.GetType(),
+                                "EventDeletedNotice",
+                                "alert('Your previously selected event was removed by a University Admin. Please select a new event.');",
+                                true
+                            );
+                        }
                     }
                 }
                 // === end fast-path ===
 
                 // Try to preselect from Session or users.xml
-                var email = (string)Session["Email"] ?? "";
+                var emailForUni = (string)Session["Email"] ?? "";
                 var userUni = (string)Session["University"];
                 if (string.IsNullOrWhiteSpace(userUni))
-                    userUni = LookupUniversityByEmail(email);
+                    userUni = LookupUniversityByEmail(emailForUni);
 
                 // Always bind the University dropdown; preselect if we know one
                 BindUniversities(out var hadSelection, prefer: userUni);
@@ -147,16 +170,16 @@ namespace CyberApp_FIA.Participant
                 if (!ev.university.Equals(uni, StringComparison.OrdinalIgnoreCase)) continue;
 
                 var label = ev.name;
-                if (ev.dateUtc.HasValue)
-                    label += " — " + ev.dateUtc.Value.ToLocalTime().ToString("yyyy-MM-dd");
+                if (ev.startUtc.HasValue)
+                    label += " — " + ev.startUtc.Value.ToLocalTime().ToString("MMM d, h:mm tt");
 
                 EventSelect.Items.Add(new ListItem(label, ev.id));
             }
         }
 
-        private IEnumerable<(string id, string name, string university, DateTime? dateUtc)> LoadActiveEvents()
+        private IEnumerable<(string id, string name, string university, DateTime? startUtc, DateTime? endUtc)> LoadActiveEvents()
         {
-            var list = new List<(string, string, string, DateTime?)>();
+            var list = new List<(string, string, string, DateTime?, DateTime?)>();
             if (!File.Exists(EventsXmlPath)) return list;
 
             var doc = new XmlDocument(); doc.Load(EventsXmlPath);
@@ -169,13 +192,29 @@ namespace CyberApp_FIA.Participant
                 var uni = ev["university"]?.InnerText ?? "";
                 var name = ev["name"]?.InnerText ?? "(unnamed)";
                 var id = ev.GetAttribute("id");
-                var date = ev["date"]?.InnerText ?? "";
+                var startStr = ev["startDate"]?.InnerText ?? ev["date"]?.InnerText ?? "";
+                var endStr = ev["endDate"]?.InnerText ?? "";
 
-                DateTime when;
-                DateTime? dt = DateTime.TryParse(date, out when) ? when : (DateTime?)null;
+                DateTime? startDt = DateTime.TryParse(startStr, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var sw) ? sw : (DateTime?)null;
+                DateTime? endDt = DateTime.TryParse(endStr, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var ew) ? ew : (DateTime?)null;
 
-                if (dt == null || dt.Value.Date >= DateTime.UtcNow.Date)
-                    list.Add((id, name, uni, dt));
+                var now = DateTime.UtcNow;
+
+                // Show event if: no dates set (legacy), OR current time is within start-end range
+                if (startDt.HasValue && endDt.HasValue)
+                {
+                    if (now < startDt.Value || now > endDt.Value)
+                        continue; // outside the event window, skip
+                }
+                else if (startDt.HasValue)
+                {
+                    if (startDt.Value.Date < DateTime.UtcNow.Date)
+                        continue; // old single-date event that's passed
+                }
+
+                list.Add((id, name, uni, startDt, endDt));
             }
             return list;
         }
@@ -407,6 +446,46 @@ namespace CyberApp_FIA.Participant
             }
         }
 
+        /// <summary>
+        /// Clears the stored lastEventId for a user if the event is no longer valid,
+        /// so they are brought back to the Select Event page instead of silently failing.
+        /// </summary>
+        private void ClearLastEventIdForUser(string userId, string fallbackEmail = "")
+        {
+            try
+            {
+                if (!File.Exists(UsersXmlPath)) return;
+
+                var doc = new XmlDocument(); doc.Load(UsersXmlPath);
+                XmlElement user = null;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    user = doc.SelectSingleNode($"/users/user[@id='{userId}']") as XmlElement;
+                }
+
+                if (user == null && !string.IsNullOrWhiteSpace(fallbackEmail))
+                {
+                    var emailLower = fallbackEmail.ToLowerInvariant();
+                    user = doc.SelectSingleNode(
+                        $"/users/user[translate(email,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{emailLower}']") as XmlElement;
+                }
+
+                if (user == null) return;
+
+                var node = user["lastEventId"];
+                if (node != null)
+                {
+                    user.RemoveChild(node);
+                    doc.Save(UsersXmlPath);
+                }
+            }
+            catch
+            {
+                // best-effort clean-up; don't block flow
+            }
+        }
+
         private bool EventExists(string eventId)
         {
             try
@@ -420,3 +499,5 @@ namespace CyberApp_FIA.Participant
         }
     }
 }
+
+
