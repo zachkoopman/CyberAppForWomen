@@ -7,26 +7,24 @@ The application supports four main user roles: Participants, Helpers, University
 
 The overall purpose of the project is to make cybersecurity education easier to access, easier to manage, and more motivating for users through features such as guided onboarding, personalized learning paths, progress tracking, badges, audit logging, and role-based administrative tools.
 
----
-
 ## Installation and Setup
 
 ### Software Requirements
 To run this project correctly, you will need the following:
 
-- **Visual Studio 2022**
-- **ASP.NET and web development** workload installed in Visual Studio
-- **.NET Framework 4.7** targeting support
+- Visual Studio Code
+- ASP.NET and web development workload installed in Visual Studio
+- .NET Framework 4.7 targeting support
 - Windows environment recommended for easiest setup with Visual Studio and IIS Express
 
 ### Main Technologies Used
 This project is built using:
 
-- **ASP.NET Web Forms**
-- **C#**
-- **.NET Framework 4.7**
-- **XML-based data storage** through files in the `App_Data` folder
-- **IIS Express** for local development and testing
+- ASP.NET Web Forms
+- C#
+- .NET Framework 4.7
+- XML-based data storage through files in the `App_Data` folder
+- IIS Express for local development and testing
 
 ### Libraries and Versioning
 This project mainly uses built-in .NET Framework libraries. These include standard Microsoft libraries such as:
@@ -40,58 +38,56 @@ This project mainly uses built-in .NET Framework libraries. These include standa
 
 The main explicit NuGet package included in the project is:
 
-- **Microsoft.CodeDom.Providers.DotNetCompilerPlatform** — version **2.0.1**
+- `Microsoft.CodeDom.Providers.DotNetCompilerPlatform` version `2.0.1`
 
 This package is used to support compilation in the ASP.NET Web Forms project.
 
 ### How to Open and Run the Project
 1. Download or clone this repository to your computer.
-2. Open **Visual Studio 2022**.
-3. Confirm that the **ASP.NET and web development** workload is installed.
-4. Confirm that **.NET Framework 4.7** targeting support is available.
+2. Open Visual Studio.
+3. Confirm that the ASP.NET and web development workload is installed.
+4. Confirm that .NET Framework 4.7 targeting support is available.
 5. Open the solution file:
    - `CyberApp_FIA.sln`
 6. Wait for Visual Studio to finish loading the solution.
 7. If prompted, restore any missing packages.
 8. Build the project by selecting:
-   - **Build > Build Solution**
+   - `Build > Build Solution`
 9. In Solution Explorer, make sure the `CyberApp_FIA` project is set as the startup project.
 10. Run the project using:
-   - **F5** for debug mode, or
-   - **Ctrl + F5** for run without debugging
+   - `F5` for debug mode, or
+   - `Ctrl + F5` for run without debugging
 
 The application should open locally in your browser through IIS Express.
 
 ### Project Structure Overview
 Some of the most important folders and files are:
 
-- **CyberApp_FIA.sln**  
+- `CyberApp_FIA.sln`  
   Main Visual Studio solution file used to open the project.
 
-- **Account/**  
+- `Account/`  
   Contains the role-based pages for Participants, Helpers, University Admins, and Super Admins.
 
-- **App_Data/**  
+- `App_Data/`  
   Stores XML data files used by the application, including users, events, sessions, enrollments, quiz results, badges, progress, and logs.
 
-- **App_Code/**  
+- `App_Code/`  
   Contains shared backend logic used across the project.
 
-- **Web.config**  
+- `Web.config`  
   Contains application configuration settings.
 
 ### Notes for Replicating the Setup
 - This project uses XML files instead of a full database, so the `App_Data` folder is important for correct system behavior.
 - The project is intended to run locally through Visual Studio and IIS Express.
 - If moving the project to another machine, make sure the full solution and all XML data files are included.
-- If deployment is needed, the project can also be hosted through IIS.
-
----
+- Once deployed, the site is visitable online. Any changes in Visual Studio need to be republished online.
 
 ## User Guide
 
 ### General System Use
-The FIA system is organized around **CyberFair events**, which contain **microcourses** and **scheduled sessions**. Admin users create the structure first, and then Participants and Helpers interact with the sessions and learning tools inside that structure.
+The FIA system is organized around CyberFair events, which contain microcourses and scheduled sessions. Admin users create the structure first, and then Participants and Helpers interact with the sessions and learning tools inside that structure.
 
 ### Participant Usage
 Participants begin by creating an account and signing in. After login, they choose their university and active event. On first use, they complete a pre-event cybersecurity quiz that measures areas of need and gives a score, quick wins, and suggested next steps.
@@ -101,7 +97,7 @@ After the quiz, the participant can:
 - Browse available sessions
 - Enroll in a session
 - Join a waitlist if a session is full
-- View enrolled sessions in **My Sessions**
+- View enrolled sessions in `My Sessions`
 - Access room links when a Helper admits them
 - Swap or replace sessions when needed
 - Message their assigned Helper for support
@@ -138,8 +134,6 @@ Super Admins manage the highest-level system setup and oversight. They can:
 - Control which microcourses are available
 - Manage system-wide administrative features
 - Review broader audit and oversight data
-
----
 
 ## Intended Usage
 This application is intended to provide a structured, supportive, and secure cybersecurity learning experience for women through guided instruction and peer-supported sessions. It is also intended to help FIA administrators organize events, manage learning content, support Helpers, track user progress, and maintain clear oversight of important system activity.
