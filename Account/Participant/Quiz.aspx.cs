@@ -64,7 +64,7 @@ namespace CyberApp_FIA.Account.Participant
             Options.Items[3].Value = "D"; Options.Items[3].Text = $"<span class='tag'>D</span>{q.D}";
 
             // Render HTML inside label content
-            
+
             Options.TextAlign = TextAlign.Right; // ensures label content next to hidden radio
 
             // restore selection if exists
@@ -184,7 +184,6 @@ namespace CyberApp_FIA.Account.Participant
 
         protected void BtnSaveShare_Click(object sender, EventArgs e)
         {
-            _svc.SetShareWithHelper(UserKey, ChkShare.Checked);
             Response.Redirect("~/Account/Participant/Home.aspx");
         }
     }

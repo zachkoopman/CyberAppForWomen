@@ -17,9 +17,44 @@ namespace CyberApp_FIA.Account
         private string AuditXmlPath => Server.MapPath("~/App_Data/Audit_Log/UnvAdminAudit.xml");
         private string UsersXmlPath => Server.MapPath("~/App_Data/users.xml");
         private string HelperProgressXmlPath => Server.MapPath("~/App_Data/helperProgress.xml");
+        private string HelperSessionReviewsXmlPath => Server.MapPath("~/App_Data/helperSessionReviews.xml");
+
 
         private string HelperEmailQuery =>
             (Request.QueryString["helperEmail"] ?? string.Empty).Trim();
+
+        private const int Tier1Threshold = 5;
+        private const int Tier2Threshold = 10;
+        private const int Tier3Threshold = 20;
+
+        private static string NormalizeBadgeTitle(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return "";
+            return string.Join(" ", s.Trim().Split(new[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        private static readonly Dictionary<string, string> HelperBadgeBaseByCourseTitle =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+    { "Enhancing Social Media Privacy Settings", "SMSettingsHelper.png" },
+    { "Phishing Awareness And Email Security", "PhishingHelper.png" },
+    { "Privacy Settings on Popular Apps", "PopAppsHelper.png" },
+    { "Detecting Spyware Infection on Devices", "SpywareHelper.png" },
+    { "Detecting Spyware Infections on Devices", "SpywareHelper.png" },
+    { "2FA Setup And Management", "2FAHelper.png" },
+    { "Password Management And Security", "PassManagementHelper.png" },
+    { "Managing Digital Footprint", "FootprintHelper.png" },
+    { "Managing Your Digital Footprint", "FootprintHelper.png" },
+    { "Recognizing AI-Assisted Manipulation And Deepfakes", "AIHelper.png" },
+    { "Using VPNs for Secure Browsing", "VPNHelper.png" },
+    { "Safe Use of Public Computers and Wi-Fi", "PublicComputersHelper.png" },
+    { "Identifying Hidden-Surveilance Devices", "ElectronicScanningHelper.png" },
+    { "Identifying Hidden Surveillance Devices (Electronic Scanning)", "ElectronicScanningHelper.png" },
+    { "Safe Online Banking Practices", "BankingHelper.png" },
+    { "Recognizing Malicious Mobile Apps", "MaliciousAppsHelper.png" },
+    { "Verifying Online Identities and Combating Catfishing", "IdentityHelper.png" },
+    { "Securing Home Wi-Fi Networks", "HomeNetHelper.png" }
+        };
 
         private int CurrentPageIndex
         {
@@ -27,11 +62,55 @@ namespace CyberApp_FIA.Account
             set => ViewState["HelperAuditPageIndex"] = value < 0 ? 0 : value;
         }
 
+        private sealed class SessionLogReviewItem
+        {
+            public string LogId { get; set; }
+            public string CourseId { get; set; }
+            public string CourseTitle { get; set; }
+            public string Scope { get; set; } // Teaching | Help
+            public DateTime LoggedLocal { get; set; }
+            public string WhenLabel { get; set; }
+            public string Details { get; set; }
+
+            public string Status { get; set; } // Pending | Verified | Questioned
+            public string StatusLabel { get; set; }
+            public string CssClass { get; set; }
+            public string AdminNote { get; set; }
+        }
+
+        private sealed class AuditRow
+        {
+            public string TimestampDate { get; set; }
+            public string TimestampTime { get; set; }
+            public DateTime TimestampLocal { get; set; }
+            public string Role { get; set; }
+            public string Type { get; set; }
+            public string FirstName { get; set; }
+            public string Email { get; set; }
+            public string Details { get; set; }
+        }
+
+        private sealed class VerificationItem
+        {
+            public string CourseId { get; set; }
+            public string CourseTitle { get; set; }
+            public string Status { get; set; }
+            public string StatusLabel { get; set; }
+            public string CssClass { get; set; }
+            public string LastUpdatedLabel { get; set; }
+            public string HelperDisplayName { get; set; }
+            public string AdminNote { get; set; }
+            public string HelperNote { get; set; }
+            public bool HasHelperNote { get; set; }
+            public bool HasAdminNote { get; set; }
+            public bool IsResubmission { get; set; }
+            public string SubmissionLabel { get; set; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Only University Admins can use this view
                 var role = (string)Session["Role"];
                 if (!string.Equals(role, "UniversityAdmin", StringComparison.OrdinalIgnoreCase))
                 {
@@ -49,17 +128,14 @@ namespace CyberApp_FIA.Account
                 var adminEmail = (string)Session["Email"] ?? string.Empty;
                 WelcomeName.Text = adminEmail.Length > 0 ? adminEmail : "University Admin";
 
-                // Figure out the admin’s university (from session or users.xml)
                 var adminUni = (string)Session["University"];
                 if (string.IsNullOrWhiteSpace(adminUni))
                 {
                     adminUni = LookupUniversityByEmail(adminEmail);
                 }
 
-                // Look up helper and make sure they belong to this university
                 if (!TryBindHelperHeader(helperEmail, adminUni, out var helperUni, out var helperId))
                 {
-                    // Either helper not found or belongs to another university
                     Response.Redirect("~/Account/UniversityAdmin/UniversityAdminAudit.aspx");
                     return;
                 }
@@ -68,10 +144,13 @@ namespace CyberApp_FIA.Account
                 HelperIdValue.Value = helperId ?? string.Empty;
 
                 EnsureAuditXml();
+                EnsureHelperProgressXml();
+                EnsureHelperSessionReviewsXml();
+
                 InitializeFilters(helperEmail, helperUni);
                 BindAuditLog();
                 BindVerificationCards();
-                BindSessionReviewCards();
+                BindIndividualSessionReviewCards();
             }
         }
 
@@ -92,7 +171,10 @@ namespace CyberApp_FIA.Account
             TxtFromTime.Text = string.Empty;
             TxtToTime.Text = string.Empty;
 
-            if (DdlTypeFilter.Items.Count > 0) DdlTypeFilter.SelectedIndex = 0;
+            if (DdlTypeFilter.Items.Count > 0)
+            {
+                DdlTypeFilter.SelectedIndex = 0;
+            }
 
             CurrentPageIndex = 0;
             BindAuditLog();
@@ -113,7 +195,6 @@ namespace CyberApp_FIA.Account
             BindAuditLog();
         }
 
-        // Export currently filtered (all pages) to CSV
         protected void BtnExportCsv_Click(object sender, EventArgs e)
         {
             var rows = GetFilteredAuditRows();
@@ -149,6 +230,12 @@ namespace CyberApp_FIA.Account
             Response.End();
         }
 
+        protected void ReviewFilter_Changed(object sender, EventArgs e)
+        {
+            BindVerificationCards();
+            BindIndividualSessionReviewCards();
+        }
+
         protected void VerificationRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             var helperId = HelperIdValue.Value;
@@ -181,8 +268,7 @@ namespace CyberApp_FIA.Account
                 return;
             }
 
-            // read admin note from card
-            string adminNote = string.Empty;
+            var adminNote = string.Empty;
             var noteBox = (TextBox)e.Item.FindControl("TxtAdminNote");
             if (noteBox != null)
             {
@@ -191,7 +277,6 @@ namespace CyberApp_FIA.Account
 
             UpdateVerificationStatus(helperId, courseId, newStatus, adminNote);
 
-            // log admin decision into the audit log
             try
             {
                 var details = $"Admin set certification verification to '{newStatus}' for helperId={helperId}, courseId={courseId}.";
@@ -206,70 +291,104 @@ namespace CyberApp_FIA.Account
             }
             catch
             {
-                // Do not block UI if audit logging fails.
             }
 
-            // Refresh both verification cards and the table below so the admin sees latest state.
             BindVerificationCards();
-            BindSessionReviewCards();
+            BindIndividualSessionReviewCards();
             BindAuditLog();
         }
 
-        protected void SessionReviewRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void TeachingLogReviewRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            var helperId = HelperIdValue.Value;
-            if (string.IsNullOrWhiteSpace(helperId))
+            HandleSessionLogReviewCommand(
+                e,
+                noteControlId: "TxtTeachingLogNote",
+                questionCommandName: "questionTeachingLog",
+                scope: "Teaching",
+                verifiedAuditType: "Helper Teaching Session Verified",
+                questionedAuditType: "Helper Teaching Session Questioned");
+        }
+
+        protected void HelpLogReviewRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            HandleSessionLogReviewCommand(
+                e,
+                noteControlId: "TxtHelpLogNote",
+                questionCommandName: "questionHelpLog",
+                scope: "Help",
+                verifiedAuditType: "Helper 1:1 Help Session Verified",
+                questionedAuditType: "Helper 1:1 Help Session Questioned");
+        }
+
+        private void HandleSessionLogReviewCommand(
+            RepeaterCommandEventArgs e,
+            string noteControlId,
+            string questionCommandName,
+            string scope,
+            string verifiedAuditType,
+            string questionedAuditType)
+        {
+            var helperId = HelperIdValue.Value ?? string.Empty;
+            var helperEmail = HelperEmailQuery;
+            var uni = UniversityValue.Value ?? string.Empty;
+
+            var logId = e.CommandArgument as string;
+            if (string.IsNullOrWhiteSpace(logId) ||
+                string.IsNullOrWhiteSpace(helperId) ||
+                string.IsNullOrWhiteSpace(helperEmail) ||
+                string.IsNullOrWhiteSpace(uni))
             {
                 return;
             }
 
-            var courseId = e.CommandArgument as string;
-            if (string.IsNullOrWhiteSpace(courseId))
-            {
-                return;
-            }
-
-            var noteBox = (TextBox)e.Item.FindControl("TxtSessionReviewNote");
+            var noteBox = (TextBox)e.Item.FindControl(noteControlId);
             var adminNote = noteBox != null ? (noteBox.Text ?? string.Empty).Trim() : string.Empty;
 
-            string scope;      // "Teaching" or "Help"
-            string newStatus;  // "Ok" or "Questioned"
-            string auditType;
+            var row = LoadHelperSessionAuditLogs(helperEmail, helperId, uni)
+                .FirstOrDefault(x => string.Equals(x.LogId, logId, StringComparison.OrdinalIgnoreCase));
 
-            if (string.Equals(e.CommandName, "verifyTeaching", StringComparison.OrdinalIgnoreCase))
-            {
-                scope = "Teaching";
-                newStatus = "Ok";
-                auditType = "Helper Teaching Session Verified";
-            }
-            else if (string.Equals(e.CommandName, "questionTeaching", StringComparison.OrdinalIgnoreCase))
-            {
-                scope = "Teaching";
-                newStatus = "Questioned";
-                auditType = "Helper Teaching Session Questioned";
-            }
-            else if (string.Equals(e.CommandName, "verifyHelp", StringComparison.OrdinalIgnoreCase))
-            {
-                scope = "Help";
-                newStatus = "Ok";
-                auditType = "Helper 1:1 Help Session Verified";
-            }
-            else if (string.Equals(e.CommandName, "questionHelp", StringComparison.OrdinalIgnoreCase))
-            {
-                scope = "Help";
-                newStatus = "Questioned";
-                auditType = "Helper 1:1 Help Session Questioned";
-            }
-            else
+            if (row == null)
             {
                 return;
             }
 
-            UpdateSessionReviewStatus(helperId, courseId, scope, newStatus, adminNote, auditType);
+            var newStatus = string.Equals(e.CommandName, questionCommandName, StringComparison.OrdinalIgnoreCase)
+                ? "Questioned"
+                : "Verified";
 
-            // Refresh both sections so admin sees updated state
+            SaveSessionLogReview(
+                row.LogId,
+                helperId,
+                helperEmail,
+                row.CourseId,
+                row.CourseTitle,
+                scope,
+                row.LoggedLocal == DateTime.MinValue ? DateTime.UtcNow : row.LoggedLocal.ToUniversalTime(),
+                newStatus,
+                adminNote);
+
+            RecalculateHelperProgressFromSessionReviews(helperId);
+
+            try
+            {
+                var auditType = newStatus == "Questioned" ? questionedAuditType : verifiedAuditType;
+
+                var details = $"Admin reviewed {scope} logId={row.LogId} for helperId={helperId}, courseId={row.CourseId}, course=\"{row.CourseTitle}\" and set status to '{newStatus}'.";
+                if (!string.IsNullOrWhiteSpace(adminNote))
+                {
+                    var preview = adminNote;
+                    if (preview.Length > 180) preview = preview.Substring(0, 177) + "...";
+                    details += " Admin note: " + preview;
+                }
+
+                UniversityAuditLogger.AppendForCurrentUser(this, auditType, details);
+            }
+            catch
+            {
+            }
+
             BindVerificationCards();
-            BindSessionReviewCards();
+            BindIndividualSessionReviewCards();
             BindAuditLog();
         }
 
@@ -280,6 +399,7 @@ namespace CyberApp_FIA.Account
             {
                 return "\"" + s.Replace("\"", "\"\"") + "\"";
             }
+
             return s;
         }
 
@@ -313,10 +433,24 @@ namespace CyberApp_FIA.Account
             }
         }
 
-        /// <summary>
-        /// Bind helper name/email/university at top of page.
-        /// Returns false if helper not found or not in this admin’s university.
-        /// </summary>
+        private void EnsureHelperSessionReviewsXml()
+        {
+            var dir = Path.GetDirectoryName(HelperSessionReviewsXmlPath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            if (!File.Exists(HelperSessionReviewsXmlPath))
+            {
+                File.WriteAllText(
+                    HelperSessionReviewsXmlPath,
+                    "<?xml version='1.0' encoding='utf-8'?><helperSessionReviews version='1'></helperSessionReviews>");
+            }
+        }
+
+       
+
         private bool TryBindHelperHeader(string helperEmail, string adminUni, out string helperUni, out string helperId)
         {
             helperUni = string.Empty;
@@ -340,7 +474,6 @@ namespace CyberApp_FIA.Account
                     return false;
                 }
 
-                // Read helper id so we can look up progress in helperProgress.xml
                 helperId = node.GetAttribute("id") ?? string.Empty;
 
                 var roleAttr = node.GetAttribute("role") ?? string.Empty;
@@ -351,7 +484,6 @@ namespace CyberApp_FIA.Account
 
                 helperUni = node["university"]?.InnerText ?? string.Empty;
 
-                // Security: helper must belong to same university as this admin
                 if (!string.IsNullOrWhiteSpace(adminUni) &&
                     !string.Equals(adminUni, helperUni, StringComparison.OrdinalIgnoreCase))
                 {
@@ -431,10 +563,77 @@ namespace CyberApp_FIA.Account
             }
             catch
             {
-                // fall through with whatever we've collected
             }
 
             return types;
+        }
+
+        private Dictionary<string, SessionLogReviewItem> LoadSessionReviewLookup()
+        {
+            var dict = new Dictionary<string, SessionLogReviewItem>(StringComparer.OrdinalIgnoreCase);
+
+            EnsureHelperSessionReviewsXml();
+
+            var doc = new XmlDocument();
+            doc.Load(HelperSessionReviewsXmlPath);
+
+            foreach (XmlElement r in doc.SelectNodes("/helperSessionReviews/review"))
+            {
+                var logId = r.GetAttribute("logId");
+                if (string.IsNullOrWhiteSpace(logId))
+                    continue;
+
+                dict[logId] = new SessionLogReviewItem
+                {
+                    LogId = logId,
+                    Status = r.GetAttribute("status"),
+                    AdminNote = r["adminNote"]?.InnerText ?? string.Empty
+                };
+            }
+
+            return dict;
+        }
+
+        private void SaveSessionLogReview(
+            string logId,
+            string helperId,
+            string helperEmail,
+            string courseId,
+            string courseTitle,
+            string scope,
+            DateTime loggedUtc,
+            string status,
+            string adminNote)
+        {
+            EnsureHelperSessionReviewsXml();
+
+            var doc = new XmlDocument();
+            doc.Load(HelperSessionReviewsXmlPath);
+
+            var root = doc.DocumentElement;
+            var review = doc.SelectSingleNode($"/helperSessionReviews/review[@logId='{logId}']") as XmlElement;
+
+            if (review == null)
+            {
+                review = doc.CreateElement("review");
+                review.SetAttribute("logId", logId);
+                root.AppendChild(review);
+            }
+
+            review.SetAttribute("helperId", helperId ?? string.Empty);
+            review.SetAttribute("helperEmail", helperEmail ?? string.Empty);
+            review.SetAttribute("courseId", courseId ?? string.Empty);
+            review.SetAttribute("courseTitle", courseTitle ?? string.Empty);
+            review.SetAttribute("scope", scope ?? string.Empty);
+            review.SetAttribute("loggedUtc", loggedUtc.ToString("o"));
+            review.SetAttribute("status", status ?? "Pending");
+            review.SetAttribute("reviewedUtc", DateTime.UtcNow.ToString("o"));
+
+            var noteEl = review["adminNote"] ?? doc.CreateElement("adminNote");
+            noteEl.InnerText = adminNote ?? string.Empty;
+            if (noteEl.ParentNode == null) review.AppendChild(noteEl);
+
+            doc.Save(HelperSessionReviewsXmlPath);
         }
 
         private List<AuditRow> GetFilteredAuditRows()
@@ -500,7 +699,6 @@ namespace CyberApp_FIA.Account
             }
             catch
             {
-                // safe fail to empty rows
             }
 
             var search = (TxtSearch.Text ?? "").Trim().ToLowerInvariant();
@@ -580,6 +778,7 @@ namespace CyberApp_FIA.Account
             if (string.IsNullOrWhiteSpace(helperId))
             {
                 VerificationListPlaceholder.Visible = false;
+                QuizFilteredEmptyPlaceholder.Visible = false;
                 return;
             }
 
@@ -587,6 +786,7 @@ namespace CyberApp_FIA.Account
             if (!File.Exists(HelperProgressXmlPath))
             {
                 VerificationListPlaceholder.Visible = false;
+                QuizFilteredEmptyPlaceholder.Visible = true;
                 return;
             }
 
@@ -599,6 +799,7 @@ namespace CyberApp_FIA.Account
             if (helperEl == null)
             {
                 VerificationListPlaceholder.Visible = false;
+                QuizFilteredEmptyPlaceholder.Visible = true;
                 return;
             }
 
@@ -672,107 +873,207 @@ namespace CyberApp_FIA.Account
                 });
             }
 
-            if (items.Count == 0)
-            {
-                VerificationListPlaceholder.Visible = false;
-                return;
-            }
+            var filteredItems = items
+                .Where(i => MatchesStatusFilter(
+                    i.Status,
+                    ChkQuizShowVerified.Checked,
+                    ChkQuizShowQuestioned.Checked,
+                    ChkQuizShowPending.Checked))
+                .OrderBy(i => i.CourseTitle)
+                .ToList();
 
-            VerificationListPlaceholder.Visible = true;
-            VerificationRepeater.DataSource = items.OrderBy(i => i.CourseTitle).ToList();
+            VerificationListPlaceholder.Visible = filteredItems.Count > 0;
+            QuizFilteredEmptyPlaceholder.Visible = filteredItems.Count == 0;
+
+            VerificationRepeater.DataSource = filteredItems;
             VerificationRepeater.DataBind();
         }
 
-        private void BindSessionReviewCards()
+        private void BindIndividualSessionReviewCards()
         {
-            var helperId = HelperIdValue.Value;
-            if (string.IsNullOrWhiteSpace(helperId))
+            var helperEmail = HelperEmailQuery;
+            var helperId = HelperIdValue.Value ?? string.Empty;
+            var uni = UniversityValue.Value ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(helperEmail) ||
+                string.IsNullOrWhiteSpace(helperId) ||
+                string.IsNullOrWhiteSpace(uni))
             {
-                SessionReviewPlaceholder.Visible = false;
+                TeachingLogReviewPlaceholder.Visible = false;
+                HelpLogReviewPlaceholder.Visible = false;
+                TeachingFilteredEmptyPlaceholder.Visible = false;
+                HelpFilteredEmptyPlaceholder.Visible = false;
                 return;
             }
 
-            EnsureHelperProgressXml();
-            if (!File.Exists(HelperProgressXmlPath))
+            EnsureAuditXml();
+            EnsureHelperSessionReviewsXml();
+
+            var allLogs = LoadHelperSessionAuditLogs(helperEmail, helperId, uni);
+
+            var teachingFiltered = allLogs
+                .Where(x => x.Scope == "Teaching")
+                .Where(x => MatchesStatusFilter(
+                    x.Status,
+                    ChkTeachingShowVerified.Checked,
+                    ChkTeachingShowQuestioned.Checked,
+                    ChkTeachingShowPending.Checked))
+                .OrderByDescending(x => x.LoggedLocal)
+                .ToList();
+
+            var helpFiltered = allLogs
+                .Where(x => x.Scope == "Help")
+                .Where(x => MatchesStatusFilter(
+                    x.Status,
+                    ChkHelpShowVerified.Checked,
+                    ChkHelpShowQuestioned.Checked,
+                    ChkHelpShowPending.Checked))
+                .OrderByDescending(x => x.LoggedLocal)
+                .ToList();
+
+            TeachingLogReviewPlaceholder.Visible = teachingFiltered.Count > 0;
+            TeachingFilteredEmptyPlaceholder.Visible = teachingFiltered.Count == 0;
+            TeachingLogReviewRepeater.DataSource = teachingFiltered;
+            TeachingLogReviewRepeater.DataBind();
+
+            HelpLogReviewPlaceholder.Visible = helpFiltered.Count > 0;
+            HelpFilteredEmptyPlaceholder.Visible = helpFiltered.Count == 0;
+            HelpLogReviewRepeater.DataSource = helpFiltered;
+            HelpLogReviewRepeater.DataBind();
+        }
+
+        private List<SessionLogReviewItem> LoadHelperSessionAuditLogs(string helperEmail, string helperId, string uni)
+        {
+            var items = new List<SessionLogReviewItem>();
+
+            if (!File.Exists(AuditXmlPath))
             {
-                SessionReviewPlaceholder.Visible = false;
-                return;
+                return items;
             }
 
-            var items = new List<SessionReviewItem>();
+            var reviewLookup = LoadSessionReviewLookup();
+
+            var doc = new XmlDocument();
+            doc.Load(AuditXmlPath);
+
+            foreach (XmlElement entry in doc.SelectNodes("/auditLog/entry"))
+            {
+                var entryUni = entry.GetAttribute("university");
+                var role = entry.GetAttribute("role");
+                var email = entry.GetAttribute("email");
+                var type = entry.GetAttribute("type");
+
+                if (!string.Equals(entryUni, uni, StringComparison.OrdinalIgnoreCase)) continue;
+                if (!string.Equals(role, "Helper", StringComparison.OrdinalIgnoreCase)) continue;
+                if (!string.Equals(email, helperEmail, StringComparison.OrdinalIgnoreCase)) continue;
+
+                var isTeaching = string.Equals(type, "Helper Delivered Session", StringComparison.OrdinalIgnoreCase);
+                var isHelp = string.Equals(type, "Helper 1:1 Help Session", StringComparison.OrdinalIgnoreCase);
+
+                if (!isTeaching && !isHelp) continue;
+
+                var logId = entry.GetAttribute("id");
+                var timestampRaw = entry.GetAttribute("timestamp");
+                var details = entry["details"]?.InnerText ?? string.Empty;
+
+                DateTime tsUtc;
+                DateTime localTs = DateTime.MinValue;
+                if (DateTime.TryParse(timestampRaw, out tsUtc))
+                {
+                    localTs = tsUtc.ToLocalTime();
+                }
+
+                var courseTitle = ExtractCourseTitleFromDetails(details);
+                var courseId = isTeaching
+                    ? ExtractCourseIdFromDetails(details)
+                    : LookupCourseIdByTitle(helperId, courseTitle);
+
+                SessionLogReviewItem existing;
+                reviewLookup.TryGetValue(logId, out existing);
+
+                var status = existing?.Status ?? "Pending";
+                var adminNote = existing?.AdminNote ?? string.Empty;
+
+                items.Add(new SessionLogReviewItem
+                {
+                    LogId = logId,
+                    CourseId = courseId,
+                    CourseTitle = string.IsNullOrWhiteSpace(courseTitle) ? "(unknown microcourse)" : courseTitle,
+                    Scope = isTeaching ? "Teaching" : "Help",
+                    LoggedLocal = localTs,
+                    WhenLabel = localTs == DateTime.MinValue ? "" : localTs.ToString("MMM d, yyyy • h:mm tt"),
+                    Details = details,
+                    Status = status,
+                    StatusLabel = status == "Questioned" ? "Questioned"
+                               : status == "Verified" ? "Verified"
+                               : "Pending review",
+                    CssClass = status == "Questioned" ? "questioned"
+                             : status == "Verified" ? "verified"
+                             : "pending",
+                    AdminNote = adminNote
+                });
+            }
+
+            return items;
+        }
+
+        private static string ExtractCourseTitleFromDetails(string details)
+        {
+            if (string.IsNullOrWhiteSpace(details))
+                return string.Empty;
+
+            var firstQuote = details.IndexOf("\"", StringComparison.Ordinal);
+            var secondQuote = firstQuote >= 0
+                ? details.IndexOf("\"", firstQuote + 1, StringComparison.Ordinal)
+                : -1;
+
+            if (firstQuote >= 0 && secondQuote > firstQuote)
+            {
+                return details.Substring(firstQuote + 1, secondQuote - firstQuote - 1).Trim();
+            }
+
+            return string.Empty;
+        }
+
+        private static string ExtractCourseIdFromDetails(string details)
+        {
+            if (string.IsNullOrWhiteSpace(details))
+                return string.Empty;
+
+            var key = "(courseId=";
+            var start = details.IndexOf(key, StringComparison.OrdinalIgnoreCase);
+            if (start < 0)
+                return string.Empty;
+
+            start += key.Length;
+            var end = details.IndexOf(")", start, StringComparison.OrdinalIgnoreCase);
+            if (end < 0) end = details.Length;
+
+            return details.Substring(start, end - start).Trim();
+        }
+
+        private string LookupCourseIdByTitle(string helperId, string courseTitle)
+        {
+            if (string.IsNullOrWhiteSpace(helperId) ||
+                string.IsNullOrWhiteSpace(courseTitle) ||
+                !File.Exists(HelperProgressXmlPath))
+            {
+                return string.Empty;
+            }
 
             var doc = new XmlDocument();
             doc.Load(HelperProgressXmlPath);
 
-            var helperEl = (XmlElement)doc.SelectSingleNode($"/helperProgress/helper[@id='{helperId}']");
-            if (helperEl == null)
+            foreach (XmlElement c in doc.SelectNodes($"/helperProgress/helper[@id='{helperId}']/course"))
             {
-                SessionReviewPlaceholder.Visible = false;
-                return;
-            }
-
-            foreach (XmlElement c in helperEl.SelectNodes("./course"))
-            {
-                var courseId = c.GetAttribute("id");
-                var title = c["title"]?.InnerText ?? courseId;
-
-                var teaching = ParseIntSafe(c["teachingSessions"]?.InnerText, 0);
-                var help = ParseIntSafe(c["helpSessions"]?.InnerText, 0);
-
-                // Only show microcourses that have at least one teaching or 1:1 session logged.
-                if (teaching == 0 && help == 0)
+                var title = c["title"]?.InnerText ?? string.Empty;
+                if (string.Equals(title.Trim(), courseTitle.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
-                    continue;
+                    return c.GetAttribute("id") ?? string.Empty;
                 }
-
-                var teachingStatus = (c["teachingReviewStatus"]?.InnerText ?? "Ok").Trim();
-                var helpStatus = (c["helpReviewStatus"]?.InnerText ?? "Ok").Trim();
-
-                var teachingLabel = teachingStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase)
-                    ? "Questioned (1 session on hold)"
-                    : "OK";
-
-                var helpLabel = helpStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase)
-                    ? "Questioned (1 session on hold)"
-                    : "OK";
-
-                var teachingCss = teachingStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase)
-                    ? "color:#b91c1c; font-weight:600;"
-                    : "color:#15803d; font-weight:600;";
-
-                var helpCss = helpStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase)
-                    ? "color:#b91c1c; font-weight:600;"
-                    : "color:#15803d; font-weight:600;";
-
-                var teachingNote = c["teachingReviewAdminNote"]?.InnerText ?? string.Empty;
-                var helpNote = c["helpReviewAdminNote"]?.InnerText ?? string.Empty;
-
-                items.Add(new SessionReviewItem
-                {
-                    CourseId = courseId,
-                    CourseTitle = title,
-                    TeachingSessions = teaching,
-                    HelpSessions = help,
-                    HasTeaching = teaching > 0,
-                    HasHelp = help > 0,
-                    TeachingStatusLabel = teachingLabel,
-                    TeachingStatusCss = teachingCss,
-                    TeachingAdminNote = teachingNote,
-                    HelpStatusLabel = helpLabel,
-                    HelpStatusCss = helpCss,
-                    HelpAdminNote = helpNote
-                });
             }
 
-            if (items.Count == 0)
-            {
-                SessionReviewPlaceholder.Visible = false;
-                return;
-            }
-
-            SessionReviewPlaceholder.Visible = true;
-            SessionReviewRepeater.DataSource = items.OrderBy(i => i.CourseTitle).ToList();
-            SessionReviewRepeater.DataBind();
+            return string.Empty;
         }
 
         private static int ParseIntSafe(string value, int fallback)
@@ -792,17 +1093,31 @@ namespace CyberApp_FIA.Account
             return null;
         }
 
+        private static bool MatchesStatusFilter(string status, bool showVerified, bool showQuestioned, bool showPending)
+        {
+            if (string.Equals(status, "Verified", StringComparison.OrdinalIgnoreCase))
+                return showVerified;
+
+            if (string.Equals(status, "Questioned", StringComparison.OrdinalIgnoreCase))
+                return showQuestioned;
+
+            return showPending;
+        }
+
         private string LookupUniversityByEmail(string email)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(email) || !File.Exists(UsersXmlPath)) return "";
+                if (string.IsNullOrWhiteSpace(email) || !File.Exists(UsersXmlPath))
+                    return "";
+
                 var doc = new XmlDocument();
                 doc.Load(UsersXmlPath);
                 var emailLower = email.ToLowerInvariant();
 
                 var node = doc.SelectSingleNode(
                     $"/users/user[translate(email,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='{emailLower}']");
+
                 return node?["university"]?.InnerText ?? "";
             }
             catch
@@ -832,7 +1147,6 @@ namespace CyberApp_FIA.Account
             updatedEl.InnerText = DateTime.UtcNow.ToString("o");
             if (updatedEl.ParentNode == null) courseEl.AppendChild(updatedEl);
 
-            // store admin note explaining this decision
             var adminNoteEl = courseEl["verificationAdminNote"] ?? doc.CreateElement("verificationAdminNote");
             adminNoteEl.InnerText = adminNote ?? string.Empty;
             if (adminNoteEl.ParentNode == null) courseEl.AppendChild(adminNoteEl);
@@ -840,222 +1154,115 @@ namespace CyberApp_FIA.Account
             doc.Save(HelperProgressXmlPath);
         }
 
-        private void UpdateSessionReviewStatus(
-            string helperId,
-            string courseId,
-            string scope,
-            string newStatus,
-            string adminNote,
-            string auditType)
+        private void RecalculateHelperProgressFromSessionReviews(string helperId)
         {
             EnsureHelperProgressXml();
+            EnsureHelperSessionReviewsXml();
+            EnsureAuditXml();
 
-            var doc = new XmlDocument();
-            doc.Load(HelperProgressXmlPath);
+            var progressDoc = new XmlDocument();
+            progressDoc.Load(HelperProgressXmlPath);
 
-            var helperEl = (XmlElement)doc.SelectSingleNode($"/helperProgress/helper[@id='{helperId}']");
+            var helperEl = progressDoc.SelectSingleNode($"/helperProgress/helper[@id='{helperId}']") as XmlElement;
             if (helperEl == null)
             {
                 return;
             }
 
-            var courseEl = (XmlElement)helperEl.SelectSingleNode($"./course[@id='{courseId}']");
-            if (courseEl == null)
-            {
-                return;
-            }
+            var helperEmail = HelperEmailQuery;
+            var uni = UniversityValue.Value ?? string.Empty;
 
-            // For logging & UI readability
-            var courseTitle = (courseEl["title"]?.InnerText ?? courseId).Trim();
-            if (string.IsNullOrEmpty(courseTitle))
-            {
-                courseTitle = courseId;
-            }
-
-            var totalsEl = helperEl["totals"] ?? doc.CreateElement("totals");
-            if (totalsEl.ParentNode == null) helperEl.AppendChild(totalsEl);
-
-            XmlElement EnsureTotalsChild(string name)
-            {
-                var n = totalsEl[name] ?? doc.CreateElement(name);
-                if (n.ParentNode == null) totalsEl.AppendChild(n);
-                return n;
-            }
-
-            var totalTeachEl = EnsureTotalsChild("totalTeachingSessions");
-            var totalHelpEl = EnsureTotalsChild("totalHelpSessions");
-
-            var totalTeach = ParseIntSafe(totalTeachEl.InnerText, 0);
-            var totalHelp = ParseIntSafe(totalHelpEl.InnerText, 0);
-
+            var rawLogs = LoadHelperSessionAuditLogs(helperEmail, helperId, uni);
+            var reviewLookup = LoadSessionReviewLookup();
             var nowIso = DateTime.UtcNow.ToString("o");
 
-            if (string.Equals(scope, "Teaching", StringComparison.OrdinalIgnoreCase))
+            var totalTeaching = 0;
+            var totalHelp = 0;
+
+            foreach (XmlElement courseEl in helperEl.SelectNodes("./course"))
             {
-                var statusEl = courseEl["teachingReviewStatus"] ?? doc.CreateElement("teachingReviewStatus");
-                if (statusEl.ParentNode == null) courseEl.AppendChild(statusEl);
-                var prevStatus = (statusEl.InnerText ?? "Ok").Trim();
-                statusEl.InnerText = newStatus;
+                var courseId = courseEl.GetAttribute("id");
 
-                var noteEl = courseEl["teachingReviewAdminNote"] ?? doc.CreateElement("teachingReviewAdminNote");
-                noteEl.InnerText = adminNote ?? string.Empty;
-                if (noteEl.ParentNode == null) courseEl.AppendChild(noteEl);
+                var teachingRaw = rawLogs.Count(x => x.Scope == "Teaching" && x.CourseId == courseId);
+                var teachingQuestioned = rawLogs.Count(x =>
+                    x.Scope == "Teaching" &&
+                    x.CourseId == courseId &&
+                    reviewLookup.ContainsKey(x.LogId) &&
+                    string.Equals(reviewLookup[x.LogId].Status, "Questioned", StringComparison.OrdinalIgnoreCase));
 
-                var flagEl = courseEl["teachingRevokedFlag"] ?? doc.CreateElement("teachingRevokedFlag");
-                if (flagEl.ParentNode == null) courseEl.AppendChild(flagEl);
-                var prevFlag = (flagEl.InnerText ?? "false").Trim();
+                var helpRaw = rawLogs.Count(x => x.Scope == "Help" && x.CourseId == courseId);
+                var helpQuestioned = rawLogs.Count(x =>
+                    x.Scope == "Help" &&
+                    x.CourseId == courseId &&
+                    reviewLookup.ContainsKey(x.LogId) &&
+                    string.Equals(reviewLookup[x.LogId].Status, "Questioned", StringComparison.OrdinalIgnoreCase));
 
-                var teachingEl = courseEl["teachingSessions"] ?? doc.CreateElement("teachingSessions");
-                if (teachingEl.ParentNode == null) courseEl.AppendChild(teachingEl);
-                var teachingCount = ParseIntSafe(teachingEl.InnerText, 0);
+                var effectiveTeaching = Math.Max(0, teachingRaw - teachingQuestioned);
+                var effectiveHelp = Math.Max(0, helpRaw - helpQuestioned);
 
-                // Question ⇒ subtract 1 once; Verify ⇒ add it back once
-                if (newStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase)
-                    && !prevFlag.Equals("true", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (teachingCount > 0)
-                    {
-                        teachingCount -= 1;
-                        teachingEl.InnerText = teachingCount.ToString();
-                        totalTeach = Math.Max(0, totalTeach - 1);
-                    }
+                SetChildInnerText(progressDoc, courseEl, "teachingSessions", effectiveTeaching.ToString());
+                SetChildInnerText(progressDoc, courseEl, "helpSessions", effectiveHelp.ToString());
 
-                    flagEl.InnerText = "true";
-                }
-                else if (newStatus.Equals("Ok", StringComparison.OrdinalIgnoreCase)
-                         && prevFlag.Equals("true", StringComparison.OrdinalIgnoreCase))
-                {
-                    teachingCount += 1;
-                    teachingEl.InnerText = teachingCount.ToString();
-                    totalTeach += 1;
-                    flagEl.InnerText = "false";
-                }
+                SetChildInnerText(progressDoc, courseEl, "teachingRevokedFlag", teachingQuestioned > 0 ? "true" : "false");
+                SetChildInnerText(progressDoc, courseEl, "helpRevokedFlag", helpQuestioned > 0 ? "true" : "false");
 
-                var updatedEl = courseEl["teachingReviewUpdatedUtc"] ?? doc.CreateElement("teachingReviewUpdatedUtc");
-                updatedEl.InnerText = nowIso;
-                if (updatedEl.ParentNode == null) courseEl.AppendChild(updatedEl);
-            }
-            else if (string.Equals(scope, "Help", StringComparison.OrdinalIgnoreCase))
-            {
-                var statusEl = courseEl["helpReviewStatus"] ?? doc.CreateElement("helpReviewStatus");
-                if (statusEl.ParentNode == null) courseEl.AppendChild(statusEl);
-                var prevStatus = (statusEl.InnerText ?? "Ok").Trim();
-                statusEl.InnerText = newStatus;
+                SetChildInnerText(progressDoc, courseEl, "teachingReviewStatus", teachingQuestioned > 0 ? "Questioned" : "Ok");
+                SetChildInnerText(progressDoc, courseEl, "helpReviewStatus", helpQuestioned > 0 ? "Questioned" : "Ok");
 
-                var noteEl = courseEl["helpReviewAdminNote"] ?? doc.CreateElement("helpReviewAdminNote");
-                noteEl.InnerText = adminNote ?? string.Empty;
-                if (noteEl.ParentNode == null) courseEl.AppendChild(noteEl);
+                SetChildInnerText(progressDoc, courseEl, "teachingReviewAdminNote",
+                    GetLatestQuestionedNoteForCourse(rawLogs, reviewLookup, courseId, "Teaching"));
+                SetChildInnerText(progressDoc, courseEl, "helpReviewAdminNote",
+                    GetLatestQuestionedNoteForCourse(rawLogs, reviewLookup, courseId, "Help"));
 
-                var flagEl = courseEl["helpRevokedFlag"] ?? doc.CreateElement("helpRevokedFlag");
-                if (flagEl.ParentNode == null) courseEl.AppendChild(flagEl);
-                var prevFlag = (flagEl.InnerText ?? "false").Trim();
+               
 
-                var helpEl = courseEl["helpSessions"] ?? doc.CreateElement("helpSessions");
-                if (helpEl.ParentNode == null) courseEl.AppendChild(helpEl);
-                var helpCount = ParseIntSafe(helpEl.InnerText, 0);
+                SetChildInnerText(progressDoc, courseEl, "teachingReviewUpdatedUtc", nowIso);
+                SetChildInnerText(progressDoc, courseEl, "helpReviewUpdatedUtc", nowIso);
 
-                if (newStatus.Equals("Questioned", StringComparison.OrdinalIgnoreCase)
-                    && !prevFlag.Equals("true", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (helpCount > 0)
-                    {
-                        helpCount -= 1;
-                        helpEl.InnerText = helpCount.ToString();
-                        totalHelp = Math.Max(0, totalHelp - 1);
-                    }
-
-                    flagEl.InnerText = "true";
-                }
-                else if (newStatus.Equals("Ok", StringComparison.OrdinalIgnoreCase)
-                         && prevFlag.Equals("true", StringComparison.OrdinalIgnoreCase))
-                {
-                    helpCount += 1;
-                    helpEl.InnerText = helpCount.ToString();
-                    totalHelp += 1;
-                    flagEl.InnerText = "false";
-                }
-
-                var updatedEl = courseEl["helpReviewUpdatedUtc"] ?? doc.CreateElement("helpReviewUpdatedUtc");
-                updatedEl.InnerText = nowIso;
-                if (updatedEl.ParentNode == null) courseEl.AppendChild(updatedEl);
+                totalTeaching += effectiveTeaching;
+                totalHelp += effectiveHelp;
             }
 
-            // Update totals snapshot
-            totalTeachEl.InnerText = totalTeach.ToString();
-            totalHelpEl.InnerText = totalHelp.ToString();
-            var totalsUpdatedEl = totalsEl["lastUpdatedUtc"] ?? doc.CreateElement("lastUpdatedUtc");
-            totalsUpdatedEl.InnerText = nowIso;
-            if (totalsUpdatedEl.ParentNode == null) totalsEl.AppendChild(totalsUpdatedEl);
-
-            doc.Save(HelperProgressXmlPath);
-
-            // Audit the admin decision into the same university audit log
-            try
+            var totalsEl = helperEl["totals"] ?? progressDoc.CreateElement("totals");
+            if (totalsEl.ParentNode == null)
             {
-                var details = $"Admin set {scope} review status to '{newStatus}' for helperId={helperId}, courseId={courseId}, course=\"{courseTitle}\".";
-                if (!string.IsNullOrWhiteSpace(adminNote))
-                {
-                    var preview = adminNote;
-                    if (preview.Length > 180) preview = preview.Substring(0, 177) + "...";
-                    details += " Admin note: " + preview;
-                }
+                helperEl.AppendChild(totalsEl);
+            }
 
-                UniversityAuditLogger.AppendForCurrentUser(this, auditType, details);
-            }
-            catch
-            {
-                // Never block admin UI on audit failures.
-            }
+            SetChildInnerText(progressDoc, totalsEl, "totalTeachingSessions", totalTeaching.ToString());
+            SetChildInnerText(progressDoc, totalsEl, "totalHelpSessions", totalHelp.ToString());
+            SetChildInnerText(progressDoc, totalsEl, "lastUpdatedUtc", nowIso);
+
+            progressDoc.Save(HelperProgressXmlPath);
         }
 
-        private class AuditRow
+        private static string GetLatestQuestionedNoteForCourse(
+            List<SessionLogReviewItem> rawLogs,
+            Dictionary<string, SessionLogReviewItem> reviewLookup,
+            string courseId,
+            string scope)
         {
-            public string TimestampDate { get; set; }
-            public string TimestampTime { get; set; }
-            public DateTime TimestampLocal { get; set; }
+            var latest = rawLogs
+                .Where(x =>
+                    string.Equals(x.CourseId, courseId, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(x.Scope, scope, StringComparison.OrdinalIgnoreCase) &&
+                    reviewLookup.ContainsKey(x.LogId) &&
+                    string.Equals(reviewLookup[x.LogId].Status, "Questioned", StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(x => x.LoggedLocal)
+                .Select(x => reviewLookup[x.LogId].AdminNote)
+                .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
 
-            public string Role { get; set; }
-            public string Type { get; set; }
-            public string FirstName { get; set; }
-            public string Email { get; set; }
-            public string Details { get; set; }
+            return latest ?? string.Empty;
         }
 
-        private sealed class VerificationItem
+        private static void SetChildInnerText(XmlDocument doc, XmlElement parent, string name, string value)
         {
-            public string CourseId { get; set; }
-            public string CourseTitle { get; set; }
-            public string Status { get; set; }
-            public string StatusLabel { get; set; }
-            public string CssClass { get; set; }
-            public string LastUpdatedLabel { get; set; }
-            public string HelperDisplayName { get; set; }
-
-            public string AdminNote { get; set; }
-            public string HelperNote { get; set; }
-            public bool HasHelperNote { get; set; }
-            public bool HasAdminNote { get; set; }
-            public bool IsResubmission { get; set; }
-            public string SubmissionLabel { get; set; }
-        }
-
-        private sealed class SessionReviewItem
-        {
-            public string CourseId { get; set; }
-            public string CourseTitle { get; set; }
-            public int TeachingSessions { get; set; }
-            public int HelpSessions { get; set; }
-
-            public bool HasTeaching { get; set; }
-            public bool HasHelp { get; set; }
-
-            public string TeachingStatusLabel { get; set; }
-            public string TeachingStatusCss { get; set; }
-            public string TeachingAdminNote { get; set; }
-
-            public string HelpStatusLabel { get; set; }
-            public string HelpStatusCss { get; set; }
-            public string HelpAdminNote { get; set; }
+            var node = parent[name] ?? doc.CreateElement(name);
+            node.InnerText = value ?? string.Empty;
+            if (node.ParentNode == null)
+            {
+                parent.AppendChild(node);
+            }
         }
     }
 }

@@ -158,6 +158,69 @@
     }
     .info-bar.ok{ background:linear-gradient(180deg,#e6fbf7,#ffffff); border-color:#bfeee6; color:#0a5b4e; }
     .info-bar.warn{ background:var(--note-pink); border-color:#ffd1e5; color:#7a103a; }
+    /* ---------- NEW: My Sessions queue position card ---------- */
+.queue-card{
+  border-radius:16px;
+  border:1px solid rgba(42,153,219,.22);
+  background:
+    radial-gradient(circle at 0 0, rgba(240,106,169,.12), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(69,195,179,.16), transparent 55%),
+    linear-gradient(180deg,#ffffff,#f7fbff);
+  padding:12px;
+  box-shadow:0 10px 24px rgba(42,153,219,.07);
+}
+
+.queue-card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.queue-card-title{
+  font-family:Poppins;
+  font-weight:600;
+  color:var(--fia-blue);
+  font-size:.95rem;
+}
+
+.queue-position-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--fia-pink),var(--fia-blue));
+  color:#fff;
+  font-family:Poppins;
+  font-size:.8rem;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+.queue-card-text{
+  color:#0f3d5e;
+  font-size:.9rem;
+  line-height:1.45;
+}
+
+.queue-card-text strong{
+  color:#0f3d5e;
+  font-family:Poppins;
+}
+/* Slight pink tone for waitlisted session queue card */
+.waitlist-card{
+  border-color:rgba(240,106,169,.26);
+  background:
+    radial-gradient(circle at 0 0, rgba(240,106,169,.14), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(42,153,219,.12), transparent 55%),
+    linear-gradient(180deg,#ffffff,#fff8fc);
+}
+
+.waitlist-position-pill{
+  background:linear-gradient(135deg,var(--fia-pink),#ff86bf);
+}
     .remain{
       font-family:Poppins; font-weight:600;
       padding:6px 10px; border-radius:999px;
@@ -190,6 +253,29 @@
       color:#fff;
       border:1px solid rgba(240,106,169,.55);
     }
+
+    .btn-swap{
+  display:inline-block;
+  appearance:none;
+  border:none;
+  cursor:pointer;
+  padding:10px 12px;
+  border-radius:12px;
+  font-weight:600;
+  font-family:Poppins;
+  box-shadow:0 2px 0 rgba(0,0,0,.04);
+  text-decoration:none;
+  background:linear-gradient(135deg, var(--fia-blue), #6bc1f1);
+  color:#fff;
+  border:1px solid rgba(42,153,219,.45);
+}
+
+.btn-swap:hover,
+.btn-swap:focus{
+  text-decoration:none;
+  color:#fff;
+  box-shadow:0 0 0 4px var(--ring);
+}
 
     /* ---------- Prereq / Conflict ---------- */
     .blocked-note{
@@ -237,35 +323,88 @@
       color:var(--ink); font-size:0.95rem; outline:none;
     }
     .input:focus{ border-color:#bfe6ff; box-shadow:0 0 0 4px var(--ring); background:#fff; }
-    /* --- CLEANER TAGS BOX + SPACING --- */
+    /* --- CLEAN TAGS: keep checkbox + label together cleanly --- */
 .tags-wrap{
-  border-radius:12px;            /* box feel (not oval) */
-  padding:12px 14px;             /* more breathing room */
-  gap:0;                         /* we control spacing inside FilterTags */
+  border-radius:12px;
+  padding:12px 14px;
+  border:1px solid rgba(69,195,179,.35);
+  background:#fff;
 }
 
 .tags-wrap [id$="FilterTags"]{
   display:flex;
   flex-wrap:wrap;
-  gap:10px 14px;                 /* more space: rows + columns */
-  max-width:100%;
+  gap:10px 12px;
+  align-items:flex-start;
 }
 
+/* Each ASP.NET CheckBoxList item chip */
 .tags-wrap [id$="FilterTags"] > span{
-  padding:6px 10px;              /* slightly roomier pill */
-  margin:0 !important;
+  display:inline-flex !important;
+  align-items:center;
+  flex-wrap:nowrap !important;
+  flex:0 0 auto;
+  width:max-content;
+  max-width:100%;
+  gap:8px;
+  padding:7px 10px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#ffffff,#f7fbff);
+  border:1px solid rgba(42,153,219,.18);
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+  line-height:1;
+  white-space:nowrap;
+  vertical-align:top;
 }
 
-    .tags-wrap span{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 10px;
+/* Keep checkbox from drifting or stretching */
+.tags-wrap [id$="FilterTags"] input[type="checkbox"]{
+  width:16px;
+  height:16px;
+  margin:0;
+  flex:0 0 auto;
+  accent-color: var(--fia-blue);
+}
 
-  border-radius:8px;              /* <-- boxy option (NOT pill) */
-  background:#fff;
-  border:1px solid rgba(69,195,179,.35);
+/* Keep tag text together with its box */
+.tags-wrap [id$="FilterTags"] label{
+  margin:0;
+  padding:0;
+  display:inline-block;
+  white-space:nowrap;
+  word-break:keep-all;
+  overflow-wrap:normal;
+  line-height:1.1;
   font-size:.9rem;
+  color:var(--fia-blue);
+  font-weight:600;
+}
+
+/* Hover/focus */
+.tags-wrap [id$="FilterTags"] > span:hover{
+  border-color: rgba(42,153,219,.35);
+  box-shadow:0 0 0 4px var(--ring);
+}
+
+/* Selected state */
+.tags-wrap [id$="FilterTags"] > span:has(input[type="checkbox"]:checked){
+  background:linear-gradient(135deg, rgba(42,153,219,.12), rgba(240,106,169,.10));
+  border-color: rgba(240,106,169,.30);
+}
+
+@media (max-width: 640px){
+  .tags-wrap{
+    padding:12px;
+  }
+
+  .tags-wrap [id$="FilterTags"]{
+    gap:10px 10px;
+  }
+
+  .tags-wrap [id$="FilterTags"] > span{
+    padding:8px 10px;
+    max-width:none;
+  }
 }
 
      
@@ -274,25 +413,100 @@
 
     .hint{ margin-top:6px; font-size:.85rem; color:var(--muted); padding-left:8px; }
 
-    /* ---------- Highlight Alternatives: picker ---------- */
-    .alt-picker-wrap{ position:relative; display:inline-flex; align-items:center; gap:6px; }
-    .alt-caret{ padding:6px 10px; border-radius:999px; border:1px solid #d9e9f6; background:#fff; color:var(--fia-blue); cursor:pointer; }
-    .alt-picker{
-      position:absolute; top:40px; right:0;
-      min-width:280px; max-width:340px;
-      background:#fff; border:1px solid #e6eef8; border-radius:16px;
-      box-shadow:0 18px 40px rgba(42,153,219,.18);
-      padding:10px; z-index:50;
-    }
-    .alt-title{ font-family:Poppins; font-size:.95rem; color:var(--fia-blue); margin:4px 8px 8px 8px; }
-    .alt-list{ display:flex; flex-direction:column; gap:8px; max-height:260px; overflow:auto; padding:0 6px 6px 6px; }
-    .alt-option{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      padding:10px 12px; border-radius:12px; border:1px solid #e6eef8; background:linear-gradient(180deg,#f7fbff,#ffffff);
-      cursor:pointer; font-size:.92rem;
-    }
-    .alt-option:hover{ box-shadow:0 0 0 4px var(--ring); border-color:#cfe8ff; }
-    .alt-actions{ display:flex; gap:8px; margin-top:8px; justify-content:flex-end; }
+    /* ---------- Highlight Alternatives: single FIA dropdown ---------- */
+.alt-picker-wrap{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+}
+
+.alt-trigger{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  border:1px solid rgba(42,153,219,.22);
+  background:linear-gradient(135deg,#f7fbff,#eef7ff);
+  color:var(--fia-blue);
+  font-family:Poppins;
+  font-weight:600;
+  font-size:.92rem;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(42,153,219,.08);
+  transition:box-shadow .15s ease, transform .12s ease, border-color .12s ease;
+}
+
+.alt-trigger:hover,
+.alt-trigger:focus{
+  outline:none;
+  transform:translateY(-1px);
+  border-color:rgba(42,153,219,.34);
+  box-shadow:0 0 0 4px var(--ring), 0 10px 22px rgba(42,153,219,.12);
+}
+
+.alt-trigger-caret{
+  font-size:.9rem;
+  line-height:1;
+  color:var(--fia-blue);
+}
+
+.alt-picker{
+  position:absolute;
+  top:48px;
+  right:0;
+  min-width:300px;
+  max-width:360px;
+  background:#fff;
+  border:1px solid #dfeaf7;
+  border-radius:18px;
+  box-shadow:0 20px 42px rgba(42,153,219,.16);
+  padding:10px;
+  z-index:50;
+}
+
+.alt-title{
+  font-family:Poppins;
+  font-size:.95rem;
+  color:var(--fia-blue);
+  margin:4px 8px 10px 8px;
+}
+
+.alt-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:260px;
+  overflow:auto;
+  padding:0 6px 6px 6px;
+}
+
+.alt-option{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid #e6eef8;
+  background:linear-gradient(180deg,#f8fbff,#ffffff);
+  cursor:pointer;
+  font-size:.92rem;
+  color:var(--ink);
+}
+
+.alt-option:hover{
+  box-shadow:0 0 0 4px var(--ring);
+  border-color:#cfe8ff;
+}
+
+.alt-actions{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+  justify-content:flex-end;
+}
 
     /* ---------- NEW: Helper one-on-one section ---------- */
     .helper-1on1{
@@ -338,6 +552,72 @@
       font-size:.85rem;
       color:var(--muted);
     }
+
+    /* ---------- Recommended microcourses ---------- */
+.recommend-wrap{
+  padding:18px 16px;
+  border-radius:20px;
+  border:1px solid var(--card-border);
+  background:linear-gradient(135deg,#ffffff,#f7fbff);
+  box-shadow:0 10px 26px rgba(42,153,219,.06);
+}
+
+.recommend-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:18px;
+  margin-top:14px;
+}
+
+@media (max-width: 720px){
+  .recommend-grid{ grid-template-columns:1fr; }
+}
+
+.recommend-topline{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.recommend-note{
+  background:var(--note-blue);
+  border:1px solid #d9e9f6;
+  color:#0f3d5e;
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:.92rem;
+}
+
+.recommend-card .btn{
+  display:inline-block;
+  text-decoration:none;
+}
+
+.recommend-empty{
+  margin-top:12px;
+}
+
+.glow-recommended{
+  border-color:#e79bc3 !important;
+  box-shadow:
+    0 0 0 4px rgba(240,106,169,.34),
+    0 0 0 9px rgba(42,153,219,.16),
+    0 0 32px rgba(240,106,169,.30),
+    0 20px 44px rgba(42,153,219,.18);
+  transform: translateY(-1px);
+  transition: box-shadow .18s ease, border-color .18s ease, transform .12s ease;
+}
+
+.glow-recommended::before{
+  width:8px;
+  background:linear-gradient(180deg, rgba(240,106,169,.95), rgba(42,153,219,.95));
+  opacity:1;
+}
+
+.glow-recommended:hover{
+  transform: translateY(-2px);
+}
   </style>
 
   <script type="text/javascript">
@@ -388,20 +668,67 @@
           } catch (e) { console.warn('Selective highlight failed:', e); }
       }
 
+      function clearRecommendationHighlights() {
+          try {
+              Array.prototype.slice.call(document.querySelectorAll('.card.glow-recommended'))
+                  .forEach(function (c) { c.classList.remove('glow-recommended'); });
+
+              var clearBtn = document.getElementById('clearRecoHighlightBtn');
+              if (clearBtn) clearBtn.style.display = 'none';
+          } catch (e) {
+              console.warn('Clear recommendation highlight failed:', e);
+          }
+      }
+
+      function highlightRecommendedCourse(courseId) {
+          try {
+              clearRecommendationHighlights();
+
+              var found = 0;
+              var cards = Array.prototype.slice.call(document.querySelectorAll('.card[data-microcourse-id]'));
+
+              cards.forEach(function (c) {
+                  var mcid = (c.getAttribute('data-microcourse-id') || '').trim();
+                  if (mcid === courseId) {
+                      c.classList.add('glow-recommended');
+                      found++;
+                  }
+              });
+
+              var clearBtn = document.getElementById('clearRecoHighlightBtn');
+              if (clearBtn) clearBtn.style.display = found > 0 ? 'inline-block' : 'none';
+          } catch (e) {
+              console.warn('Recommendation highlight failed:', e);
+          }
+      }
+
       // ---- New: toggle and (re)build the picker menu ----
       function toggleAltPicker(ev) {
           ev.preventDefault();
+
           var picker = document.getElementById('altPicker');
+          var trigger = document.getElementById('altTrigger');
+
           if (!picker) return;
-          if (picker.getAttribute('data-built') !== '1') buildAltPicker(picker);
-          picker.hidden = !picker.hidden;
+
+          if (picker.getAttribute('data-built') !== '1') {
+              buildAltPicker(picker);
+          }
+
+          var willOpen = picker.hidden;
+          picker.hidden = !willOpen;
+
+          if (trigger) {
+              trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+          }
       }
 
       function buildAltPicker(picker) {
           picker.innerHTML = '';
+
           var title = document.createElement('div');
           title.className = 'alt-title';
-          title.textContent = 'Show alternatives for…';
+          title.textContent = 'Highlight alternatives';
           picker.appendChild(title);
 
           var items = getBlockedPrereqs();
@@ -411,18 +738,25 @@
           if (items.length === 0) {
               var empty = document.createElement('div');
               empty.className = 'alt-option';
-              empty.textContent = 'No prerequisite blocks detected.';
+              empty.textContent = 'No prerequisite blocks detected right now.';
               list.appendChild(empty);
           } else {
               items.forEach(function (it) {
                   var row = document.createElement('button');
                   row.type = 'button';
                   row.className = 'alt-option';
-                  row.innerHTML = '<span>' + escapeHtml(it.title) + '</span><span class="pill pill-link" style="border-color:#d9e9f6;">Highlight</span>';
+                  row.innerHTML =
+                      '<span>' + escapeHtml(it.title) + '</span>' +
+                      '<span class="pill pill-link" style="margin-right:0;">Highlight</span>';
+
                   row.onclick = function () {
                       highlightAlternativesFor(it.id);
                       picker.hidden = true;
+
+                      var trigger = document.getElementById('altTrigger');
+                      if (trigger) trigger.setAttribute('aria-expanded', 'false');
                   };
+
                   list.appendChild(row);
               });
           }
@@ -431,18 +765,35 @@
 
           var actions = document.createElement('div');
           actions.className = 'alt-actions';
+
           var btnAll = document.createElement('button');
-          btnAll.type = 'button'; btnAll.className = 'btn btn-primary';
+          btnAll.type = 'button';
+          btnAll.className = 'btn btn-primary';
           btnAll.textContent = 'Highlight All';
-          btnAll.onclick = function () { highlightAlternatives(); picker.hidden = true; };
+          btnAll.onclick = function () {
+              highlightAlternatives();
+              picker.hidden = true;
+
+              var trigger = document.getElementById('altTrigger');
+              if (trigger) trigger.setAttribute('aria-expanded', 'false');
+          };
+
           var btnClear = document.createElement('button');
-          btnClear.type = 'button'; btnClear.className = 'btn btn-ghost';
+          btnClear.type = 'button';
+          btnClear.className = 'btn btn-ghost';
           btnClear.textContent = 'Clear';
           btnClear.onclick = function () {
-              Array.prototype.slice.call(document.querySelectorAll('.card.glow-alt')).forEach(function (c) { c.classList.remove('glow-alt'); });
+              Array.prototype.slice.call(document.querySelectorAll('.card.glow-alt'))
+                  .forEach(function (c) { c.classList.remove('glow-alt'); });
+
               picker.hidden = true;
+
+              var trigger = document.getElementById('altTrigger');
+              if (trigger) trigger.setAttribute('aria-expanded', 'false');
           };
-          actions.appendChild(btnAll); actions.appendChild(btnClear);
+
+          actions.appendChild(btnAll);
+          actions.appendChild(btnClear);
           picker.appendChild(actions);
 
           picker.setAttribute('data-built', '1');
@@ -460,12 +811,17 @@
               var el = document.getElementById(id); if (el) { el.setAttribute('type', 'datetime-local'); }
           });
 
-          // close picker on outside click
           document.addEventListener('click', function (e) {
               var picker = document.getElementById('altPicker');
               var wrap = document.querySelector('.alt-picker-wrap');
+              var trigger = document.getElementById('altTrigger');
+
               if (!picker || !wrap) return;
-              if (!wrap.contains(e.target)) picker.hidden = true;
+
+              if (!wrap.contains(e.target)) {
+                  picker.hidden = true;
+                  if (trigger) trigger.setAttribute('aria-expanded', 'false');
+              }
           });
       });
   </script>
@@ -509,6 +865,24 @@
         </div>
       </asp:PlaceHolder>
 
+        <!-- NEW: No-show / attendance notice (from missingParticipantSessions.xml) -->
+<asp:PlaceHolder ID="NoShowNoticePH" runat="server" Visible="false">
+  <div class="note" style="background:var(--note-pink); border-color:#ffd1e5; color:#7a103a;">
+    <strong>Attendance notice:</strong>
+    <asp:Literal ID="NoShowNoticeText" runat="server" />
+    <div style="margin-top:10px;">
+      <asp:HiddenField ID="NoShowAckKey" runat="server" />
+      <asp:LinkButton ID="AckNoShowBtn"
+                      runat="server"
+                      CssClass="pill pill-pink"
+                      OnClick="AckNoShowBtn_Click"
+                      CausesValidation="false">
+        Acknowledge
+      </asp:LinkButton>
+    </div>
+  </div>
+</asp:PlaceHolder>
+
       <!-- Privacy note -->
       <div class="note">
         <strong>Privacy:</strong> Your learning results are private to you and the FIA team.
@@ -521,56 +895,86 @@
       <fia:ParticipantScoreWidget ID="ScoreWidget" runat="server" />
       <br /><br />
 
-      <!-- ==== HELPER ONE-ON-ONE SUPPORT ==== -->
-      <asp:PlaceHolder ID="HelperSupportPanel" runat="server" Visible="false">
-        <div class="section">
-          <div class="helper-1on1">
-            <div class="helper-1on1-header">
-              <h2 class="section-title">
-                One-on-one support with
-                <span class="pill pill-pink"><asp:Literal ID="HelperName" runat="server" /></span>
-              </h2>
-              <p class="subtle">
-                Stuck on a topic, quiz, or example? You can send a message to your FIA Helper and request a short
-                one-on-one meeting. When you write, use a clear topic title, explain exactly what you need help with,
-                and share a few times you are available to meet.
-              </p>
+        <asp:PlaceHolder ID="RecommendedCoursesPanel" runat="server" Visible="false">
+  <div class="section">
+    <div class="recommend-wrap">
+      <div class="helper-1on1-header">
+  <h2 class="section-title" style="margin-bottom:6px;">
+    Recommended Microcourses
+    <button type="button"
+            id="clearRecoHighlightBtn"
+            class="pill pill-link"
+            style="display:none;"
+            onclick="clearRecommendationHighlights()">
+      Turn Off Highlight
+    </button>
+  </h2>
+
+  <p class="subtle" style="margin:0;">
+    Based on your cybersecurity score, FIA recommends starting with the highest-risk areas first.
+    If a course is locked by a prerequisite, we recommend that prerequisite before the locked course.
+  </p>
+</div>
+
+      <asp:PlaceHolder ID="RecommendedCoursesEmpty" runat="server" Visible="false">
+  <div class="note recommend-empty">
+    You do not have any more recommended microcourses right now. Great job so far. You can take whichever course you would like next and have fun exploring the rest of the FIA experience.
+  </div>
+</asp:PlaceHolder>
+
+      <asp:Repeater ID="RecommendedCoursesRepeater" runat="server">
+        <HeaderTemplate>
+          <div class="recommend-grid">
+        </HeaderTemplate>
+        <ItemTemplate>
+          <div class="card recommend-card">
+            <div class="card-sec">
+              <div class="recommend-topline">
+                <span class='<%# Eval("BadgeCss") %>'><%#: Eval("BadgeText") %></span>
+                <span class="pill"><%#: Eval("GapText") %></span>
+              </div>
+
+              <h3 class="title" style="margin-top:10px;"><%#: Eval("Title") %></h3>
+              <p class="subtle" style="margin:8px 0 0 0;"><%#: Eval("Summary") %></p>
             </div>
 
-            <div class="cta-row" style="margin-top:10px;">
-              <asp:Button ID="StartHelperMessageBtn"
-                          runat="server"
-                          CssClass="btn btn-primary"
-                          Text="Send message"
-                          OnClick="StartHelperMessageBtn_Click" />
+            <div class="card-sec">
+              <div class="recommend-note">
+                <%#: Eval("Reason") %>
+              </div>
             </div>
 
-            <asp:PlaceHolder ID="ConversationsEmpty" runat="server" Visible="false">
-              <p class="hint" style="margin-top:12px;">
-                You have not started a one-on-one conversation yet. After you send your first message, it will appear here.
-              </p>
-            </asp:PlaceHolder>
+            <div class="card-sec">
+              <div class='info-bar <%# Convert.ToBoolean(Eval("CanSignUp")) ? "ok" : "warn" %>'>
+                <span><strong>Status</strong></span>
+                <span><%#: Eval("AvailabilityText") %></span>
+              </div>
+            </div>
 
-            <asp:Repeater ID="ConversationsRepeater" runat="server">
-              <HeaderTemplate>
-                <div class="conversation-list">
-              </HeaderTemplate>
-              <ItemTemplate>
-                <a class="conversation-card" href='<%# Eval("ConversationUrl") %>'>
-                  <div class="conversation-title"><%# Eval("Topic") %></div>
-                  <div class="conversation-meta">
-                    Sent
-                    <span><%# Eval("CreatedOnLocal", "{0:MMM d, yyyy • h:mm tt}") %></span>
-                  </div>
-                </a>
-              </ItemTemplate>
-              <FooterTemplate>
-                </div>
-              </FooterTemplate>
-            </asp:Repeater>
+            <asp:PlaceHolder runat="server" Visible='<%# Convert.ToBoolean(Eval("HasMatchingSessions")) %>'>
+  <div class="card-sec">
+    <button type="button"
+            class="btn btn-primary"
+            onclick="highlightRecommendedCourse('<%# Eval("CourseId") %>')">
+      Highlight in Available Sessions
+    </button>
+  </div>
+</asp:PlaceHolder>
+
+<asp:PlaceHolder runat="server" Visible='<%# !Convert.ToBoolean(Eval("HasMatchingSessions")) %>'>
+  <div class="card-sec">
+    <div class="subtle">No matching session card is currently posted for this event.</div>
+  </div>
+</asp:PlaceHolder>
           </div>
-        </div>
-      </asp:PlaceHolder>
+        </ItemTemplate>
+        <FooterTemplate>
+          </div>
+        </FooterTemplate>
+      </asp:Repeater>
+    </div>
+  </div>
+</asp:PlaceHolder>
 
       <!-- ==== FILTERS ==== -->
       <div class="filters-card">
@@ -604,7 +1008,7 @@
           <div class="field row-full">
             <label for="FilterQuery">Search</label>
             <asp:TextBox ID="FilterQuery" runat="server" CssClass="input"
-                        placeholder="title, helper, or room…" />
+                        placeholder="e.g., enter a microcourse title or helper name" />
             <div class="hint">Tip: type a few letters (e.g., “phish”, “Zoom”, or a helper’s name)</div>
           </div>
         </div>
@@ -678,21 +1082,77 @@
               </asp:PlaceHolder>
 
 
-                <!-- Status -->
-                <asp:Literal ID="MyStatusBadge" runat="server"
-                  Text='<%# (bool)Eval("isEnrolled")
-                      ? "<div class=\"card-sec\"><div class=\"info-bar ok\"><span><strong>Status</strong></span><span class=\"remain\">Enrolled</span></div></div>"
-                      : "<div class=\"card-sec\"><div class=\"info-bar warn\"><span><strong>Status</strong></span><span>Waitlist position: " + Eval("waitlistPosition") + "</span></div></div>" %>' />
+               <!-- Status: Enrolled -->
+<asp:PlaceHolder ID="MyEnrolledStatusPH" runat="server" Visible='<%# (bool)Eval("isEnrolled") %>'>
+  <div class="card-sec">
+    <div class="info-bar ok">
+      <span><strong>Status</strong></span>
+      <span class="remain">Enrolled</span>
+    </div>
+  </div>
+</asp:PlaceHolder>
+
+<!-- Status: Waitlist -->
+<asp:PlaceHolder ID="MyWaitlistStatusPH" runat="server" Visible='<%# !(bool)Eval("isEnrolled") %>'>
+  <div class="card-sec">
+    <div class="info-bar warn">
+      <span><strong>Status</strong></span>
+      <span class="remain low">Waitlist</span>
+    </div>
+  </div>
+</asp:PlaceHolder>
+
+                  <!-- NEW: Dedicated waitlist position card -->
+<asp:PlaceHolder ID="WaitlistPositionPH" runat="server" Visible='<%# (bool)Eval("showWaitlistPosition") %>'>
+  <div class="card-sec">
+    <div class="queue-card waitlist-card">
+      <div class="queue-card-top">
+        <span class="queue-card-title">Waitlist queue</span>
+        <span class="queue-position-pill waitlist-position-pill">
+          Overall position <%# Eval("overallQueuePosition") %>
+        </span>
+      </div>
+
+      <div class="queue-card-text">
+        You are currently on the waitlist for this session. This is not a guaranteed seat,
+        but you may still get a chance if participants cancel, no-show, or if earlier sessions
+        move quickly. Please stay checked in around the session time and keep this page open
+        to watch your position.
+      </div>
+    </div>
+  </div>
+</asp:PlaceHolder>
+
+                  <!-- NEW: Queue position card for multi-participant enrolled sessions -->
+<asp:PlaceHolder ID="QueuePositionPH" runat="server" Visible='<%# (bool)Eval("showQueuePosition") %>'>
+  <div class="card-sec">
+    <div class="queue-card">
+      <div class="queue-card-top">
+        <span class="queue-card-title">Session queue</span>
+        <span class="queue-position-pill">
+          Position <%# Eval("queuePosition") %> of <%# Eval("enrolledCount") %>
+        </span>
+      </div>
+
+      <div class="queue-card-text">
+        You are currently in position <strong><%# Eval("queuePosition") %></strong>
+        for this session. Please keep this page open around the session time
+        and check here for your room link or Helper update when your session is ready.
+        Since there are mutiple participants enrolled, your start time may be
+        a bit after what is displayed for the session!
+      </div>
+    </div>
+  </div>
+</asp:PlaceHolder>
 
                 <!-- Actions -->
-                <div class="card-sec">
-                  <div class="cta-row">
-                    <!-- CHANGED: show Mark as Complete only for enrolled -->
-                    <asp:Button ID="CompleteBtn" runat="server" CssClass="btn btn-ghost" Text="Mark as Complete"
-                                CommandName="complete" CommandArgument='<%# Eval("sessionId") %>'
-                                Visible='<%# (bool)Eval("isEnrolled") %>' />
-                  </div>
-                </div>
+              <div class="card-sec">
+  <div class="cta-row">
+    <asp:PlaceHolder runat="server" Visible='<%# (bool)Eval("isEnrolled") && !(bool)Eval("hasConflict") %>'>
+      <a class="btn btn-swap" href="<%# Eval("swapUrl") %>">Swap Session</a>
+    </asp:PlaceHolder>
+  </div>
+</div>
 
                 <!-- NEW: Unenroll button (pink) on its own line; visible for enrolled OR waitlisted -->
                 <div class="card-sec">
@@ -719,15 +1179,9 @@
       </asp:PlaceHolder>
 
       <!-- ==== AVAILABLE SESSIONS ==== -->
-      <div class="section">
-        <h2 class="section-title">
+      <div class="section" id="available-sessions">
+       <h2 class="section-title">
           Available Sessions
-          <!-- Split control: button + caret opens picker -->
-          <span class="alt-picker-wrap">
-            <button type="button" class="pill pill-link" onclick="highlightAlternatives()">Highlight Alternatives</button>
-            <button type="button" class="alt-caret" onclick="toggleAltPicker(event)" aria-haspopup="true" aria-expanded="false">▾</button>
-            <div id="altPicker" class="alt-picker" hidden></div>
-          </span>
         </h2>
 
         <asp:Repeater ID="SessionsRepeater" runat="server">
@@ -772,15 +1226,14 @@
                 Visible='<%# (bool)Eval("isEnrolled") || (bool)Eval("isWaitlisted") %>'
                 Text='<%# (bool)Eval("isEnrolled")
                     ? "<div class=\"card-sec\"><div class=\"info-bar ok\"><span><strong>Status</strong></span><span class=\"remain\">Enrolled</span></div></div>"
-                    : "<div class=\"card-sec\"><div class=\"info-bar warn\"><span><strong>Status</strong></span><span>Waitlist position: " + Eval("waitlistPosition") + "</span></div></div>" %>' />
+                    : "<div class=\"card-sec\"><div class=\"info-bar warn\"><span><strong>Status</strong></span><span>Waitlisted" + "</span></div></div>" %>' />
 
               <!-- Prereq blocked note -->
               <asp:PlaceHolder ID="BlockedPH" runat="server" Visible='<%# !(bool)Eval("prereqMet") %>'>
                 <div class="card-sec">
                   <div class="blocked-note">
                     <strong>Prerequisite needed.</strong>
-                    You can’t join this yet. First complete: <em><%# Eval("missingPrereqTitle") %></em>.
-                    Use <strong>Highlight Alternatives</strong> to quickly find sessions that unlock this.
+                    You can't join this yet. First complete: <em><%# Eval("missingPrereqTitle") %></em>.
                   </div>
                 </div>
               </asp:PlaceHolder>
@@ -810,12 +1263,12 @@
               <div class="card-sec">
                 <div class="cta-row">
                   <asp:Button ID="EnrollBtn" runat="server" CssClass="btn btn-primary" Text="Enroll"
-                              CommandName="enroll" CommandArgument='<%# Eval("sessionId") %>'
-                              Visible='<%# (bool)Eval("prereqMet") && !(bool)Eval("hasConflict") && !(bool)Eval("isEnrolled") && !(bool)Eval("isWaitlisted") && !(bool)Eval("isFull") %>' />
+            CommandName="enroll" CommandArgument='<%# Eval("sessionId") %>'
+            Visible='<%# (bool)Eval("prereqMet") && !(bool)Eval("hasConflict") && !(bool)Eval("isEnrolled") && !(bool)Eval("isWaitlisted") && !(bool)Eval("isFull") %>' />
 
-                  <asp:Button ID="WaitlistBtn" runat="server" CssClass="btn btn-ghost" Text="Join Waitlist"
-                              CommandName="waitlist" CommandArgument='<%# Eval("sessionId") %>'
-                              Visible='<%# (bool)Eval("prereqMet") && !(bool)Eval("hasConflict") && !(bool)Eval("isEnrolled") && !(bool)Eval("isWaitlisted") && (bool)Eval("isFull") %>' />
+<asp:Button ID="WaitlistBtn" runat="server" CssClass="btn btn-ghost" Text="Join Waitlist"
+            CommandName="waitlist" CommandArgument='<%# Eval("sessionId") %>'
+            Visible='<%# (bool)Eval("prereqMet") && !(bool)Eval("hasConflict") && !(bool)Eval("isEnrolled") && !(bool)Eval("isWaitlisted") && (bool)Eval("isFull") %>' />
                 </div>
               </div>
             </div>
@@ -826,11 +1279,80 @@
           </FooterTemplate>
         </asp:Repeater>
       </div>
+               <!-- ==== MY BADGES (card-style, consistent with other components) ==== -->
+<div class="section">
+  <div class="helper-1on1" style="background:linear-gradient(135deg,#ffffff,#f0f7fd); border:1px solid var(--card-border); box-shadow:0 10px 26px rgba(42,153,219,.06);">
+    <div class="helper-1on1-header">
+      <h2 class="section-title" style="margin-bottom:6px;">
+        My Badges
+        
+      </h2>
 
+      <p class="subtle" style="margin:0;">
+        Earn a badge each time you complete a microcourse for the first time.
+      </p>
+    </div>
+
+    <div class="cta-row" style="margin-top:12px;">
+      <a class="btn btn-primary" style="text-decoration:none;" href="<%: ResolveUrl("~/Account/Participant/Badges.aspx") %>">
+        View my badges
+      </a>
+    </div>
+  </div>
+</div>
+
+      <!-- ==== HELPER ONE-ON-ONE SUPPORT ==== -->
+      <asp:PlaceHolder ID="HelperSupportPanel" runat="server" Visible="false">
+        <div class="section">
+          <div class="helper-1on1">
+            <div class="helper-1on1-header">
+              <h2 class="section-title">
+                One-on-one support with
+                <span class="pill pill-pink"><asp:Literal ID="HelperName" runat="server" /></span>
+              </h2>
+              <p class="subtle">
+                Stuck on a topic, quiz, or example? You can send a message to your FIA Helper and request a short
+                one-on-one meeting. When you write, use a clear topic title, explain exactly what you need help with,
+                and share a few times you are available to meet.
+              </p>
+            </div>
+
+            <div class="cta-row" style="margin-top:10px;">
+              <asp:Button ID="StartHelperMessageBtn"
+                          runat="server"
+                          CssClass="btn btn-primary"
+                          Text="Send message"
+                          OnClick="StartHelperMessageBtn_Click" />
+            </div>
+
+            <asp:PlaceHolder ID="ConversationsEmpty" runat="server" Visible="false">
+              <p class="hint" style="margin-top:12px;">
+                You have not started a one-on-one conversation yet. After you send your first message, it will appear here.
+              </p>
+            </asp:PlaceHolder>
+
+            <asp:Repeater ID="ConversationsRepeater" runat="server">
+              <HeaderTemplate>
+                <div class="conversation-list">
+              </HeaderTemplate>
+              <ItemTemplate>
+                <a class="conversation-card" href='<%# Eval("ConversationUrl") %>'>
+                  <div class="conversation-title"><%# Eval("Topic") %></div>
+                  <div class="conversation-meta">
+                    Sent
+                    <span><%# Eval("CreatedOnLocal", "{0:MMM d, yyyy • h:mm tt}") %></span>
+                  </div>
+                </a>
+              </ItemTemplate>
+              <FooterTemplate>
+                </div>
+              </FooterTemplate>
+            </asp:Repeater>
+          </div>
+        </div>
+      </asp:PlaceHolder>
       <asp:Label ID="FormMessage" runat="server" EnableViewState="false" />
     </div>
   </form>
 </body>
 </html>
-
-

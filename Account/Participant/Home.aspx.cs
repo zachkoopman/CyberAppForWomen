@@ -22,13 +22,15 @@ namespace CyberApp_FIA.Participant
         private string EnrollmentsXmlPath => Server.MapPath("~/App_Data/enrollments.xml");
         private string CompletionsXmlPath => Server.MapPath("~/App_Data/completions.xml");
 
+        private string MissingParticipantSessionsXmlPath => Server.MapPath("~/App_Data/missingParticipantSessions.xml");
+        private static readonly object MissingLock = new object();
+
         // NEW: users file for one-time session deletion notices
         private string UsersXmlPath => Server.MapPath("~/App_Data/users.xml");
 
         // NEW: helper one-on-one conversations
         private string HelperMessagesXmlPath => Server.MapPath("~/App_Data/helperMessages.xml");
 
-        private static readonly object EnrollmentsLock = new object();
         private static readonly object CompletionsLock = new object();
 
         private sealed class FilterState
@@ -98,11 +100,16 @@ namespace CyberApp_FIA.Participant
                 // NEW: show one-time notice if an admin deleted a session this participant was in
                 LoadSessionDeletionNotice(CurrentUserId());
 
+                // NEW: show no-show attendance notice (if any unacknowledged)
+                LoadNoShowNotice(CurrentUserId(), eventId);
+
                 // NEW: load assigned Helper one-on-one support section (if any)
                 LoadAssignedHelperSupport(CurrentUserId());
 
                 EnsureXmlDoc(EnrollmentsXmlPath, "enrollments");
                 EnsureXmlDoc(CompletionsXmlPath, "completions");
+
+                LoadRecommendedMicrocourses(CurrentUserId(), eventId);
 
                 var allCourseTags = LoadCourseTags();
                 var allTagValues = allCourseTags.Values.SelectMany(v => v).Distinct(StringComparer.OrdinalIgnoreCase);
@@ -220,6 +227,209 @@ namespace CyberApp_FIA.Participant
                 Session["AssignedHelperId"] = null;
                 Session["AssignedHelperName"] = null;
                 Session["AssignedHelperEmail"] = null;
+            }
+        }
+
+        private void EnsureXmlDoc(string path, string rootName)
+        {
+            if (File.Exists(path)) return;
+            var doc = new XmlDocument();
+            doc.AppendChild(doc.CreateElement(rootName));
+            doc.Save(path);
+        }
+
+        /// <summary>
+        /// Shows an attendance/no-show banner if this participant has an unacknowledged
+        /// missing record in missingParticipantSessions.xml. Includes a simple strike-style message.
+        /// </summary>
+        private void LoadNoShowNotice(string userId, string eventId)
+        {
+            NoShowNoticePH.Visible = false;
+            NoShowNoticeText.Text = string.Empty;
+            NoShowAckKey.Value = string.Empty;
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(eventId))
+                    return;
+
+                EnsureXmlDoc(MissingParticipantSessionsXmlPath, "missingParticipantSessions");
+
+                if (!File.Exists(MissingParticipantSessionsXmlPath))
+                    return;
+
+                var missDoc = new XmlDocument();
+                missDoc.Load(MissingParticipantSessionsXmlPath);
+
+                // Find all missing entries for this participant (scoped to this event),
+                // and locate the most recent one that is NOT acknowledged.
+                XmlElement latestUnacked = null;
+                DateTime latestTs = DateTime.MinValue;
+
+                foreach (XmlElement m in missDoc.SelectNodes(
+                    $"/missingParticipantSessions/missing[@participantId='{userId}' and @eventId='{eventId}']"))
+                {
+                    // Skip acknowledged items
+                    var ack = (m.GetAttribute("ack") ?? "").Trim();
+                    if (string.Equals(ack, "true", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    var tsRaw = m.GetAttribute("tsUtc");
+                    if (!DateTime.TryParse(tsRaw, CultureInfo.InvariantCulture,
+                        DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var tsUtc))
+                    {
+                        // If ts missing or malformed, treat as older than any valid ts.
+                        tsUtc = DateTime.MinValue;
+                    }
+
+                    if (latestUnacked == null || tsUtc > latestTs)
+                    {
+                        latestUnacked = m;
+                        latestTs = tsUtc;
+                    }
+                }
+
+                if (latestUnacked == null)
+                    return;
+
+                var sessionId = latestUnacked.GetAttribute("sessionId") ?? "";
+                var helperId = latestUnacked.GetAttribute("helperId") ?? "";
+
+                // Compute strike count (simple): total missing records for this participant in this event (all time).
+                int strikeCount = 0;
+                foreach (XmlElement m in missDoc.SelectNodes(
+                    $"/missingParticipantSessions/missing[@participantId='{userId}' and @eventId='{eventId}']"))
+                {
+                    strikeCount++;
+                }
+
+                // Resolve session details for a nicer message: course title, helper name, start time.
+                string courseTitle = "a session";
+                string helperName = "your Helper";
+                DateTime? startLocal = null;
+
+                if (File.Exists(EventSessionsXmlPath))
+                {
+                    var sesDoc = new XmlDocument();
+                    sesDoc.Load(EventSessionsXmlPath);
+
+                    var ses = sesDoc.SelectSingleNode(
+                        $"/eventSessions/session[@eventId='{eventId}' and @id='{sessionId}']") as XmlElement;
+
+                    if (ses != null)
+                    {
+                        // helper string (may be name/email)
+                        var h = (ses["helper"]?.InnerText ?? "").Trim();
+                        if (!string.IsNullOrWhiteSpace(h))
+                            helperName = h;
+
+                        // start time
+                        var startIso = (ses["start"]?.InnerText ?? "").Trim();
+                        if (DateTime.TryParse(startIso, CultureInfo.InvariantCulture,
+                            DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var startUtc))
+                        {
+                            startLocal = DateTime.SpecifyKind(startUtc, DateTimeKind.Utc).ToLocalTime();
+                        }
+
+                        // microcourse title via courseId
+                        var courseId = (ses["courseId"]?.InnerText ?? "").Trim();
+                        if (!string.IsNullOrWhiteSpace(courseId) && File.Exists(MicrocoursesXmlPath))
+                        {
+                            var microDoc = new XmlDocument();
+                            microDoc.Load(MicrocoursesXmlPath);
+                            var courseEl = microDoc.SelectSingleNode($"/microcourses/course[@id='{courseId}']") as XmlElement;
+                            var t = (courseEl?["title"]?.InnerText ?? "").Trim();
+                            if (!string.IsNullOrWhiteSpace(t))
+                                courseTitle = t;
+                        }
+                    }
+                }
+
+                // Build policy-like “strike system” wording (gentle, not threatening).
+                // You can tweak thresholds later; the message works even if counts go beyond 3.
+                var strikeLabel = strikeCount == 1 ? "1 notice" : $"{strikeCount} notices";
+
+                var when = startLocal.HasValue
+                    ? startLocal.Value.ToString("ddd, MMM d • h:mm tt")
+                    : "(time unavailable)";
+
+                // Message: what happened + policy-like warning.
+                var msg =
+                    $"You were marked missing for “{courseTitle}” with {helperName} on {when}. " +
+                    $"This is {strikeLabel} for this event. " +
+                    "Repeated no-shows may temporarily restrict your ability to enroll. " +
+                    "If you can’t attend a session, please unenroll early so someone else can take the spot.";
+
+                NoShowNoticeText.Text = Server.HtmlEncode(msg);
+                NoShowNoticePH.Visible = true;
+
+                // Store a unique key so “Acknowledge” can mark THIS record as acknowledged.
+                // (eventId|sessionId|tsUtc)
+                var tsKey = latestUnacked.GetAttribute("tsUtc") ?? "";
+                NoShowAckKey.Value = $"{eventId}|{sessionId}|{tsKey}";
+            }
+            catch
+            {
+                // Non-critical banner: fail silently.
+                NoShowNoticePH.Visible = false;
+                NoShowNoticeText.Text = string.Empty;
+                NoShowAckKey.Value = string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Participant clicks Acknowledge: mark the latest shown missing record as ack=true so it stops appearing.
+        /// </summary>
+        protected void AckNoShowBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var userId = CurrentUserId();
+                if (string.IsNullOrWhiteSpace(userId))
+                    return;
+
+                var key = (NoShowAckKey.Value ?? "").Trim();
+                if (string.IsNullOrWhiteSpace(key))
+                    return;
+
+                var parts = key.Split('|');
+                if (parts.Length != 3)
+                    return;
+
+                var eventId = parts[0];
+                var sessionId = parts[1];
+                var tsUtc = parts[2];
+
+                lock (MissingLock)
+                {
+                    EnsureXmlDoc(MissingParticipantSessionsXmlPath, "missingParticipantSessions");
+
+                    var doc = new XmlDocument();
+                    doc.Load(MissingParticipantSessionsXmlPath);
+
+                    // Find the exact missing record by participantId + eventId + sessionId + tsUtc
+                    var node = doc.SelectSingleNode(
+                        $"/missingParticipantSessions/missing[@participantId='{userId}' and @eventId='{eventId}' and @sessionId='{sessionId}' and @tsUtc='{tsUtc}']"
+                    ) as XmlElement;
+
+                    if (node != null)
+                    {
+                        node.SetAttribute("ack", "true");
+                        node.SetAttribute("ackTsUtc", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
+                        doc.Save(MissingParticipantSessionsXmlPath);
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+            finally
+            {
+                // Hide banner immediately after acknowledging (and clear key)
+                NoShowNoticePH.Visible = false;
+                NoShowNoticeText.Text = string.Empty;
+                NoShowAckKey.Value = string.Empty;
             }
         }
 
@@ -392,6 +602,550 @@ namespace CyberApp_FIA.Participant
             return map;
         }
 
+        private void LoadRecommendedMicrocourses(string userId, string eventId)
+        {
+            RecommendedCoursesPanel.Visible = false;
+            RecommendedCoursesEmpty.Visible = false;
+            RecommendedCoursesRepeater.DataSource = null;
+            RecommendedCoursesRepeater.DataBind();
+
+            if (string.IsNullOrWhiteSpace(userId))
+                return;
+
+            var quiz = new QuizService(Server);
+            var latest = quiz.LoadLatestResult(userId);
+            if (latest == null || latest.DomainScores == null || latest.DomainScores.Count == 0)
+                return;
+
+            var catalog = LoadRecommendationCatalog();
+            if (catalog.Count == 0)
+                return;
+
+            var aliases = BuildRecommendationAliases(catalog);
+            var completedSet = LoadUserCompletedSet(userId);
+            var visibleCourseIds = LoadEventVisibleCourseIds(eventId);
+            var upcomingCourseIds = LoadUpcomingCourseIdsForEvent(eventId);
+
+            var rows = BuildRecommendationRows(
+                latest,
+                catalog,
+                aliases,
+                completedSet,
+                visibleCourseIds,
+                upcomingCourseIds);
+
+            RecommendedCoursesPanel.Visible = true;
+            RecommendedCoursesEmpty.Visible = rows.Count == 0;
+            RecommendedCoursesRepeater.DataSource = rows;
+            RecommendedCoursesRepeater.DataBind();
+        }
+
+        private Dictionary<string, RecommendationCourse> LoadRecommendationCatalog()
+        {
+            var catalog = new Dictionary<string, RecommendationCourse>(StringComparer.OrdinalIgnoreCase);
+            if (!File.Exists(MicrocoursesXmlPath))
+                return catalog;
+
+            var doc = new XmlDocument();
+            doc.Load(MicrocoursesXmlPath);
+
+            foreach (XmlElement c in doc.SelectNodes("/microcourses/course"))
+            {
+                var id = c.GetAttribute("id");
+                if (string.IsNullOrWhiteSpace(id))
+                    continue;
+
+                catalog[id] = new RecommendationCourse
+                {
+                    Id = id,
+                    Title = (c["title"]?.InnerText ?? "").Trim(),
+                    Summary = (c["summary"]?.InnerText ?? "").Trim(),
+                    Status = (c.GetAttribute("status") ?? "").Trim()
+                };
+            }
+
+            var allIdToTitle = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var allTitleToId = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var course in catalog.Values)
+            {
+                allIdToTitle[course.Id] = course.Title;
+                if (!string.IsNullOrWhiteSpace(course.Title) && !allTitleToId.ContainsKey(course.Title))
+                    allTitleToId[course.Title] = course.Id;
+            }
+
+            foreach (XmlElement c in doc.SelectNodes("/microcourses/course"))
+            {
+                var id = c.GetAttribute("id");
+                if (string.IsNullOrWhiteSpace(id) || !catalog.ContainsKey(id))
+                    continue;
+
+                var prereqIds = new List<string>();
+
+                foreach (XmlElement p in c.SelectNodes("prerequisites/course"))
+                {
+                    var resolved = ResolveRecommendationCourseIdentifier(
+                        p.GetAttribute("id"),
+                        allIdToTitle,
+                        allTitleToId);
+
+                    if (!string.IsNullOrWhiteSpace(resolved) &&
+                        !prereqIds.Any(x => string.Equals(x, resolved, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        prereqIds.Add(resolved);
+                    }
+                }
+
+                var singlePrereq = c.SelectSingleNode("prerequisite") as XmlElement;
+                if (singlePrereq != null)
+                {
+                    var resolved = ResolveRecommendationCourseIdentifier(
+                        singlePrereq.GetAttribute("id"),
+                        allIdToTitle,
+                        allTitleToId);
+
+                    if (!string.IsNullOrWhiteSpace(resolved) &&
+                        !prereqIds.Any(x => string.Equals(x, resolved, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        prereqIds.Add(resolved);
+                    }
+                }
+
+                var prereqAttr = c.GetAttribute("prerequisiteId");
+                if (!string.IsNullOrWhiteSpace(prereqAttr))
+                {
+                    var resolved = ResolveRecommendationCourseIdentifier(
+                        prereqAttr,
+                        allIdToTitle,
+                        allTitleToId);
+
+                    if (!string.IsNullOrWhiteSpace(resolved) &&
+                        !prereqIds.Any(x => string.Equals(x, resolved, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        prereqIds.Add(resolved);
+                    }
+                }
+
+                catalog[id].PrereqIds = prereqIds;
+            }
+
+            return catalog;
+        }
+
+        private string ResolveRecommendationCourseIdentifier(
+            string ident,
+            Dictionary<string, string> allIdToTitle,
+            Dictionary<string, string> allTitleToId)
+        {
+            if (string.IsNullOrWhiteSpace(ident))
+                return null;
+
+            if (allIdToTitle.ContainsKey(ident))
+                return ident;
+
+            if (allTitleToId.TryGetValue(ident, out var idFromTitle))
+                return idFromTitle;
+
+            return null;
+        }
+
+        private Dictionary<string, string> BuildRecommendationAliases(Dictionary<string, RecommendationCourse> catalog)
+        {
+            var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var course in catalog.Values)
+            {
+                var normalized = NormalizeRecommendationKey(course.Title);
+                if (!string.IsNullOrWhiteSpace(normalized) && !map.ContainsKey(normalized))
+                    map[normalized] = course.Id;
+            }
+
+            TryAddRecommendationAlias(map, catalog, "Two-Factor Authentication Setup and Management", "2FA Setup And Management");
+            TryAddRecommendationAlias(map, catalog, "Detecting Spyware Infections on Devices", "Detecting Spyware Infection on Devices");
+            TryAddRecommendationAlias(map, catalog, "Managing Your Digital Footprint", "Managing Digital Footprint");
+            TryAddRecommendationAlias(map, catalog, "Identifying Hidden Surveillance Devices (Electronic Scanning)", "Identifying Hidden-Surveilance Devices");
+
+            return map;
+        }
+
+        private void TryAddRecommendationAlias(
+            Dictionary<string, string> map,
+            Dictionary<string, RecommendationCourse> catalog,
+            string quizTitle,
+            string courseTitle)
+        {
+            var match = catalog.Values.FirstOrDefault(c =>
+                string.Equals(c.Title, courseTitle, StringComparison.OrdinalIgnoreCase));
+
+            if (match == null)
+                return;
+
+            var normalizedQuizTitle = NormalizeRecommendationKey(quizTitle);
+            if (!string.IsNullOrWhiteSpace(normalizedQuizTitle))
+                map[normalizedQuizTitle] = match.Id;
+        }
+
+        private string NormalizeRecommendationKey(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
+            value = value.Replace("&", " and ")
+                         .Replace("-", " ")
+                         .Replace("/", " ")
+                         .Replace("(", " ")
+                         .Replace(")", " ");
+
+            var chars = value.ToLowerInvariant()
+                             .Select(ch => char.IsLetterOrDigit(ch) ? ch : ' ')
+                             .ToArray();
+
+            return string.Join(
+                " ",
+                new string(chars).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        private string ResolveRecommendationCourseId(
+            string domainTitle,
+            Dictionary<string, string> aliases)
+        {
+            if (string.IsNullOrWhiteSpace(domainTitle))
+                return null;
+
+            aliases.TryGetValue(NormalizeRecommendationKey(domainTitle), out var courseId);
+            return courseId;
+        }
+
+        private HashSet<string> LoadUpcomingCourseIdsForEvent(string eventId)
+        {
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            if (string.IsNullOrWhiteSpace(eventId) || !File.Exists(EventSessionsXmlPath))
+                return set;
+
+            var doc = new XmlDocument();
+            doc.Load(EventSessionsXmlPath);
+
+            foreach (XmlElement s in doc.SelectNodes($"/eventSessions/session[@eventId='{eventId}']"))
+            {
+                var courseId = (s["courseId"]?.InnerText ?? "").Trim();
+                var endIso = (s["end"]?.InnerText ?? "").Trim();
+
+                if (string.IsNullOrWhiteSpace(courseId))
+                    continue;
+
+                if (DateTime.TryParse(
+                        endIso,
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                        out var endUtc) &&
+                    endUtc >= DateTime.UtcNow)
+                {
+                    set.Add(courseId);
+                }
+            }
+
+            return set;
+        }
+
+        private List<RecommendationRow> BuildRecommendationRows(
+    QuizService.ScoreResult latest,
+    Dictionary<string, RecommendationCourse> catalog,
+    Dictionary<string, string> aliases,
+    HashSet<string> completedSet,
+    HashSet<string> visibleCourseIds,
+    HashSet<string> upcomingCourseIds)
+        {
+            var rowsByCourseId = new Dictionary<string, RecommendationRow>(StringComparer.OrdinalIgnoreCase);
+
+            var orderedDomains = latest.DomainScores
+                .Where(kv => kv.Value > 0)
+                .OrderByDescending(kv => kv.Value)
+                .ThenBy(kv => kv.Key)
+                .ToList();
+
+            int sortOrder = 0;
+
+            foreach (var domain in orderedDomains)
+            {
+                var targetCourseId = ResolveRecommendationCourseId(domain.Key, aliases);
+                if (string.IsNullOrWhiteSpace(targetCourseId))
+                    continue;
+
+                if (!catalog.TryGetValue(targetCourseId, out var targetCourse))
+                    continue;
+
+                if (completedSet.Contains(targetCourseId))
+                    continue;
+
+                var chain = GetRecursiveRecommendationChain(targetCourseId, catalog, completedSet);
+
+                if (chain.Count == 0)
+                    continue;
+
+                // No unmet prereq chain, so recommend the target directly.
+                if (chain.Count == 1 && string.Equals(chain[0], targetCourseId, StringComparison.OrdinalIgnoreCase))
+                {
+                    UpsertRecommendationRow(
+                        rowsByCourseId,
+                        targetCourse,
+                        sortOrder,
+                        domain.Value,
+                        $"Recommended because your {domain.Key} gap was {domain.Value:0.##}/10, which suggests a bigger need in this area right now.",
+                        isPrereq: false,
+                        isLockedByPrereq: false,
+                        visibleCourseIds: visibleCourseIds,
+                        upcomingCourseIds: upcomingCourseIds);
+
+                    sortOrder++;
+                    continue;
+                }
+
+                // Recursive chain example: [C, B, A]
+                // C = take first, B = needed next, A = target and still locked
+                for (int i = 0; i < chain.Count; i++)
+                {
+                    var courseId = chain[i];
+                    if (!catalog.TryGetValue(courseId, out var course))
+                        continue;
+
+                    if (completedSet.Contains(courseId))
+                        continue;
+
+                    bool isFirstAction = (i == 0);
+                    bool isTarget = string.Equals(courseId, targetCourseId, StringComparison.OrdinalIgnoreCase);
+                    bool isPrereq = !isTarget;
+                    bool isLockedByPrereq = !isFirstAction;
+
+                    string previousTitle = null;
+                    string nextTitle = null;
+
+                    if (i > 0 && catalog.TryGetValue(chain[i - 1], out var previousCourse))
+                        previousTitle = previousCourse.Title;
+
+                    if (i + 1 < chain.Count && catalog.TryGetValue(chain[i + 1], out var nextCourse))
+                        nextTitle = nextCourse.Title;
+
+                    string reason;
+                    if (isFirstAction)
+                    {
+                        reason =
+                            $"Start here first. This microcourse is being recommended because it is a prerequisite for \"{nextTitle}\" and needs to be completed before you can move forward in this learning path.";
+                    }
+                    else if (isTarget)
+                    {
+                        reason =
+                            $"This directly matches your {domain.Key} gap ({domain.Value:0.##}/10), but it stays locked until you complete \"{previousTitle}\".";
+                    }
+                    else
+                    {
+                        reason =
+                            $"Complete this after \"{previousTitle}\". It is still required before you can unlock \"{nextTitle}\".";
+                    }
+
+                    UpsertRecommendationRow(
+                        rowsByCourseId,
+                        course,
+                        sortOrder,
+                        domain.Value,
+                        reason,
+                        isPrereq: isPrereq,
+                        isLockedByPrereq: isLockedByPrereq,
+                        visibleCourseIds: visibleCourseIds,
+                        upcomingCourseIds: upcomingCourseIds);
+
+                    sortOrder++;
+                }
+            }
+
+            return rowsByCourseId.Values
+                .OrderBy(r => r.SortOrder)
+                .ThenByDescending(r => r.GapScore)
+                .Take(4)
+                .ToList();
+        }
+
+        private List<string> GetRecursiveRecommendationChain(
+    string targetCourseId,
+    Dictionary<string, RecommendationCourse> catalog,
+    HashSet<string> completedSet)
+        {
+            var ordered = new List<string>();
+            var visiting = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            CollectRecursiveRecommendationChain(
+                targetCourseId,
+                catalog,
+                completedSet,
+                ordered,
+                visiting);
+
+            return ordered;
+        }
+
+        private void CollectRecursiveRecommendationChain(
+            string courseId,
+            Dictionary<string, RecommendationCourse> catalog,
+            HashSet<string> completedSet,
+            List<string> ordered,
+            HashSet<string> visiting)
+        {
+            if (string.IsNullOrWhiteSpace(courseId))
+                return;
+
+            if (completedSet.Contains(courseId))
+                return;
+
+            if (!catalog.TryGetValue(courseId, out var course))
+                return;
+
+            // Cycle protection: prevents infinite loops on bad XML like A -> B -> A
+            if (!visiting.Add(courseId))
+                return;
+
+            var unmetPrereqs = (course.PrereqIds ?? new List<string>())
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .Where(id => !completedSet.Contains(id))
+                .ToList();
+
+            foreach (var prereqId in unmetPrereqs)
+            {
+                CollectRecursiveRecommendationChain(
+                    prereqId,
+                    catalog,
+                    completedSet,
+                    ordered,
+                    visiting);
+            }
+
+            if (!ordered.Any(x => string.Equals(x, courseId, StringComparison.OrdinalIgnoreCase)))
+            {
+                ordered.Add(courseId);
+            }
+
+            visiting.Remove(courseId);
+        }
+
+        private void UpsertRecommendationRow(
+            Dictionary<string, RecommendationRow> rowsByCourseId,
+            RecommendationCourse course,
+            int sortOrder,
+            double gapScore,
+            string reason,
+            bool isPrereq,
+            bool isLockedByPrereq,
+            HashSet<string> visibleCourseIds,
+            HashSet<string> upcomingCourseIds)
+        {
+            var isPublished = string.Equals(course.Status, "Published", StringComparison.OrdinalIgnoreCase);
+            var enforceVisibility = visibleCourseIds != null && visibleCourseIds.Count > 0;
+            var inThisEvent = !enforceVisibility || visibleCourseIds.Contains(course.Id);
+            var hasUpcomingSession = upcomingCourseIds != null && upcomingCourseIds.Contains(course.Id);
+
+            var hasMatchingSessions = inThisEvent && hasUpcomingSession;
+            var canSignUp = isPublished && !isLockedByPrereq && hasMatchingSessions;
+
+            var availabilityText =
+                !isPublished ? "Coming soon" :
+                isLockedByPrereq ? "Finish the prerequisite first" :
+                !inThisEvent ? "Not offered in this event" :
+                !hasUpcomingSession ? "No session posted yet" :
+                "Ready to sign up";
+
+            var badgeText =
+    isPrereq && !isLockedByPrereq ? "Take this first" :
+    isPrereq && isLockedByPrereq ? "Needed next" :
+    isLockedByPrereq ? "Locked until prereq" :
+    "Recommended";
+
+            var badgeCss =
+                isPrereq && !isLockedByPrereq ? "pill pill-pink" :
+                "pill pill-link";
+
+            if (rowsByCourseId.TryGetValue(course.Id, out var existing))
+            {
+                if (sortOrder < existing.SortOrder)
+                    existing.SortOrder = sortOrder;
+
+                if (gapScore > existing.GapScore)
+                {
+                    existing.GapScore = gapScore;
+                    existing.GapText = $"Gap {gapScore:0.##}/10";
+                }
+
+                if (isPrereq && !isLockedByPrereq)
+                {
+                    existing.BadgeText = "Take this first";
+                    existing.BadgeCss = "pill pill-pink";
+                    existing.Reason = reason;
+                    existing.AvailabilityText = availabilityText;
+                    existing.CanSignUp = canSignUp;
+                }
+                else if (isPrereq && isLockedByPrereq)
+                {
+                    if (!string.Equals(existing.BadgeText, "Take this first", StringComparison.OrdinalIgnoreCase))
+                    {
+                        existing.BadgeText = "Needed next";
+                        existing.BadgeCss = "pill pill-link";
+                    }
+
+                    existing.CanSignUp = false;
+                    existing.AvailabilityText = "Finish the earlier prerequisite first";
+                    existing.Reason = reason;
+                }
+                else if (isLockedByPrereq)
+                {
+                    if (!string.Equals(existing.BadgeText, "Take this first", StringComparison.OrdinalIgnoreCase))
+                    {
+                        existing.BadgeText = "Locked until prereq";
+                        existing.BadgeCss = "pill pill-link";
+                    }
+
+                    existing.CanSignUp = false;
+                    existing.AvailabilityText = "Finish the prerequisite first";
+                    existing.Reason = reason;
+                }
+
+                else
+                {
+                    var keepPrereqMessaging =
+                        string.Equals(existing.BadgeText, "Take this first", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(existing.BadgeText, "Needed next", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(existing.BadgeText, "Locked until prereq", StringComparison.OrdinalIgnoreCase);
+
+                    if (!keepPrereqMessaging)
+                    {
+                        existing.BadgeText = "Recommended";
+                        existing.BadgeCss = "pill pill-link";
+                        existing.Reason = reason;
+                        existing.AvailabilityText = availabilityText;
+                        existing.CanSignUp = canSignUp;
+                    }
+                }
+
+                if (hasMatchingSessions)
+                    existing.HasMatchingSessions = true;
+
+                return;
+            }
+
+            rowsByCourseId[course.Id] = new RecommendationRow
+            {
+                SortOrder = sortOrder,
+                GapScore = gapScore,
+                CourseId = course.Id,
+                Title = course.Title,
+                Summary = course.Summary,
+                Reason = reason,
+                AvailabilityText = availabilityText,
+                BadgeText = badgeText,
+                BadgeCss = badgeCss,
+                GapText = $"Gap {gapScore:0.##}/10",
+                CanSignUp = canSignUp,
+                HasMatchingSessions = hasMatchingSessions
+            };
+        }
+
         private void LoadTagOptionsIntoUi(IEnumerable<string> allTags)
         {
             FilterTags.Items.Clear();
@@ -460,6 +1214,31 @@ namespace CyberApp_FIA.Participant
             return list;
         }
 
+        private sealed class RecommendationCourse
+        {
+            public string Id { get; set; }
+            public string Title { get; set; }
+            public string Summary { get; set; }
+            public string Status { get; set; }
+            public List<string> PrereqIds { get; set; } = new List<string>();
+        }
+
+        private sealed class RecommendationRow
+        {
+            public int SortOrder { get; set; }
+            public double GapScore { get; set; }
+            public string CourseId { get; set; }
+            public string Title { get; set; }
+            public string Summary { get; set; }
+            public string Reason { get; set; }
+            public string AvailabilityText { get; set; }
+            public string BadgeText { get; set; }
+            public string BadgeCss { get; set; }
+            public string GapText { get; set; }
+            public bool CanSignUp { get; set; }
+            public bool HasMatchingSessions { get; set; }
+        }
+
         private bool SessionOverlapsUser(string eventId, string userId, string sessionId, out Interval conflictWith)
         {
             conflictWith = null;
@@ -512,6 +1291,37 @@ namespace CyberApp_FIA.Participant
                     return idx;
                 idx++;
             }
+            return 0;
+        }
+
+        // NEW: Gets the participant's 1-based position inside the enrolled queue.
+        // This uses the order of <enrolled><user> nodes in enrollments.xml.
+        private int GetEnrolledQueuePosition(XmlElement enrollmentSessionNode, string userId)
+        {
+            if (enrollmentSessionNode == null || string.IsNullOrWhiteSpace(userId))
+            {
+                return 0;
+            }
+
+            var enrolledUsers = enrollmentSessionNode.SelectNodes("enrolled/user");
+
+            if (enrolledUsers == null)
+            {
+                return 0;
+            }
+
+            var position = 1;
+
+            foreach (XmlElement user in enrolledUsers)
+            {
+                if (string.Equals(user.GetAttribute("id"), userId, StringComparison.OrdinalIgnoreCase))
+                {
+                    return position;
+                }
+
+                position++;
+            }
+
             return 0;
         }
 
@@ -628,13 +1438,7 @@ namespace CyberApp_FIA.Participant
             return map;
         }
 
-        private void EnsureXmlDoc(string path, string rootName)
-        {
-            if (File.Exists(path)) return;
-            var doc = new XmlDocument();
-            doc.AppendChild(doc.CreateElement(rootName));
-            doc.Save(path);
-        }
+
 
         private HashSet<string> LoadUserCompletedSet(string userId)
         {
@@ -707,6 +1511,10 @@ namespace CyberApp_FIA.Participant
                 var courseId = s["courseId"]?.InnerText ?? "";
                 if (string.IsNullOrEmpty(courseId)) continue;
                 if (visibleCourseIds.Count > 0 && !visibleCourseIds.Contains(courseId)) continue;
+
+                // Hide sessions for courses the user already completed
+                if (completedSet != null && completedSet.Contains(courseId))
+                    continue;
 
                 var startIso = s["start"]?.InnerText ?? "";
                 var endIso = s["end"]?.InnerText ?? "";
@@ -849,6 +1657,15 @@ namespace CyberApp_FIA.Participant
 
                 var courseId = s["courseId"]?.InnerText ?? "";
 
+                // NEW: queue display values for multi-participant enrolled sessions
+                var capStr = (s["capacity"]?.InnerText ?? "0").Trim();
+                var capacity = int.TryParse(capStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var capVal)
+                    ? capVal
+                    : 0;
+
+                var enrolledCount = sesNode.SelectNodes("enrolled/user")?.Count ?? 0;
+                var queuePosition = isEnrolled ? GetEnrolledQueuePosition(sesNode, userId) : 0;
+
                 // Parse current start/end for the session (UTC → local)
                 var startIso = s["start"]?.InnerText ?? "";
                 var endIso = s["end"]?.InnerText ?? "";
@@ -913,6 +1730,13 @@ namespace CyberApp_FIA.Participant
                 // compute waitlist position for "My Sessions" when applicable
                 var waitlistPosition = isWaitlisted ? GetWaitlistPosition(eventId, sid, userId) : 0;
 
+                // NEW: Total queue position includes enrolled participants first, then waitlisted users.
+                // Example: capacity/enrolled count is 3 and this user is waitlist position 2,
+                // so their overall queue position is 5.
+                
+                var overallQueuePosition = isWaitlisted && waitlistPosition > 0
+                    ? enrolledCount + waitlistPosition
+                    : 0;
 
                 // Only participants the Helper has "admitted" see the room link.
                 bool isAdmitted = false;
@@ -932,6 +1756,13 @@ namespace CyberApp_FIA.Participant
                 bool hasConflict = false;
                 string conflictMessage = string.Empty;
                 string replacementUrl = string.Empty;
+
+                var returnQuery = Request.Url.Query ?? "";
+                var swapUrl = ResolveUrl(
+                    $"~/Account/Participant/SwapSession.aspx?eventId={HttpUtility.UrlEncode(eventId)}" +
+                    $"&sessionId={HttpUtility.UrlEncode(sid)}" +
+                    $"&return={HttpUtility.UrlEncode(returnQuery)}"
+                );
 
                 var thisInterval = myIntervals
                     .FirstOrDefault(m => string.Equals(m.SessionId, sid, StringComparison.OrdinalIgnoreCase));
@@ -982,7 +1813,18 @@ namespace CyberApp_FIA.Participant
                     timeChangedMessage,
                     hasConflict,
                     conflictMessage,
-                    replacementUrl
+                    replacementUrl,
+                    swapUrl,
+
+                    // Enrolled queue card values
+                    capacity,
+                    enrolledCount,
+                    queuePosition,
+                    showQueuePosition = isEnrolled && capacity > 1 && queuePosition > 0,
+
+                    // Waitlist queue card values
+                    overallQueuePosition,
+                    showWaitlistPosition = isWaitlisted && overallQueuePosition > 0
                 });
             }
 
@@ -1103,7 +1945,10 @@ namespace CyberApp_FIA.Participant
 
         private void SaveEnrollmentsDoc(XmlDocument doc)
         {
-            lock (EnrollmentsLock) { doc.Save(EnrollmentsXmlPath); }
+            lock (EnrollmentSync.EnrollmentsLock)
+            {
+                doc.Save(EnrollmentsXmlPath);
+            }
         }
 
         private XmlElement EnsureSessionNode(XmlDocument doc, string eventId, string sessionId)
@@ -1169,7 +2014,7 @@ namespace CyberApp_FIA.Participant
 
         private bool TryEnroll(string eventId, string sessionId, string userId, out string message)
         {
-            lock (EnrollmentsLock)
+            lock (EnrollmentSync.EnrollmentsLock)
             {
                 var cap = GetCapacity(eventId, sessionId);
                 var doc = LoadEnrollmentsDoc();
@@ -1224,7 +2069,7 @@ namespace CyberApp_FIA.Participant
 
         private bool TryWaitlist(string eventId, string sessionId, string userId, out string message)
         {
-            lock (EnrollmentsLock)
+            lock (EnrollmentSync.EnrollmentsLock)
             {
                 var cap = GetCapacity(eventId, sessionId);
                 var doc = LoadEnrollmentsDoc();
@@ -1282,7 +2127,7 @@ namespace CyberApp_FIA.Participant
 
         private bool TryMarkComplete(string eventId, string sessionId, string userId, out string message)
         {
-            lock (EnrollmentsLock)
+            lock (EnrollmentSync.EnrollmentsLock)
             {
                 var doc = LoadEnrollmentsDoc();
                 var ses = EnsureSessionNode(doc, eventId, sessionId);
@@ -1337,7 +2182,7 @@ namespace CyberApp_FIA.Participant
         // NEW: Unenroll handler for both enrolled and waitlisted users
         private bool TryUnenroll(string eventId, string sessionId, string userId, out string message)
         {
-            lock (EnrollmentsLock)
+            lock (EnrollmentSync.EnrollmentsLock)
             {
                 var doc = LoadEnrollmentsDoc();
                 var ses = EnsureSessionNode(doc, eventId, sessionId);
@@ -1431,6 +2276,7 @@ namespace CyberApp_FIA.Participant
         }
     }
 }
+
 
 
 

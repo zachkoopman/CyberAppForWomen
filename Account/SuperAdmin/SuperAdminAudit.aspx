@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SuperAdminAudit.aspx.cs" Inherits="CyberApp_FIA.Account.SuperAdminAudit" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SuperAdminAudit.aspx.cs" Inherits="CyberApp_FIA.Account.SuperAdminAudit" MaintainScrollPositionOnPostBack="true"%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

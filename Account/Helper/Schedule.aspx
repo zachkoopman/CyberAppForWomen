@@ -526,6 +526,29 @@
       box-shadow:0 0 0 2px rgba(255,255,255,0.6);
     }
 
+    .session-undo-note{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid #d9e9f6;
+  background:linear-gradient(135deg,rgba(42,153,219,0.08),rgba(240,106,169,0.08));
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  box-shadow:0 8px 18px rgba(15,23,42,0.05);
+}
+
+.session-undo-note-text{
+  font-size:.84rem;
+  color:#374151;
+  line-height:1.4;
+}
+
+.session-undo-note-text strong{
+  color:#1d4ed8;
+}
+
     @media (max-width:640px){
       .page-header{
         flex-direction:column-reverse;
@@ -567,6 +590,9 @@
 </head>
 <body>
   <form id="form1" runat="server">
+    <asp:ScriptManager runat="server" />
+    <asp:UpdatePanel runat="server">
+    <ContentTemplate>
     <div class="wrap">
 
       <div class="page-header">
@@ -585,77 +611,6 @@
           <span class="icon">←</span>
           <span>Back to Helper Home</span>
         </a>
-      </div>
-
-      <!-- Mark session delivered block + recent history -->
-      <div class="deliver-shell">
-        <div>
-          <div class="deliver-eyebrow">Certification progress</div>
-          <h2 class="deliver-title">Mark a session as delivered</h2>
-          <p class="deliver-sub">
-            Quickly log that you delivered a microcourse session so your teaching counts toward certification.
-            You can add a short note that only admins will see.
-          </p>
-        </div>
-        <div class="deliver-form">
-          <div class="deliver-field-group">
-            <span class="deliver-label">Course</span>
-            <asp:DropDownList ID="DeliverCourseDropDown"
-                              runat="server"
-                              CssClass="deliver-select" />
-          </div>
-          <div class="deliver-field-group">
-            <span class="deliver-label">Notes (optional)</span>
-            <asp:TextBox ID="DeliverNotesTextBox"
-                         runat="server"
-                         CssClass="deliver-notes"
-                         TextMode="MultiLine"
-                         Rows="2"
-                         placeholder="Any quick context you want University Admins to see."></asp:TextBox>
-          </div>
-          <div class="deliver-field-group">
-            <asp:Button ID="DeliverSubmitButton"
-                        runat="server"
-                        CssClass="deliver-submit"
-                        Text="Log delivered session"
-                        OnClick="DeliverSubmitButton_Click" />
-          </div>
-        </div>
-
-        <!-- New: recent delivered sessions with per-row undo -->
-        <div class="deliver-history">
-          <div class="deliver-history-header">Recent delivered sessions</div>
-          <asp:PlaceHolder ID="DeliverHistoryEmpty" runat="server">
-            <div class="deliver-history-empty">
-              Once you log delivered sessions, the last three will show here with quick undo.
-            </div>
-          </asp:PlaceHolder>
-
-          <asp:Repeater ID="DeliverHistoryRepeater"
-                        runat="server"
-                        OnItemCommand="DeliverHistoryRepeater_ItemCommand">
-            <HeaderTemplate>
-              <div class="deliver-history-list">
-            </HeaderTemplate>
-            <ItemTemplate>
-              <div class="deliver-history-item">
-                <div class="deliver-history-main">
-                  <div class="deliver-history-title"><%# Eval("CourseTitle") %></div>
-                  <div class="deliver-history-meta"><%# Eval("WhenLabel") %></div>
-                </div>
-                <asp:Button ID="UndoDeliverItemButton"
-                            runat="server"
-                            CssClass="deliver-history-undo"
-                            Text="Undo"
-                            CommandName="undoDeliver"
-                            CommandArgument='<%# Eval("Snapshot") %>' />
-              </div>
-            </ItemTemplate>
-            <FooterTemplate>
-              </div>
-            </FooterTemplate>
-          </asp:Repeater>
-        </div>
       </div>
 
       <div class="schedule-shell">
@@ -714,7 +669,7 @@
                   <asp:Repeater ID="ParticipantsRepeater" runat="server" DataSource='<%# Eval("Participants") %>'>
                     <ItemTemplate>
                       <div class="session-participant-row">
-                        <span class="participant-name"><%# Eval("Name") %></span>
+                        <span class="participant-name"><%# (Container.ItemIndex + 1) %>. <%# Eval("Name") %></span>
                         <span class="participant-status">
                           <%# (bool)Eval("Invited") ? "Invited" : "Needs Invite" %>
                         </span>
@@ -749,6 +704,45 @@
                             Visible='<%# (bool)Eval("CanUndoCheckin") %>' />
               </div>
 
+                <!-- Post-invite actions: only show after the #1 participant has been invited -->
+<asp:PlaceHolder ID="PostInviteActionsPH"
+                 runat="server"
+                 Visible='<%# (bool)Eval("HasActiveInvite") %>'>
+  <div class="session-actions" style="margin-top:10px;">
+    <asp:Button ID="CompleteParticipantBtn"
+            runat="server"
+            CssClass="session-admit-btn"
+            Text="Mark Session Complete"
+            CommandName="completeParticipant"
+            CommandArgument='<%# Eval("EventId") + "|" + Eval("SessionId") + "|" + Eval("ActiveParticipantId") %>' />
+
+    <asp:Button ID="MissingParticipantBtn"
+                runat="server"
+                CssClass="session-admit-btn"
+                Text="Mark Participant Missing"
+                CommandName="markMissingParticipant"
+                CommandArgument='<%# Eval("EventId") + "|" + Eval("SessionId") + "|" + Eval("ActiveParticipantId") %>' />
+  </div>
+</asp:PlaceHolder>
+
+                <asp:PlaceHolder ID="UndoParticipantActionPH"
+                 runat="server"
+                 Visible='<%# (bool)Eval("CanUndoParticipantAction") %>'>
+  <div class="session-undo-note">
+    <div class="session-undo-note-text">
+      <strong>Recent action:</strong>
+      <%# Eval("UndoActionText") %>
+    </div>
+
+    <asp:Button ID="UndoParticipantActionBtn"
+                runat="server"
+                CssClass="session-admit-btn session-undo-btn"
+                Text="Undo"
+                CommandName="undoParticipantAction"
+                CommandArgument='<%# Eval("UndoSnapshotId") %>' />
+  </div>
+</asp:PlaceHolder>
+
               <asp:PlaceHolder ID="CheckinMetaPH" runat="server" Visible='<%# (bool)Eval("HasCheckin") %>'>
                 <div class="session-checkin-meta">
                   Checked in at <%# Eval("CheckedInAtLabel") %>.
@@ -769,8 +763,9 @@
     <div id="fiaToast" class="fia-toast" style="display:none;">
       <span id="fiaToastText"></span>
     </div>
+  </ContentTemplate>
+    </asp:UpdatePanel>
   </form>
 </body>
 </html>
-
 

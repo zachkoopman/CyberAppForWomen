@@ -51,6 +51,42 @@ namespace CyberApp_FIA.Helper
         protected global::System.Web.UI.WebControls.Literal QuestionedNoticeText;
 
         /// <summary>
+        /// TeachingQuestionedNoticePH control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder TeachingQuestionedNoticePH;
+
+        /// <summary>
+        /// TeachingQuestionedNoticeRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater TeachingQuestionedNoticeRepeater;
+
+        /// <summary>
+        /// HelpQuestionedNoticePH control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder HelpQuestionedNoticePH;
+
+        /// <summary>
+        /// HelpQuestionedNoticeRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater HelpQuestionedNoticeRepeater;
+
+        /// <summary>
         /// NotCertifiedPH control.
         /// </summary>
         /// <remarks>

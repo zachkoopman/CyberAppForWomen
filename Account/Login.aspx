@@ -193,11 +193,6 @@
             PostBackUrl="~/Account/CreateAccountPage.aspx" />
         </div>
 
-        <!-- Aux links (e.g., password reset) -->
-        <div class="foot">
-          <span><a href="#">Forgot password?</a></span>
-        </div>
-
         <!-- General message area for success/errors; viewstate off to avoid stale text -->
         <asp:Label ID="FormMessage" runat="server" EnableViewState="false" />
 

@@ -622,12 +622,12 @@
                 </div>
 
                 <asp:PlaceHolder ID="HasConvoPH" runat="server"
-                                 Visible='<%# (bool)Eval("HasConversation") %>'>
-                  <span class="msg-indicator" title="This participant has sent you messages.">
-                    <span class="msg-dot"></span>
-                    <span>Messages</span>
-                  </span>
-                </asp:PlaceHolder>
+                 Visible='<%# (bool)Eval("HasConversation") %>'>
+  <span class="msg-indicator" title="This participant has an unread message.">
+    <span class="msg-dot"></span>
+    <span>New message</span>
+  </span>
+</asp:PlaceHolder>
               </div>
 
               <div class="participant-email">

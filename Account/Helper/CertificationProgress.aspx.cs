@@ -28,6 +28,8 @@ namespace CyberApp_FIA.Helper
         private string MicrocoursesXmlPath => Server.MapPath("~/App_Data/microcourses.xml");
         private string HelperProgressXmlPath => Server.MapPath("~/App_Data/helperProgress.xml");
 
+        private string HelperSessionReviewsXmlPath => Server.MapPath("~/App_Data/helperSessionReviews.xml");
+
         protected void Page_Load(object sender, EventArgs e)
         {
             // Gate: Helpers only
@@ -46,6 +48,8 @@ namespace CyberApp_FIA.Helper
 
                 // Seed helperProgress.xml for this helper if needed
                 EnsureHelperProgressSeeded(helperId, HelperName.Text);
+
+                EnsureHelperSessionReviewsXml();
 
                 BindCertificationView();
             }
@@ -89,6 +93,16 @@ namespace CyberApp_FIA.Helper
             File.WriteAllText(HelperProgressXmlPath, "<?xml version='1.0' encoding='utf-8'?><helperProgress version='1'></helperProgress>");
         }
 
+        private void EnsureHelperSessionReviewsXml()
+        {
+            if (File.Exists(HelperSessionReviewsXmlPath)) return;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(HelperSessionReviewsXmlPath));
+            File.WriteAllText(
+                HelperSessionReviewsXmlPath,
+                "<?xml version='1.0' encoding='utf-8'?><helperSessionReviews version='1'></helperSessionReviews>");
+        }
+
         private sealed class RuleInfo
         {
             public string Id { get; set; }
@@ -130,6 +144,13 @@ namespace CyberApp_FIA.Helper
             // NEW: note fields
             public string AdminNote { get; set; }
             public string HelperNote { get; set; }
+        }
+
+        private sealed class QuestionedSessionInfo
+        {
+            public int Count { get; set; }
+            public string LatestAdminNote { get; set; }
+            public DateTime LatestReviewedUtc { get; set; }
         }
 
         private sealed class ModuleStatus
@@ -186,6 +207,27 @@ namespace CyberApp_FIA.Helper
             public bool HelpOnHold { get; set; }
             public string TeachingReviewNote { get; set; }
             public string HelpReviewNote { get; set; }
+
+            public int TeachingQuestionedCount { get; set; }
+            public int HelpQuestionedCount { get; set; }
+
+            public bool HasTeachingQuestionedCount { get; set; }
+            public bool HasHelpQuestionedCount { get; set; }
+
+            public string TeachingQuestionedCountText { get; set; }
+            public string HelpQuestionedCountText { get; set; }
+
+            public string TeachingHoldSentence { get; set; }
+            public string HelpHoldSentence { get; set; }
+
+            public bool HasTeachingReviewNote { get; set; }
+            public bool HasHelpReviewNote { get; set; }
+
+            public bool ShowTeachingOnHoldDetail { get; set; }
+            public bool ShowHelpOnHoldDetail { get; set; }
+
+            public bool ShowTeachingQuestionedNotice { get; set; }
+            public bool ShowHelpQuestionedNotice { get; set; }
 
 
             // Button visibility
@@ -320,6 +362,135 @@ namespace CyberApp_FIA.Helper
             doc.Save(HelperProgressXmlPath);
         }
 
+        private static DateTime ParseUtcOrMin(string raw)
+        {
+            DateTime dt;
+            if (DateTime.TryParse(raw ?? string.Empty, out dt))
+            {
+                return dt.Kind == DateTimeKind.Utc ? dt : dt.ToUniversalTime();
+            }
+
+            return DateTime.MinValue;
+        }
+
+        private QuestionedSessionInfo GetQuestionedSessionInfo(string helperId, string courseId, string scope)
+        {
+            var info = new QuestionedSessionInfo
+            {
+                Count = 0,
+                LatestAdminNote = string.Empty,
+                LatestReviewedUtc = DateTime.MinValue
+            };
+
+            if (string.IsNullOrWhiteSpace(helperId) || string.IsNullOrWhiteSpace(courseId))
+            {
+                return info;
+            }
+
+            EnsureHelperSessionReviewsXml();
+            if (!File.Exists(HelperSessionReviewsXmlPath))
+            {
+                return info;
+            }
+
+            var doc = new XmlDocument();
+            doc.Load(HelperSessionReviewsXmlPath);
+
+            foreach (XmlElement review in doc.SelectNodes(
+                $"/helperSessionReviews/review[@helperId='{helperId}' and @courseId='{courseId}' and @scope='{scope}' and @status='Questioned']"))
+            {
+                info.Count++;
+
+                var reviewedUtc = ParseUtcOrMin(review.GetAttribute("reviewedUtc"));
+                if (reviewedUtc == DateTime.MinValue)
+                {
+                    reviewedUtc = ParseUtcOrMin(review.GetAttribute("loggedUtc"));
+                }
+
+                if (reviewedUtc >= info.LatestReviewedUtc)
+                {
+                    info.LatestReviewedUtc = reviewedUtc;
+                    info.LatestAdminNote = review["adminNote"]?.InnerText ?? string.Empty;
+                }
+            }
+
+            return info;
+        }
+
+        private static bool IsScopeMessageAcknowledged(DateTime acknowledgedUtc, DateTime latestReviewedUtc)
+        {
+            if (latestReviewedUtc == DateTime.MinValue)
+            {
+                return false;
+            }
+
+            return acknowledgedUtc >= latestReviewedUtc;
+        }
+
+        private static string BuildQuestionedCountText(string scope, int count)
+        {
+            if (count <= 0)
+            {
+                return string.Empty;
+            }
+
+            if (string.Equals(scope, "Teaching", StringComparison.OrdinalIgnoreCase))
+            {
+                return count == 1 ? "1 teaching session" : count + " teaching sessions";
+            }
+
+            return count == 1 ? "1 one-on-one help session" : count + " one-on-one help sessions";
+        }
+
+        private static string BuildHoldSentence(string scope, int count)
+        {
+            if (count <= 0)
+            {
+                return string.Empty;
+            }
+
+            if (string.Equals(scope, "Teaching", StringComparison.OrdinalIgnoreCase))
+            {
+                return count == 1
+                    ? "1 teaching session for this microcourse is currently on hold and does not count toward certification."
+                    : count + " teaching sessions for this microcourse are currently on hold and do not count toward certification.";
+            }
+
+            return count == 1
+                ? "1 one-on-one help session for this microcourse is currently on hold and does not count toward certification."
+                : count + " one-on-one help sessions for this microcourse are currently on hold and do not count toward certification.";
+        }
+
+        private void AcknowledgeSessionReviewNotice(string helperId, string courseId, string scope)
+        {
+            EnsureHelperProgressXml();
+
+            var doc = new XmlDocument();
+            doc.Load(HelperProgressXmlPath);
+
+            var courseEl = (XmlElement)doc.SelectSingleNode(
+                $"/helperProgress/helper[@id='{helperId}']/course[@id='{courseId}']");
+
+            if (courseEl == null)
+            {
+                return;
+            }
+
+            var nodeName = string.Equals(scope, "Teaching", StringComparison.OrdinalIgnoreCase)
+                ? "teachingReviewAcknowledgedUtc"
+                : "helpReviewAcknowledgedUtc";
+
+            var ackEl = courseEl[nodeName] ?? doc.CreateElement(nodeName);
+            ackEl.InnerText = DateTime.UtcNow.ToString("o");
+
+            if (ackEl.ParentNode == null)
+            {
+                courseEl.AppendChild(ackEl);
+            }
+
+            doc.Save(HelperProgressXmlPath);
+        }
+
         private void BindCertificationView()
         {
             EnsureRulesXml();
@@ -388,6 +559,22 @@ namespace CyberApp_FIA.Helper
                 QuestionedNoticeText.Text = string.Empty;
             }
 
+            // ADD THIS BLOCK RIGHT HERE
+            var teachingQuestioned = sorted
+                .Where(m => m.ShowTeachingQuestionedNotice)
+                .ToList();
+
+            TeachingQuestionedNoticePH.Visible = teachingQuestioned.Count > 0;
+            TeachingQuestionedNoticeRepeater.DataSource = teachingQuestioned;
+            TeachingQuestionedNoticeRepeater.DataBind();
+
+            var helpQuestioned = sorted
+                .Where(m => m.ShowHelpQuestionedNotice)
+                .ToList();
+
+            HelpQuestionedNoticePH.Visible = helpQuestioned.Count > 0;
+            HelpQuestionedNoticeRepeater.DataSource = helpQuestioned;
+            HelpQuestionedNoticeRepeater.DataBind();
 
             NotCertifiedRepeater.DataSource = notCertified;
             NotCertifiedRepeater.DataBind();
@@ -462,7 +649,7 @@ namespace CyberApp_FIA.Helper
 
             var list = new List<MicrocourseInfo>();
 
-            foreach (XmlElement c in doc.SelectNodes("/microcourses/course[@status='Published' or @status='Draft']"))
+            foreach (XmlElement c in doc.SelectNodes("/microcourses/course[@status='Published']"))
             {
                 var id = c.GetAttribute("id");
                 var title = c["title"]?.InnerText ?? "(Untitled microcourse)";
@@ -574,9 +761,24 @@ namespace CyberApp_FIA.Helper
             var teachingReviewNote = string.Empty;
             var helpReviewNote = string.Empty;
 
+            var teachingQuestionedCount = 0;
+            var helpQuestionedCount = 0;
+            var teachingQuestionedCountText = string.Empty;
+            var helpQuestionedCountText = string.Empty;
+            var teachingHoldSentence = string.Empty;
+            var helpHoldSentence = string.Empty;
+            var hasTeachingReviewNote = false;
+            var hasHelpReviewNote = false;
+            var showTeachingOnHoldDetail = false;
+            var showHelpOnHoldDetail = false;
+            var showTeachingQuestionedNotice = false;
+            var showHelpQuestionedNotice = false;
+
             try
             {
                 EnsureHelperProgressXml();
+                EnsureHelperSessionReviewsXml();
+
                 var doc = new XmlDocument();
                 doc.Load(HelperProgressXmlPath);
 
@@ -587,19 +789,44 @@ namespace CyberApp_FIA.Helper
                     var courseEl = (XmlElement)helperEl.SelectSingleNode($"./course[@id='{course.Id}']");
                     if (courseEl != null)
                     {
-                        teachingOnHold = (courseEl["teachingRevokedFlag"]?.InnerText ?? "false")
-                            .Equals("true", StringComparison.OrdinalIgnoreCase);
-                        helpOnHold = (courseEl["helpRevokedFlag"]?.InnerText ?? "false")
-                            .Equals("true", StringComparison.OrdinalIgnoreCase);
+                        var teachingAckUtc = ParseUtcOrMin(courseEl["teachingReviewAcknowledgedUtc"]?.InnerText ?? string.Empty);
+                        var helpAckUtc = ParseUtcOrMin(courseEl["helpReviewAcknowledgedUtc"]?.InnerText ?? string.Empty);
 
-                        teachingReviewNote = courseEl["teachingReviewAdminNote"]?.InnerText ?? string.Empty;
-                        helpReviewNote = courseEl["helpReviewAdminNote"]?.InnerText ?? string.Empty;
+                        var teachingInfo = GetQuestionedSessionInfo(helperId, course.Id, "Teaching");
+                        var helpInfo = GetQuestionedSessionInfo(helperId, course.Id, "Help");
+
+                        teachingQuestionedCount = teachingInfo.Count;
+                        helpQuestionedCount = helpInfo.Count;
+
+                        teachingOnHold = teachingQuestionedCount > 0;
+                        helpOnHold = helpQuestionedCount > 0;
+
+                        teachingReviewNote = teachingInfo.LatestAdminNote;
+                        helpReviewNote = helpInfo.LatestAdminNote;
+
+                        hasTeachingReviewNote = !string.IsNullOrWhiteSpace(teachingReviewNote);
+                        hasHelpReviewNote = !string.IsNullOrWhiteSpace(helpReviewNote);
+
+                        teachingQuestionedCountText = BuildQuestionedCountText("Teaching", teachingQuestionedCount);
+                        helpQuestionedCountText = BuildQuestionedCountText("Help", helpQuestionedCount);
+
+                        teachingHoldSentence = BuildHoldSentence("Teaching", teachingQuestionedCount);
+                        helpHoldSentence = BuildHoldSentence("Help", helpQuestionedCount);
+
+                        var teachingAcked = IsScopeMessageAcknowledged(teachingAckUtc, teachingInfo.LatestReviewedUtc);
+                        var helpAcked = IsScopeMessageAcknowledged(helpAckUtc, helpInfo.LatestReviewedUtc);
+
+                        showTeachingOnHoldDetail = teachingQuestionedCount > 0 && !teachingAcked;
+                        showHelpOnHoldDetail = helpQuestionedCount > 0 && !helpAcked;
+
+                        showTeachingQuestionedNotice = teachingQuestionedCount > 0 && !teachingAcked;
+                        showHelpQuestionedNotice = helpQuestionedCount > 0 && !helpAcked;
                     }
                 }
             }
             catch
             {
-                // Best-effort; certification logic should not break if we can't read flags.
+                // Best-effort; certification logic should not break if we can't read review counts.
             }
 
 
@@ -624,10 +851,9 @@ namespace CyberApp_FIA.Helper
             var hasAdminNote = !string.IsNullOrWhiteSpace(adminNote);
             var hasHelperNote = !string.IsNullOrWhiteSpace(helperNote);
 
-            // Quiz req + progress
             bool quizMet = requireQuiz
-                ? (passScore > 0 && progress.QuizScore >= passScore)
-                : true;
+    ? (passScore > 0 && progress.QuizScore >= passScore)
+    : true;
 
             // If the admin has questioned this module, treat the quiz as not met
             // until it is re-submitted and re-verified.
@@ -636,15 +862,21 @@ namespace CyberApp_FIA.Helper
                 quizMet = false;
             }
 
+            // Once the helper has submitted for verification, show "Passed!" in the score line
+            // instead of the numeric stored score.
+            bool quizSubmittedForVerification =
+                requireQuiz &&
+                !string.Equals(verificationStatus, "NotRequested", StringComparison.OrdinalIgnoreCase) &&
+                progress.QuizScore >= passScore &&
+                passScore > 0;
 
+            // Always show the actual required score pulled from the rule.
             string quizReqText = requireQuiz
-                ? (quizMet
-                    ? "Passed"
-                    : (passScore > 0 ? $"Score ≥ {passScore}%" : "Quiz required (score TBD)"))
+                ? (passScore > 0 ? $"{passScore}%" : "Quiz required")
                 : "No quiz required";
 
             string quizProgressText = requireQuiz
-                ? $"{progress.QuizScore}%"
+                ? (quizSubmittedForVerification ? "Passed!" : $"{progress.QuizScore}%")
                 : "—";
 
             string quizStatusText = requireQuiz
@@ -797,6 +1029,21 @@ namespace CyberApp_FIA.Helper
                 TeachingReviewNote = teachingReviewNote,
                 HelpReviewNote = helpReviewNote,
 
+                TeachingQuestionedCount = teachingQuestionedCount,
+                HelpQuestionedCount = helpQuestionedCount,
+                HasTeachingQuestionedCount = teachingQuestionedCount > 0,
+                HasHelpQuestionedCount = helpQuestionedCount > 0,
+                TeachingQuestionedCountText = teachingQuestionedCountText,
+                HelpQuestionedCountText = helpQuestionedCountText,
+                TeachingHoldSentence = teachingHoldSentence,
+                HelpHoldSentence = helpHoldSentence,
+                HasTeachingReviewNote = hasTeachingReviewNote,
+                HasHelpReviewNote = hasHelpReviewNote,
+                ShowTeachingOnHoldDetail = showTeachingOnHoldDetail,
+                ShowHelpOnHoldDetail = showHelpOnHoldDetail,
+                ShowTeachingQuestionedNotice = showTeachingQuestionedNotice,
+                ShowHelpQuestionedNotice = showHelpQuestionedNotice,
+
 
                 // NEW: note plumbing for helper view
                 AdminNote = adminNote,
@@ -806,7 +1053,7 @@ namespace CyberApp_FIA.Helper
                 ShowAdminNoteForHelper = isQuestioned && hasAdminNote,
 
                 // Button logic: normal confirm unless on hold; on-hold shows resubmit
-                ShowConfirmButton = !isQuestioned,
+                ShowConfirmButton = !isQuestioned && !isEligible && !isCertified,
                 ShowResubmitButton = isQuestioned,
 
                 ExternalLink = extLink,
@@ -869,6 +1116,46 @@ namespace CyberApp_FIA.Helper
             SaveQuizConfirmed(helperId, courseId, passScore, isResubmission, helperNote);
 
             // Refresh UI with updated progress.
+            BindCertificationView();
+        }
+
+        protected void TeachingQuestionedNoticeRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (!string.Equals(e.CommandName, "acceptTeachingNotice", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var helperId = Session["UserId"] as string ?? string.Empty;
+            var courseId = e.CommandArgument as string ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(helperId) || string.IsNullOrWhiteSpace(courseId))
+            {
+                BindCertificationView();
+                return;
+            }
+
+            AcknowledgeSessionReviewNotice(helperId, courseId, "Teaching");
+            BindCertificationView();
+        }
+
+        protected void HelpQuestionedNoticeRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (!string.Equals(e.CommandName, "acceptHelpNotice", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var helperId = Session["UserId"] as string ?? string.Empty;
+            var courseId = e.CommandArgument as string ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(helperId) || string.IsNullOrWhiteSpace(courseId))
+            {
+                BindCertificationView();
+                return;
+            }
+
+            AcknowledgeSessionReviewNotice(helperId, courseId, "Help");
             BindCertificationView();
         }
 

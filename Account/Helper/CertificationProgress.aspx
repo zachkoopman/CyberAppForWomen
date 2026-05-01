@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CertificationProgress.aspx.cs" Inherits="CyberApp_FIA.Helper.CertificationProgress" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CertificationProgress.aspx.cs" Inherits="CyberApp_FIA.Helper.CertificationProgress" MaintainScrollPositionOnPostBack="true" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -155,6 +155,26 @@
       color:var(--fia-blue);
     }
 
+    .back-link{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 11px;
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,0.6);
+  background:#ffffff;
+  font-size:.85rem;
+  font-weight:600;
+  color:#374151;
+  text-decoration:none;
+  white-space:nowrap;
+  box-shadow:0 10px 24px rgba(15,23,42,0.12);
+}
+
+.back-link span.icon{
+  font-size:.95rem;
+}
+
      .questioned-banner{
       margin-bottom:18px;
       border-radius:16px;
@@ -184,6 +204,77 @@
       font-size:0.75rem;
     }
 
+    .questioned-banner-stack{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.questioned-banner.scope-teaching{
+  border-color:#bfebe3;
+  background:#effcf8;
+  color:#115e59;
+}
+
+.questioned-banner.scope-help{
+  border-color:#fbcfe8;
+  background:#fdf2f8;
+  color:#9d174d;
+}
+
+.questioned-banner-sub{
+  margin-top:4px;
+  font-size:0.9rem;
+  line-height:1.5;
+}
+
+.questioned-banner-note{
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.72);
+  border:1px solid rgba(0,0,0,0.06);
+  font-size:0.86rem;
+}
+
+.questioned-banner-note strong{
+  display:inline-block;
+  margin-right:4px;
+}
+
+.questioned-banner-actions{
+  margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.questioned-banner-accept{
+  border:none;
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:0.8rem;
+  font-weight:600;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--fia-blue),var(--fia-teal));
+  color:#ffffff;
+}
+
+.questioned-banner-accept:hover{
+  opacity:0.96;
+}
+
+.req-item-row.questioned-row{
+  margin-top:6px;
+  padding-top:6px;
+  border-top:1px dashed rgba(220,38,38,0.18);
+}
+
+.req-item-row.questioned-row .req-item-label,
+.req-item-row.questioned-row .req-item-value{
+  color:#991b1b;
+  font-weight:700;
+}
 
     /* Section headings */
     .section-block{
@@ -541,6 +632,8 @@
       opacity:0.95;
     }
 
+
+
     @media (max-width:720px){
       .cert-hero{
         flex-direction:column;
@@ -551,6 +644,9 @@
 
 <body>
   <form id="form1" runat="server">
+    <asp:ScriptManager runat="server" />
+    <asp:UpdatePanel runat="server">
+    <ContentTemplate>
     <div class="wrap">
 
       <!-- Hero -->
@@ -567,12 +663,17 @@
             plus a detailed breakdown for every microcourse.
           </p>
         </div>
-        <div>
-          <div class="cert-helper-tag">
-            <span>Peer Helper:</span>
-            <span class="name"><asp:Literal ID="HelperName" runat="server" /></span>
-          </div>
-        </div>
+       <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+  <a href="<%: ResolveUrl("~/Account/Helper/Home.aspx") %>" class="back-link">
+    <span class="icon">←</span>
+    <span>Back to Helper Home</span>
+  </a>
+
+  <div class="cert-helper-tag">
+    <span>Peer Helper:</span>
+    <span class="name"><asp:Literal ID="HelperName" runat="server" /></span>
+  </div>
+</div>
       </div>
 
               <asp:PlaceHolder ID="QuestionedNoticePH" runat="server" Visible="false">
@@ -584,6 +685,94 @@
           <asp:Literal ID="QuestionedNoticeText" runat="server" />
         </div>
       </asp:PlaceHolder>
+
+        <asp:PlaceHolder ID="TeachingQuestionedNoticePH" runat="server" Visible="false">
+  <div class="questioned-banner-stack">
+    <asp:Repeater ID="TeachingQuestionedNoticeRepeater" runat="server"
+      OnItemCommand="TeachingQuestionedNoticeRepeater_ItemCommand">
+      <ItemTemplate>
+        <div class="questioned-banner scope-teaching">
+          <div class="questioned-banner-title">
+            <span class="icon">!</span>
+            <span>Teaching session logs questioned</span>
+          </div>
+
+          <div class="questioned-banner-sub">
+            <strong><%# Eval("Title") %></strong>:
+            <%# Eval("TeachingHoldSentence") %>
+          </div>
+
+          <asp:PlaceHolder ID="TeachingBannerNotePH" runat="server"
+            Visible='<%# (bool)Eval("HasTeachingReviewNote") %>'>
+            <div class="questioned-banner-note">
+              <strong>Admin note:</strong>
+              <span><%# Eval("TeachingReviewNote") %></span>
+            </div>
+          </asp:PlaceHolder>
+
+          <div class="questioned-banner-sub">
+            If you believe this is a mistake, email your university admin and include any proof,
+            screenshots, or details that may help.
+          </div>
+
+          <div class="questioned-banner-actions">
+            <asp:Button
+              ID="BtnAcceptTeachingNotice"
+              runat="server"
+              CssClass="questioned-banner-accept"
+              Text="Close / accept"
+              CommandName="acceptTeachingNotice"
+              CommandArgument='<%# Eval("CourseId") %>' />
+          </div>
+        </div>
+      </ItemTemplate>
+    </asp:Repeater>
+  </div>
+</asp:PlaceHolder>
+
+<asp:PlaceHolder ID="HelpQuestionedNoticePH" runat="server" Visible="false">
+  <div class="questioned-banner-stack">
+    <asp:Repeater ID="HelpQuestionedNoticeRepeater" runat="server"
+      OnItemCommand="HelpQuestionedNoticeRepeater_ItemCommand">
+      <ItemTemplate>
+        <div class="questioned-banner scope-help">
+          <div class="questioned-banner-title">
+            <span class="icon">!</span>
+            <span>One-on-one help logs questioned</span>
+          </div>
+
+          <div class="questioned-banner-sub">
+            <strong><%# Eval("Title") %></strong>:
+            <%# Eval("HelpHoldSentence") %>
+          </div>
+
+          <asp:PlaceHolder ID="HelpBannerNotePH" runat="server"
+            Visible='<%# (bool)Eval("HasHelpReviewNote") %>'>
+            <div class="questioned-banner-note">
+              <strong>Admin note:</strong>
+              <span><%# Eval("HelpReviewNote") %></span>
+            </div>
+          </asp:PlaceHolder>
+
+          <div class="questioned-banner-sub">
+            If you believe this is a mistake, email your university admin and include any proof,
+            screenshots, or details that may help.
+          </div>
+
+          <div class="questioned-banner-actions">
+            <asp:Button
+              ID="BtnAcceptHelpNotice"
+              runat="server"
+              CssClass="questioned-banner-accept"
+              Text="Close / accept"
+              CommandName="acceptHelpNotice"
+              CommandArgument='<%# Eval("CourseId") %>' />
+          </div>
+        </div>
+      </ItemTemplate>
+    </asp:Repeater>
+  </div>
+</asp:PlaceHolder>
 
 
       <!-- Certification status widget -->
@@ -718,26 +907,38 @@
                   <!-- Teaching sessions requirement -->
                   <div class="req-item req-item-teach">
                     <div class="req-item-title teach">Teaching sessions</div>
-                    <div class="req-item-row">
-                      <span class="req-item-label">Required:</span>
-                      <span class="req-item-value"><%# Eval("TeachingRequirementText") %></span>
-                    </div>
-                    <div class="req-item-row">
-                      <span class="req-item-label">Your progress:</span>
-                      <span class="req-item-value"><%# Eval("TeachingProgressText") %></span>
-                    </div>
-                    <div class="req-item-status <%# Eval("TeachingStatusCss") %>">
-                      <%# Eval("TeachingStatusText") %>
-                    </div>
-                      <asp:PlaceHolder ID="TeachingOnHoldPH" runat="server"
-  Visible='<%# (bool)Eval("TeachingOnHold") %>'>
+
+<div class="req-item-row">
+  <span class="req-item-label">Required:</span>
+  <span class="req-item-value"><%# Eval("TeachingRequirementText") %></span>
+</div>
+
+<div class="req-item-row">
+  <span class="req-item-label">Your progress:</span>
+  <span class="req-item-value"><%# Eval("TeachingProgressText") %></span>
+</div>
+
+<asp:PlaceHolder ID="TeachingQuestionedCountPH" runat="server"
+  Visible='<%# (bool)Eval("HasTeachingQuestionedCount") %>'>
+  <div class="req-item-row questioned-row">
+    <span class="req-item-label">Questioned:</span>
+    <span class="req-item-value"><%# Eval("TeachingQuestionedCountText") %></span>
+  </div>
+</asp:PlaceHolder>
+
+<div class="req-item-status <%# Eval("TeachingStatusCss") %>">
+  <%# Eval("TeachingStatusText") %>
+</div>
+
+<asp:PlaceHolder ID="TeachingOnHoldPH" runat="server"
+  Visible='<%# (bool)Eval("ShowTeachingOnHoldDetail") %>'>
   <div class="req-meta"
        style="margin-top:4px; padding:6px 8px; border-radius:10px;
               background:#fef2f2; color:#991b1b;">
-    <strong>Note from your admin (teaching):</strong>
+    <strong>Admin note (teaching):</strong>
     <span><%# Eval("TeachingReviewNote") %></span>
     <br />
-    <span>One teaching session for this microcourse is currently on hold and does not count toward certification.</span>
+    <span><%# Eval("TeachingHoldSentence") %></span>
   </div>
 </asp:PlaceHolder>
 
@@ -746,26 +947,38 @@
                   <!-- 1:1 help sessions requirement -->
                   <div class="req-item req-item-help">
                     <div class="req-item-title help">1:1 help sessions</div>
-                    <div class="req-item-row">
-                      <span class="req-item-label">Required:</span>
-                      <span class="req-item-value"><%# Eval("HelpRequirementText") %></span>
-                    </div>
-                    <div class="req-item-row">
-                      <span class="req-item-label">Your progress:</span>
-                      <span class="req-item-value"><%# Eval("HelpProgressText") %></span>
-                    </div>
-                    <div class="req-item-status <%# Eval("HelpStatusCss") %>">
-                      <%# Eval("HelpStatusText") %>
-                    </div>
-                      <asp:PlaceHolder ID="HelpOnHoldPH" runat="server"
-  Visible='<%# (bool)Eval("HelpOnHold") %>'>
+
+<div class="req-item-row">
+  <span class="req-item-label">Required:</span>
+  <span class="req-item-value"><%# Eval("HelpRequirementText") %></span>
+</div>
+
+<div class="req-item-row">
+  <span class="req-item-label">Your progress:</span>
+  <span class="req-item-value"><%# Eval("HelpProgressText") %></span>
+</div>
+
+<asp:PlaceHolder ID="HelpQuestionedCountPH" runat="server"
+  Visible='<%# (bool)Eval("HasHelpQuestionedCount") %>'>
+  <div class="req-item-row questioned-row">
+    <span class="req-item-label">Questioned:</span>
+    <span class="req-item-value"><%# Eval("HelpQuestionedCountText") %></span>
+  </div>
+</asp:PlaceHolder>
+
+<div class="req-item-status <%# Eval("HelpStatusCss") %>">
+  <%# Eval("HelpStatusText") %>
+</div>
+
+<asp:PlaceHolder ID="HelpOnHoldPH" runat="server"
+  Visible='<%# (bool)Eval("ShowHelpOnHoldDetail") %>'>
   <div class="req-meta"
        style="margin-top:4px; padding:6px 8px; border-radius:10px;
               background:#fef2f2; color:#991b1b;">
-    <strong>Note from your admin (1:1 help):</strong>
+    <strong>Admin note (1:1 help):</strong>
     <span><%# Eval("HelpReviewNote") %></span>
     <br />
-    <span>One 1:1 help session for this microcourse is currently on hold and does not count toward certification.</span>
+    <span><%# Eval("HelpHoldSentence") %></span>
   </div>
 </asp:PlaceHolder>
 
@@ -847,10 +1060,7 @@
 
 
 
-                <!-- IMPORTANT: req-meta stays inside .req-card -->
-                <div class="req-meta">
-                  <%# Eval("RuleMetaText") %>
-                </div>
+                
               </div>
             </ItemTemplate>
           </asp:Repeater>
@@ -858,6 +1068,8 @@
       </div>
 
     </div>
+    </ContentTemplate>
+    </asp:UpdatePanel>
   </form>
 </body>
 </html>

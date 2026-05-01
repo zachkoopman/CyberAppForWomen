@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Quiz.aspx.cs" Inherits="CyberApp_FIA.Account.Participant.Quiz" MaintainScrollPositionOnPostBack="true" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Quiz.aspx.cs" Inherits="CyberApp_FIA.Account.Participant.Quiz" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
@@ -137,7 +137,8 @@
   </style>
 </head>
 <body>
-<form id="form1" runat="server" enableviewstate="true">
+    <form id="form1" runat="server" enableviewstate="true">
+  <asp:ScriptManager runat="server" />
   <div class="wrap">
     <div class="card">
       <span class="eyebrow">FIA Cyberfair</span>
@@ -148,6 +149,8 @@
       <div class="sub">Short, plain-language quiz to tailor your experience. You can exit anytime — your progress is saved.</div>
       <div class="progress"><div id="ProgressBar" runat="server" class="bar"></div></div>
 
+      <asp:UpdatePanel runat="server">
+      <ContentTemplate>
       <asp:Panel ID="PanelQuestion" runat="server">
         <div class="meta">
           <span id="LblQuestionNumber" runat="server" class="kicker"></span>
@@ -184,6 +187,7 @@
           <asp:Button ID="BtnFinish" runat="server" Text="Finish" CssClass="btn pink" OnClick="BtnFinish_Click" Visible="false" />
         </div>
       </asp:Panel>
+    
 
       <asp:Panel ID="PanelComplete" runat="server" Visible="false">
         <h1>Your Score</h1>
@@ -205,14 +209,13 @@
         </div>
 
         <div class="summary">
-          <strong>Sharing (optional)</strong><br />
-          <asp:CheckBox ID="ChkShare" runat="server" Text="Share my results with my assigned Helper for tailored support" />
-          <div class="disclaimer" style="margin-top:6px;color:var(--muted)">You can revoke sharing anytime from your home screen widget.</div>
           <div class="controls" style="margin-top:10px">
             <asp:Button ID="BtnSaveShare" runat="server" Text="Save &amp; Go to My Home" CssClass="btn" OnClick="BtnSaveShare_Click" />
           </div>
         </div>
-      </asp:Panel>
+     </asp:Panel>
+      </ContentTemplate>
+      </asp:UpdatePanel>
     </div>
   </div>
 </form>

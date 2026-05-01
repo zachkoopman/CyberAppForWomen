@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SuperAdminHome.aspx.cs" Inherits="CyberApp_FIA.Account.SuperAdminHome" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SuperAdminHome.aspx.cs" Inherits="CyberApp_FIA.Account.SuperAdminHome" MaintainScrollPositionOnPostBack="true"%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -474,17 +474,28 @@
                   Display="Dynamic" />
               </div>
 
-              <!-- Duration -->
-              <div>
-                <label for="Duration">Duration</label>
-                <asp:TextBox ID="Duration" runat="server" />
-                <asp:RequiredFieldValidator
-                  runat="server"
-                  ControlToValidate="Duration"
-                  CssClass="val"
-                  ErrorMessage="Duration is required."
-                  Display="Dynamic" />
-              </div>
+             <!-- Duration -->
+<div>
+  <label for="Duration">Duration (minutes)</label>
+  <asp:TextBox
+    ID="Duration"
+    runat="server"
+    TextMode="Number"
+    placeholder="e.g., 60" />
+  <asp:RequiredFieldValidator
+    runat="server"
+    ControlToValidate="Duration"
+    CssClass="val"
+    ErrorMessage="Duration in minutes is required."
+    Display="Dynamic" />
+  <asp:RegularExpressionValidator
+    runat="server"
+    ControlToValidate="Duration"
+    CssClass="val"
+    ErrorMessage="Enter duration as a whole number of minutes, such as 60."
+    ValidationExpression="^[1-9][0-9]*$"
+    Display="Dynamic" />
+</div>
 
               <!-- Summary -->
               <div style="grid-column:1/-1">
@@ -500,7 +511,7 @@
 
               <!-- External link -->
               <div style="grid-column:1/-1">
-                <label for="ExternalLink">External link (slides / video / PDF)</label>
+                <label for="ExternalLink">External link (Google Classroom Link)</label>
                 <asp:TextBox ID="ExternalLink" runat="server" TextMode="Url" />
               </div>
 
@@ -516,7 +527,7 @@
                 <asp:DropDownList ID="Status" runat="server">
                   <asp:ListItem Text="Draft" Value="Draft" />
                   <asp:ListItem Text="Published" Value="Published" />
-                  <asp:ListItem Text="Deprecated" Value="Deprecated" />
+                 
                 </asp:DropDownList>
               </div>
 
@@ -630,6 +641,22 @@
               Open Create University Admin
             </a>
           </div>
+
+            <!-- NEW: Password reset tool -->
+<div class="card">
+  <div class="card-title">
+    Password reset
+    <span class="card-pill">Access</span>
+  </div>
+  <p class="card-sub">
+    Enter a user’s email address and a new password to reset their account login.
+    The system updates passwordHash and passwordSalt in users.xml.
+  </p>
+  <a class="btn btn-secondary"
+     href="<%: ResolveUrl("~/Account/SuperAdmin/PasswordReset.aspx") %>">
+    Open password reset
+  </a>
+</div>
 
           <!-- System Audit Log -->
           <div class="card">

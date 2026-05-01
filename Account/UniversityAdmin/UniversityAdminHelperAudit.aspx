@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true"
     CodeBehind="UniversityAdminHelperAudit.aspx.cs"
-    Inherits="CyberApp_FIA.Account.UniversityAdminHelperAudit" %>
+    Inherits="CyberApp_FIA.Account.UniversityAdminHelperAudit" MaintainScrollPositionOnPostBack="true" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -41,7 +41,6 @@
       margin:0 auto;
     }
 
-    /* ---------- Hero header ---------- */
     .page-header{
       border-radius:24px;
       padding:20px 22px 22px;
@@ -145,7 +144,6 @@
       }
     }
 
-    /* ---------- Cards & common UI ---------- */
     .card{
       background:var(--card-bg);
       border:1px solid var(--card-border);
@@ -221,7 +219,6 @@
       font-size:.9rem;
     }
 
-    /* Certification verification cards */
     .verification-list{
       margin-top:12px;
       display:flex;
@@ -255,7 +252,6 @@
       background:#fef2f2;
     }
 
-    /* Visually flag resubmissions */
     .verification-card.resubmission{
       border-style:dashed;
     }
@@ -304,7 +300,6 @@
       margin-top:2px;
     }
 
-    /* Helper note chip shown to admin */
     .helper-note-chip{
       margin-top:6px;
       padding:6px 8px;
@@ -473,6 +468,94 @@
       font-size:.85rem;
     }
 
+    .review-section{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid #e5edf7;
+  border-radius:18px;
+  background:linear-gradient(180deg,#ffffff,#fbfdff);
+}
+
+.review-section + .review-section{
+  margin-top:18px;
+}
+
+.review-section-quiz{
+  box-shadow:inset 0 3px 0 rgba(42,153,219,.18);
+}
+
+.review-section-teaching{
+  box-shadow:inset 0 3px 0 rgba(69,195,179,.22);
+}
+
+.review-section-help{
+  box-shadow:inset 0 3px 0 rgba(240,106,169,.18);
+}
+
+.review-section-title{
+  margin:0;
+  font-family:Poppins;
+  font-size:1.02rem;
+}
+
+.review-section-sub{
+  margin:6px 0 0 0;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.status-filter-bar{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid #e6eef8;
+  background:#f8fbff;
+}
+
+.status-filter-label{
+  margin:0 0 8px 0;
+  font-family:Poppins;
+  font-size:.82rem;
+  color:#4b5563;
+}
+
+.status-filter-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.status-filter-group > span{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid #d9e9f6;
+  box-shadow:0 4px 12px rgba(42,153,219,.06);
+}
+
+.status-filter-group input[type=checkbox]{
+  width:16px;
+  height:16px;
+  margin:0;
+  accent-color:var(--fia-blue);
+}
+
+.status-filter-group label{
+  display:inline;
+  margin:0;
+  font-family:Lato,Arial,sans-serif;
+  font-size:.86rem;
+  font-weight:700;
+  color:#1f3b57;
+}
+
+.empty-review-note{
+  margin-top:12px;
+}
+
     @media (max-width:800px){
       .helper-header{
         flex-direction:column;
@@ -502,7 +585,6 @@
   <form id="form1" runat="server">
     <div class="wrap">
 
-      <!-- Hero header -->
       <div class="page-header">
         <div class="page-header-main">
           <div class="badge">FIA</div>
@@ -534,7 +616,6 @@
         </div>
       </div>
 
-      <!-- Helper context -->
       <div class="card">
         <div class="helper-header">
           <div class="helper-meta">
@@ -566,7 +647,6 @@
         <asp:HiddenField ID="HelperIdValue" runat="server" />
       </div>
 
-      <!-- Certification verification + session review -->
       <div class="card">
         <h2>Certification verification</h2>
         <p class="sub">
@@ -586,267 +666,267 @@
           For questioned items, leave a short note so the helper knows what to review before resubmitting.
         </div>
 
-        <asp:PlaceHolder ID="VerificationListPlaceholder" runat="server" Visible="false">
-          <div class="verification-list">
-            <asp:Repeater ID="VerificationRepeater" runat="server" OnItemCommand="VerificationRepeater_ItemCommand">
-              <ItemTemplate>
-                <div class="verification-card <%# Eval("CssClass") %>">
-                  <div class="verification-main">
-                    <div class="verification-status">
-                      <%# Eval("StatusLabel") %>
-                      <span class="submission-pill"><%# Eval("SubmissionLabel") %></span>
-                    </div>
-                    <div class="verification-title"><%# Eval("CourseTitle") %></div>
-                    <div>
-                      Helper reported: reviewed resources and passed the quiz for this microcourse.
-                    </div>
-                    <div class="verification-meta">
-                      Last updated: <%# Eval("LastUpdatedLabel") %>
-                    </div>
+        <div class="review-section review-section-quiz">
+  <h3 class="review-section-title">Quiz submissions</h3>
+  <p class="review-section-sub">
+    Review helper submissions where they reported reviewing the resources and passing the quiz.
+  </p>
 
-                    <!-- Helper's note visible to admin on resubmission or initial -->
-                    <asp:PlaceHolder ID="HelperNotePH" runat="server"
-                      Visible='<%# (bool)Eval("HasHelperNote") %>'>
-                      <div class="helper-note-chip">
-                        <span class="helper-note-label">Helper note:</span>
-                        <span class="helper-note-text"><%# Eval("HelperNote") %></span>
-                      </div>
-                    </asp:PlaceHolder>
-                  </div>
+  <div class="status-filter-bar">
+    <div class="status-filter-label">Show quiz submissions by status</div>
+    <div class="status-filter-group">
+      <asp:CheckBox ID="ChkQuizShowVerified" runat="server"
+        Text="Show Verified Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+      <asp:CheckBox ID="ChkQuizShowQuestioned" runat="server"
+        Text="Show Questioned Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+      <asp:CheckBox ID="ChkQuizShowPending" runat="server"
+        Text="Show Pending Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+    </div>
+  </div>
 
-                  <div class="verification-actions">
-                    
-                    <span class="verification-actions-label">Note to helper</span>
-                    <asp:TextBox
-                      ID="TxtAdminNote"
-                      runat="server"
-                      CssClass="admin-note-input"
-                      TextMode="MultiLine"
-                      Rows="3"
-                      Text='<%# Eval("AdminNote") %>'
-                      Placeholder="Add a short note on why you verified or questioned this." />
-                    <asp:Button
-                      ID="BtnMarkVerified"
-                      runat="server"
-                      CssClass="btn primary"
-                      Text="Mark verified"
-                      CommandName="markVerified"
-                      CommandArgument='<%# Eval("CourseId") %>' />
-                    <asp:Button
-                      ID="BtnMarkQuestioned"
-                      runat="server"
-                      CssClass="btn link"
-                      Text="Mark questioned"
-                      CommandName="markQuestioned"
-                      CommandArgument='<%# Eval("CourseId") %>' />
-                  </div>
+  <asp:PlaceHolder ID="VerificationListPlaceholder" runat="server" Visible="false">
+    <div class="verification-list">
+      <asp:Repeater ID="VerificationRepeater" runat="server" OnItemCommand="VerificationRepeater_ItemCommand">
+        <ItemTemplate>
+          <div class="verification-card <%# Eval("CssClass") %>">
+            <div class="verification-main">
+              <div class="verification-status">
+                <%# Eval("StatusLabel") %>
+                <span class="submission-pill"><%# Eval("SubmissionLabel") %></span>
+              </div>
+              <div class="verification-title"><%# Eval("CourseTitle") %></div>
+              <div>
+                Helper reported: reviewed resources and passed the quiz for this microcourse.
+              </div>
+              <div class="verification-meta">
+                Last updated: <%# Eval("LastUpdatedLabel") %>
+              </div>
+
+              <asp:PlaceHolder ID="HelperNotePH" runat="server"
+                Visible='<%# (bool)Eval("HasHelperNote") %>'>
+                <div class="helper-note-chip">
+                  <span class="helper-note-label">Helper note:</span>
+                  <span class="helper-note-text"><%# Eval("HelperNote") %></span>
                 </div>
-              </ItemTemplate>
-            </asp:Repeater>
+              </asp:PlaceHolder>
+            </div>
+
+            <div class="verification-actions">
+              <span class="verification-actions-label">Note to helper</span>
+              <asp:TextBox
+                ID="TxtAdminNote"
+                runat="server"
+                CssClass="admin-note-input"
+                TextMode="MultiLine"
+                Rows="3"
+                Text='<%# Eval("AdminNote") %>'
+                Placeholder="Add a short note on why you verified or questioned this." />
+              <asp:Button
+                ID="BtnMarkVerified"
+                runat="server"
+                CssClass="btn primary"
+                Text="Mark verified"
+                CommandName="markVerified"
+                CommandArgument='<%# Eval("CourseId") %>' />
+              <asp:Button
+                ID="BtnMarkQuestioned"
+                runat="server"
+                CssClass="btn link"
+                Text="Mark questioned"
+                CommandName="markQuestioned"
+                CommandArgument='<%# Eval("CourseId") %>' />
+            </div>
           </div>
-        </asp:PlaceHolder>
+        </ItemTemplate>
+      </asp:Repeater>
+    </div>
+  </asp:PlaceHolder>
 
-        <!-- Teaching & 1:1 session review (course-level) -->
-        <asp:PlaceHolder ID="SessionReviewPlaceholder" runat="server" Visible="false">
-          <h3 style="margin-top:18px; font-family:Poppins; font-size:1rem;">
-            Teaching &amp; 1:1 session review
-          </h3>
-          <p class="sub" style="margin-bottom:10px;">
-            Use this section to spot-check teaching and 1:1 logs for each microcourse.
-            Questioning a log temporarily removes one session from the helper’s progress
-            for that course until you verify it again.
-          </p>
+  <asp:PlaceHolder ID="QuizFilteredEmptyPlaceholder" runat="server" Visible="false">
+    <div class="note empty-review-note">No quiz submissions match the selected status filters right now.</div>
+  </asp:PlaceHolder>
+</div>
 
-          <div class="verification-list">
-            <asp:Repeater ID="SessionReviewRepeater" runat="server" OnItemCommand="SessionReviewRepeater_ItemCommand">
-              <ItemTemplate>
-                <div class="verification-card pending">
-                  <div class="verification-main">
-                    <div class="verification-title"><%# Eval("CourseTitle") %></div>
-                    <div class="verification-meta">
-                      Teaching sessions logged:
-                      <strong><%# Eval("TeachingSessions") %></strong>
-                      &nbsp;•&nbsp;
-                      1:1 help sessions logged:
-                      <strong><%# Eval("HelpSessions") %></strong>
-                    </div>
+<div class="review-section review-section-teaching">
+  <h3 class="review-section-title">Teaching sessions</h3>
+  <p class="review-section-sub">
+    Each card below is one individual delivered teaching session log from this helper.
+  </p>
 
-                    <!-- Teaching status + note -->
-                    <asp:PlaceHolder ID="TeachingRowPH" runat="server" Visible='<%# (bool)Eval("HasTeaching") %>'>
-                      <div style="margin-top:8px; font-size:0.82rem;">
-                        <strong>Teaching status:</strong>
-                        <span style='<%# Eval("TeachingStatusCss") %>'>
-                          <%# Eval("TeachingStatusLabel") %>
-                        </span>
-                      </div>
-                      <asp:PlaceHolder ID="TeachingNotePH" runat="server"
-                        Visible='<%# !string.IsNullOrWhiteSpace((string)Eval("TeachingAdminNote")) %>'>
-                        <div class="helper-note-chip" style="margin-top:4px;">
-                          <span class="helper-note-label">Admin note (teaching):</span>
-                          <span><%# Eval("TeachingAdminNote") %></span>
-                        </div>
-                      </asp:PlaceHolder>
-                    </asp:PlaceHolder>
+  <div class="status-filter-bar">
+    <div class="status-filter-label">Show teaching session logs by status</div>
+    <div class="status-filter-group">
+      <asp:CheckBox ID="ChkTeachingShowVerified" runat="server"
+        Text="Show Verified Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+      <asp:CheckBox ID="ChkTeachingShowQuestioned" runat="server"
+        Text="Show Questioned Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+      <asp:CheckBox ID="ChkTeachingShowPending" runat="server"
+        Text="Show Pending Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+    </div>
+  </div>
 
-                    <!-- Help status + note -->
-                    <asp:PlaceHolder ID="HelpRowPH" runat="server" Visible='<%# (bool)Eval("HasHelp") %>'>
-                      <div style="margin-top:8px; font-size:0.82rem;">
-                        <strong>1:1 help status:</strong>
-                        <span style='<%# Eval("HelpStatusCss") %>'>
-                          <%# Eval("HelpStatusLabel") %>
-                        </span>
-                      </div>
-                      <asp:PlaceHolder ID="HelpNotePH" runat="server"
-                        Visible='<%# !string.IsNullOrWhiteSpace((string)Eval("HelpAdminNote")) %>'>
-                        <div class="helper-note-chip" style="margin-top:4px;">
-                          <span class="helper-note-label">Admin note (1:1 help):</span>
-                          <span><%# Eval("HelpAdminNote") %></span>
-                        </div>
-                      </asp:PlaceHolder>
-                    </asp:PlaceHolder>
-                  </div>
+  <asp:PlaceHolder ID="TeachingLogReviewPlaceholder" runat="server" Visible="false">
+    <div class="verification-list">
+      <asp:Repeater ID="TeachingLogReviewRepeater" runat="server" OnItemCommand="TeachingLogReviewRepeater_ItemCommand">
+        <ItemTemplate>
+          <div class='verification-card <%# Eval("CssClass") %>'>
+            <div class="verification-main">
+              <div class="verification-status"><%# Eval("StatusLabel") %></div>
+              <div class="verification-title"><%# Eval("CourseTitle") %></div>
+              <div class="verification-meta">Logged: <%# Eval("WhenLabel") %></div>
+              <div style="margin-top:4px;"><%# Eval("Details") %></div>
 
-                  <div class="verification-actions">
-                    <!-- One note box shared for this course; you can aim it at either action -->
-                    <span class="verification-actions-label">Note for this course</span>
-                    <asp:TextBox
-                      ID="TxtSessionReviewNote"
-                      runat="server"
-                      CssClass="admin-note-input"
-                      TextMode="MultiLine"
-                      Rows="3"
-                      Placeholder="Add a short note about why you verified or questioned a teaching or 1:1 log." />
-
-                    <asp:PlaceHolder ID="TeachingButtonsPH" runat="server" Visible='<%# (bool)Eval("HasTeaching") %>'>
-                      <asp:Button
-                        ID="BtnVerifyTeaching"
-                        runat="server"
-                        CssClass="btn primary"
-                        Text="Verify teaching"
-                        CommandName="verifyTeaching"
-                        CommandArgument='<%# Eval("CourseId") %>' />
-                      <asp:Button
-                        ID="BtnQuestionTeaching"
-                        runat="server"
-                        CssClass="btn link"
-                        Text="Question teaching"
-                        CommandName="questionTeaching"
-                        CommandArgument='<%# Eval("CourseId") %>' />
-                    </asp:PlaceHolder>
-
-                    <asp:PlaceHolder ID="HelpButtonsPH" runat="server" Visible='<%# (bool)Eval("HasHelp") %>'>
-                      <asp:Button
-                        ID="BtnVerifyHelp"
-                        runat="server"
-                        CssClass="btn primary"
-                        Text="Verify 1:1 help"
-                        CommandName="verifyHelp"
-                        CommandArgument='<%# Eval("CourseId") %>' />
-                      <asp:Button
-                        ID="BtnQuestionHelp"
-                        runat="server"
-                        CssClass="btn link"
-                        Text="Question 1:1 help"
-                        CommandName="questionHelp"
-                        CommandArgument='<%# Eval("CourseId") %>' />
-                    </asp:PlaceHolder>
-                  </div>
+              <asp:PlaceHolder ID="AdminNotePH" runat="server"
+                Visible='<%# !string.IsNullOrWhiteSpace((string)Eval("AdminNote")) %>'>
+                <div class="helper-note-chip" style="margin-top:6px;">
+                  <span class="helper-note-label">Admin note:</span>
+                  <span><%# Eval("AdminNote") %></span>
                 </div>
-              </ItemTemplate>
-            </asp:Repeater>
-          </div>
-        </asp:PlaceHolder>
+              </asp:PlaceHolder>
+            </div>
 
-        <!-- Per-log quiz / teaching / 1:1 views -->
-        <asp:PlaceHolder ID="QuizLogsPlaceholder" runat="server" Visible="false">
-          <h3 style="margin-top:20px; font-family:Poppins; font-size:1rem;">
-            Quiz &amp; materials completion logs
-          </h3>
-          <p class="sub" style="margin-bottom:10px;">
-            Each row is a single time this helper completed quiz or materials work for a microcourse.
-          </p>
-          <div class="verification-list">
-            <asp:Repeater ID="QuizLogRepeater" runat="server">
-              <ItemTemplate>
-                <div class="verification-card">
-                  <div class="verification-main">
-                    <div class="verification-title"><%# Eval("CourseTitle") %></div>
-                    <div class="verification-meta">
-                      Logged: <%# Eval("WhenLabel") %>
-                    </div>
-                    <asp:PlaceHolder ID="QuizDetailsPH" runat="server"
-                      Visible='<%# !string.IsNullOrWhiteSpace((string)Eval("DetailsPreview")) %>'>
-                      <div style="margin-top:4px; font-size:0.8rem; color:var(--muted);">
-                        <%# Eval("DetailsPreview") %>
-                      </div>
-                    </asp:PlaceHolder>
-                  </div>
-                </div>
-              </ItemTemplate>
-            </asp:Repeater>
-          </div>
-        </asp:PlaceHolder>
+            <div class="verification-actions">
+              <span class="verification-actions-label">Note to helper</span>
+              <asp:TextBox
+                ID="TxtTeachingLogNote"
+                runat="server"
+                CssClass="admin-note-input"
+                TextMode="MultiLine"
+                Rows="3"
+                Text='<%# Eval("AdminNote") %>'
+                Placeholder="Add a short reason if you question this teaching log." />
 
-        <asp:PlaceHolder ID="TeachingLogsPlaceholder" runat="server" Visible="false">
-          <h3 style="margin-top:20px; font-family:Poppins; font-size:1rem;">
-            Teaching session logs
-          </h3>
-          <p class="sub" style="margin-bottom:10px;">
-            One row per teaching session the helper logged from their schedule screen.
-          </p>
-          <div class="verification-list">
-            <asp:Repeater ID="TeachingLogRepeater" runat="server">
-              <ItemTemplate>
-                <div class="verification-card">
-                  <div class="verification-main">
-                    <div class="verification-title"><%# Eval("CourseTitle") %></div>
-                    <div class="verification-meta">
-                      Logged: <%# Eval("WhenLabel") %>
-                    </div>
-                    <asp:PlaceHolder ID="TeachDetailsPH" runat="server"
-                      Visible='<%# !string.IsNullOrWhiteSpace((string)Eval("DetailsPreview")) %>'>
-                      <div style="margin-top:4px; font-size:0.8rem; color:var(--muted);">
-                        <%# Eval("DetailsPreview") %>
-                      </div>
-                    </asp:PlaceHolder>
-                  </div>
-                </div>
-              </ItemTemplate>
-            </asp:Repeater>
-          </div>
-        </asp:PlaceHolder>
+              <asp:Button
+                ID="BtnVerifyTeachingLog"
+                runat="server"
+                CssClass="btn primary"
+                Text="Verify log"
+                CommandName="verifyTeachingLog"
+                CommandArgument='<%# Eval("LogId") %>' />
 
-        <asp:PlaceHolder ID="HelpLogsPlaceholder" runat="server" Visible="false">
-          <h3 style="margin-top:20px; font-family:Poppins; font-size:1rem;">
-            1:1 help session logs
-          </h3>
-          <p class="sub" style="margin-bottom:10px;">
-            One row per one-on-one help session the helper logged from their 1:1 workspace.
-          </p>
-          <div class="verification-list">
-            <asp:Repeater ID="HelpLogRepeater" runat="server">
-              <ItemTemplate>
-                <div class="verification-card">
-                  <div class="verification-main">
-                    <div class="verification-title"><%# Eval("CourseTitle") %></div>
-                    <div class="verification-meta">
-                      Logged: <%# Eval("WhenLabel") %>
-                    </div>
-                    <asp:PlaceHolder ID="HelpDetailsPH" runat="server"
-                      Visible='<%# !string.IsNullOrWhiteSpace((string)Eval("DetailsPreview")) %>'>
-                      <div style="margin-top:4px; font-size:0.8rem; color:var(--muted);">
-                        <%# Eval("DetailsPreview") %>
-                      </div>
-                    </asp:PlaceHolder>
-                  </div>
-                </div>
-              </ItemTemplate>
-            </asp:Repeater>
+              <asp:Button
+                ID="BtnQuestionTeachingLog"
+                runat="server"
+                CssClass="btn link"
+                Text="Question log"
+                CommandName="questionTeachingLog"
+                CommandArgument='<%# Eval("LogId") %>' />
+            </div>
           </div>
-        </asp:PlaceHolder>
+        </ItemTemplate>
+      </asp:Repeater>
+    </div>
+  </asp:PlaceHolder>
+
+  <asp:PlaceHolder ID="TeachingFilteredEmptyPlaceholder" runat="server" Visible="false">
+    <div class="note empty-review-note">No teaching session logs match the selected status filters right now.</div>
+  </asp:PlaceHolder>
+</div>
+
+<div class="review-section review-section-help">
+  <h3 class="review-section-title">One-on-one sessions</h3>
+  <p class="review-section-sub">
+    Each card below is one individual one-on-one help log from this helper.
+  </p>
+
+  <div class="status-filter-bar">
+    <div class="status-filter-label">Show one-on-one session logs by status</div>
+    <div class="status-filter-group">
+      <asp:CheckBox ID="ChkHelpShowVerified" runat="server"
+        Text="Show Verified Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+      <asp:CheckBox ID="ChkHelpShowQuestioned" runat="server"
+        Text="Show Questioned Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+      <asp:CheckBox ID="ChkHelpShowPending" runat="server"
+        Text="Show Pending Logs"
+        Checked="true"
+        AutoPostBack="true"
+        OnCheckedChanged="ReviewFilter_Changed" />
+    </div>
+  </div>
+
+  <asp:PlaceHolder ID="HelpLogReviewPlaceholder" runat="server" Visible="false">
+    <div class="verification-list">
+      <asp:Repeater ID="HelpLogReviewRepeater" runat="server" OnItemCommand="HelpLogReviewRepeater_ItemCommand">
+        <ItemTemplate>
+          <div class='verification-card <%# Eval("CssClass") %>'>
+            <div class="verification-main">
+              <div class="verification-status"><%# Eval("StatusLabel") %></div>
+              <div class="verification-title"><%# Eval("CourseTitle") %></div>
+              <div class="verification-meta">Logged: <%# Eval("WhenLabel") %></div>
+              <div style="margin-top:4px;"><%# Eval("Details") %></div>
+
+              <asp:PlaceHolder ID="AdminNotePH" runat="server"
+                Visible='<%# !string.IsNullOrWhiteSpace((string)Eval("AdminNote")) %>'>
+                <div class="helper-note-chip" style="margin-top:6px;">
+                  <span class="helper-note-label">Admin note:</span>
+                  <span><%# Eval("AdminNote") %></span>
+                </div>
+              </asp:PlaceHolder>
+            </div>
+
+            <div class="verification-actions">
+              <span class="verification-actions-label">Note to helper</span>
+              <asp:TextBox
+                ID="TxtHelpLogNote"
+                runat="server"
+                CssClass="admin-note-input"
+                TextMode="MultiLine"
+                Rows="3"
+                Text='<%# Eval("AdminNote") %>'
+                Placeholder="Add a short reason if you question this 1:1 log." />
+
+              <asp:Button
+                ID="BtnVerifyHelpLog"
+                runat="server"
+                CssClass="btn primary"
+                Text="Verify log"
+                CommandName="verifyHelpLog"
+                CommandArgument='<%# Eval("LogId") %>' />
+
+              <asp:Button
+                ID="BtnQuestionHelpLog"
+                runat="server"
+                CssClass="btn link"
+                Text="Question log"
+                CommandName="questionHelpLog"
+                CommandArgument='<%# Eval("LogId") %>' />
+            </div>
+          </div>
+        </ItemTemplate>
+      </asp:Repeater>
+    </div>
+  </asp:PlaceHolder>
+
+  <asp:PlaceHolder ID="HelpFilteredEmptyPlaceholder" runat="server" Visible="false">
+    <div class="note empty-review-note">No one-on-one session logs match the selected status filters right now.</div>
+  </asp:PlaceHolder>
+</div>
       </div>
 
-      <!-- Helper-scoped audit log -->
       <div class="card">
         <h2>Helper activity log</h2>
         <p class="sub">
@@ -968,5 +1048,3 @@
   </form>
 </body>
 </html>
-
-

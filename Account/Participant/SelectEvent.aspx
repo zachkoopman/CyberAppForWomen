@@ -180,6 +180,16 @@
       font-weight:600;
     }
 
+    /* Empty-state helper messages under dropdown boxes */
+/* Keep empty-state messages inside the dropdown only */
+.availability-msg{
+  display:none !important;
+}
+
+.availability-msg.warning{
+  display:none !important;
+}
+
     /* Note */
     .note{
       margin-top:14px;
@@ -301,40 +311,50 @@
             <div class="row">
               <label for="UniversitySelect">University</label>
 
-              <!-- NOTE: ASP.NET DropDownList renders as a <select>. CssClass keeps the same visuals. -->
               <asp:DropDownList
-                ID="UniversitySelect"
-                runat="server"
-                CssClass="ddl"
-                AutoPostBack="true"
-                OnSelectedIndexChanged="UniversitySelect_SelectedIndexChanged" />
+  ID="UniversitySelect"
+  runat="server"
+  CssClass="ddl"
+  AutoPostBack="true"
+  OnSelectedIndexChanged="UniversitySelect_SelectedIndexChanged" />
 
-              <asp:CustomValidator
-                ID="UniRequired"
-                runat="server"
-                CssClass="val"
-                OnServerValidate="UniRequired_ServerValidate"
-                ErrorMessage="Please select a university."
-                Display="Dynamic" />
-            </div>
+<asp:Label
+  ID="UniversityAvailabilityMessage"
+  runat="server"
+  CssClass="availability-msg warning"
+  Visible="false" />
+
+<asp:CustomValidator
+  ID="UniRequired"
+  runat="server"
+  CssClass="val"
+  OnServerValidate="UniRequired_ServerValidate"
+  ErrorMessage="Please select a university."
+  Display="Dynamic" />
 
             <!-- ========================= Event selection ========================= -->
             <div class="row">
               <label for="EventSelect">Active Cyberfair event</label>
 
-              <asp:DropDownList
-                ID="EventSelect"
-                runat="server"
-                CssClass="ddl" />
+           <asp:DropDownList
+  ID="EventSelect"
+  runat="server"
+  CssClass="ddl" />
 
-              <asp:CustomValidator
-                ID="EventRequired"
-                runat="server"
-                CssClass="val"
-                OnServerValidate="EventRequired_ServerValidate"
-                ErrorMessage="Please select an event."
-                Display="Dynamic" />
-            </div>
+<asp:Label
+  ID="EventAvailabilityMessage"
+  runat="server"
+  CssClass="availability-msg"
+  Visible="false" />
+
+<asp:CustomValidator
+  ID="EventRequired"
+  runat="server"
+  CssClass="val"
+  OnServerValidate="EventRequired_ServerValidate"
+  ErrorMessage="Please select an event."
+  Display="Dynamic" />
+           
 
             <!-- Privacy notice -->
             <div class="note">

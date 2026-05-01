@@ -5,6 +5,7 @@ using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
+using System.Linq;
 
 namespace CyberApp_FIA.Participant
 {
@@ -136,14 +137,23 @@ namespace CyberApp_FIA.Participant
         private void BindUniversities(out bool preselected, string prefer)
         {
             preselected = false;
-            UniversitySelect.Items.Clear();
 
-            var unis = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var ev in LoadActiveEvents())
-                unis.Add(ev.university);
+            UniversitySelect.Items.Clear();
+            EventSelect.Items.Clear();
+
+            UniversityAvailabilityMessage.Visible = false;
+            EventAvailabilityMessage.Visible = false;
+
+            UniversitySelect.Enabled = true;
+            EventSelect.Enabled = false;
+            BtnContinue.Enabled = true;
+
+            var activeEvents = LoadActiveEvents().ToList();
+            var knownUniversities = LoadKnownUniversities();
 
             UniversitySelect.Items.Add(new ListItem("-- Select university --", ""));
-            foreach (var u in unis)
+
+            foreach (var u in knownUniversities)
             {
                 var li = new ListItem(u, u);
                 UniversitySelect.Items.Add(li);
@@ -156,6 +166,44 @@ namespace CyberApp_FIA.Participant
                     preselected = true;
                 }
             }
+
+            if (activeEvents.Count == 0)
+            {
+                UniversityAvailabilityMessage.Text =
+                    "No universities currently have an active Cyberfair event available. Please check back later or contact the FIA team.";
+
+                UniversityAvailabilityMessage.Visible = true;
+
+                EventSelect.Items.Add(new ListItem("No active events available", ""));
+                EventSelect.Enabled = false;
+
+                EventAvailabilityMessage.Text =
+                    "There are no active Cyberfair events to choose from right now.";
+
+                EventAvailabilityMessage.Visible = true;
+
+                BtnContinue.Enabled = false;
+                preselected = false;
+
+                return;
+            }
+
+            EventSelect.Items.Add(new ListItem("-- Select a university first --", ""));
+
+            if (knownUniversities.Count == 0)
+            {
+                UniversityAvailabilityMessage.Text =
+                    "No universities are available yet. Please contact the FIA team before continuing.";
+
+                UniversityAvailabilityMessage.Visible = true;
+
+                EventSelect.Items.Clear();
+                EventSelect.Items.Add(new ListItem("No events available", ""));
+                EventSelect.Enabled = false;
+
+                BtnContinue.Enabled = false;
+                preselected = false;
+            }
         }
 
         private void BindEventsForUniversity(string uni)
@@ -163,23 +211,104 @@ namespace CyberApp_FIA.Participant
             EventSelect.Items.Clear();
             EventSelect.Items.Add(new ListItem("-- Select event --", ""));
 
-            if (string.IsNullOrWhiteSpace(uni)) return;
+            EventAvailabilityMessage.Visible = false;
+            EventSelect.Enabled = true;
+            BtnContinue.Enabled = true;
 
-            foreach (var ev in LoadActiveEvents())
+            if (string.IsNullOrWhiteSpace(uni))
             {
-                if (!ev.university.Equals(uni, StringComparison.OrdinalIgnoreCase)) continue;
+                EventSelect.Items.Clear();
+                EventSelect.Items.Add(new ListItem("-- Select a university first --", ""));
+                EventSelect.Enabled = false;
 
+                EventAvailabilityMessage.Text =
+                    "Select a university first, then available Cyberfair events will appear here.";
+
+                EventAvailabilityMessage.Visible = true;
+                return;
+            }
+
+            var matchingEvents = LoadActiveEvents()
+                .Where(ev => ev.university.Equals(uni, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (matchingEvents.Count == 0)
+            {
+                EventSelect.Items.Clear();
+                EventSelect.Items.Add(new ListItem("No active events available for this university", ""));
+                EventSelect.Enabled = false;
+                BtnContinue.Enabled = false;
+
+                EventAvailabilityMessage.Text =
+                    "No active Cyberfair events are available for the selected university right now. Please check back later or contact the FIA team.";
+
+                EventAvailabilityMessage.Visible = true;
+                return;
+            }
+
+            foreach (var ev in matchingEvents)
+            {
                 var label = ev.name;
-                if (ev.dateUtc.HasValue)
-                    label += " — " + ev.dateUtc.Value.ToLocalTime().ToString("yyyy-MM-dd");
+
+                if (ev.startUtc.HasValue)
+                {
+                    label += " — " + ev.startUtc.Value.ToLocalTime().ToString("MMM d, h:mm tt");
+                }
 
                 EventSelect.Items.Add(new ListItem(label, ev.id));
             }
         }
 
-        private IEnumerable<(string id, string name, string university, DateTime? dateUtc)> LoadActiveEvents()
+
+        private SortedSet<string> LoadKnownUniversities()
         {
-            var list = new List<(string, string, string, DateTime?)>();
+            var universities = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            try
+            {
+                if (File.Exists(EventsXmlPath))
+                {
+                    var doc = new XmlDocument();
+                    doc.Load(EventsXmlPath);
+
+                    foreach (XmlElement ev in doc.SelectNodes("/events/event"))
+                    {
+                        var uni = ev["university"]?.InnerText?.Trim();
+
+                        if (!string.IsNullOrWhiteSpace(uni))
+                        {
+                            universities.Add(uni);
+                        }
+                    }
+                }
+
+                if (File.Exists(UsersXmlPath))
+                {
+                    var doc = new XmlDocument();
+                    doc.Load(UsersXmlPath);
+
+                    foreach (XmlElement user in doc.SelectNodes("/users/user"))
+                    {
+                        var uni = user["university"]?.InnerText?.Trim();
+
+                        if (!string.IsNullOrWhiteSpace(uni))
+                        {
+                            universities.Add(uni);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // If university lookup fails, return whatever was already found.
+            }
+
+            return universities;
+        }
+
+        private IEnumerable<(string id, string name, string university, DateTime? startUtc, DateTime? endUtc)> LoadActiveEvents()
+        {
+            var list = new List<(string, string, string, DateTime?, DateTime?)>();
             if (!File.Exists(EventsXmlPath)) return list;
 
             var doc = new XmlDocument(); doc.Load(EventsXmlPath);
@@ -192,13 +321,29 @@ namespace CyberApp_FIA.Participant
                 var uni = ev["university"]?.InnerText ?? "";
                 var name = ev["name"]?.InnerText ?? "(unnamed)";
                 var id = ev.GetAttribute("id");
-                var date = ev["date"]?.InnerText ?? "";
+                var startStr = ev["startDate"]?.InnerText ?? ev["date"]?.InnerText ?? "";
+                var endStr = ev["endDate"]?.InnerText ?? "";
 
-                DateTime when;
-                DateTime? dt = DateTime.TryParse(date, out when) ? when : (DateTime?)null;
+                DateTime? startDt = DateTime.TryParse(startStr, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var sw) ? sw : (DateTime?)null;
+                DateTime? endDt = DateTime.TryParse(endStr, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var ew) ? ew : (DateTime?)null;
 
-                if (dt == null || dt.Value.Date >= DateTime.UtcNow.Date)
-                    list.Add((id, name, uni, dt));
+                var now = DateTime.UtcNow;
+
+                // Show event if: no dates set (legacy), OR current time is within start-end range
+                if (startDt.HasValue && endDt.HasValue)
+                {
+                    if (now < startDt.Value || now > endDt.Value)
+                        continue; // outside the event window, skip
+                }
+                else if (startDt.HasValue)
+                {
+                    if (startDt.Value.Date < DateTime.UtcNow.Date)
+                        continue; // old single-date event that's passed
+                }
+
+                list.Add((id, name, uni, startDt, endDt));
             }
             return list;
         }

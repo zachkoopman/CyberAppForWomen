@@ -174,6 +174,9 @@
 </head>
 <body>
   <form id="form1" runat="server">
+    <asp:ScriptManager runat="server" />
+    <asp:UpdatePanel runat="server">
+    <ContentTemplate>
     <div class="wrap">
       <div class="brand">
         <div class="badge">FIA</div>
@@ -224,7 +227,8 @@
         <asp:Label ID="FormMessage" runat="server" CssClass="form-message" EnableViewState="false" />
       </div>
     </div>
+ </ContentTemplate>
+    </asp:UpdatePanel>
   </form>
 </body>
 </html>
-

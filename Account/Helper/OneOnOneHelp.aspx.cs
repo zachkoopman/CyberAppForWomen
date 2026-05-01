@@ -132,8 +132,7 @@ namespace CyberApp_FIA.Helper
                 return;
             }
 
-            // Preload all participant ids that have any conversation with this helper
-            var participantsWithConversations = LoadParticipantsWithConversations(currentHelperId);
+            var participantsWithUnreadMessages = LoadParticipantsWithUnreadMessages(currentHelperId);
 
             try
             {
@@ -161,7 +160,7 @@ namespace CyberApp_FIA.Helper
                         }
 
                         var hasConversation = !string.IsNullOrWhiteSpace(participantId) &&
-                                              participantsWithConversations.Contains(participantId);
+                      participantsWithUnreadMessages.Contains(participantId);
 
                         var conversationsUrl = ResolveUrl(
                             "~/Account/Helper/ParticipantConversations.aspx?participantId="
@@ -195,11 +194,7 @@ namespace CyberApp_FIA.Helper
             ParticipantsRepeater.DataBind();
         }
 
-        /// <summary>
-        /// Loads a set of participant IDs that have at least one conversation
-        /// with the specified helper in helperMessages.xml.
-        /// </summary>
-        private HashSet<string> LoadParticipantsWithConversations(string helperId)
+        private HashSet<string> LoadParticipantsWithUnreadMessages(string helperId)
         {
             var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -217,18 +212,67 @@ namespace CyberApp_FIA.Helper
                 foreach (XmlElement conv in doc.SelectNodes($"/helperMessages/conversation[@helperId='{helperId}']"))
                 {
                     var pid = (conv.GetAttribute("participantId") ?? string.Empty).Trim();
-                    if (!string.IsNullOrWhiteSpace(pid))
+                    if (string.IsNullOrWhiteSpace(pid))
+                        continue;
+
+                    var helperLastReadStr = (conv.GetAttribute("helperLastReadUtc") ?? string.Empty).Trim();
+                    DateTime helperLastReadUtc = DateTime.MinValue;
+
+                    if (!string.IsNullOrWhiteSpace(helperLastReadStr))
+                    {
+                        DateTime.TryParse(
+                            helperLastReadStr,
+                            CultureInfo.InvariantCulture,
+                            DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                            out helperLastReadUtc);
+                    }
+
+                    DateTime latestParticipantMessageUtc = DateTime.MinValue;
+
+                    foreach (XmlElement msg in conv.SelectNodes("message"))
+                    {
+                        var from = (msg.GetAttribute("from") ?? string.Empty).Trim();
+                        var isFromHelper =
+                            from.Equals("helper", StringComparison.OrdinalIgnoreCase) ||
+                            from.Equals("Helper", StringComparison.OrdinalIgnoreCase);
+
+                        if (isFromHelper)
+                            continue;
+
+                        // Support both participant-side "ts" and helper-side "sentOn"
+                        var msgTimeRaw =
+                            (msg.GetAttribute("ts") ?? string.Empty).Trim();
+
+                        if (string.IsNullOrWhiteSpace(msgTimeRaw))
+                        {
+                            msgTimeRaw = (msg.GetAttribute("sentOn") ?? string.Empty).Trim();
+                        }
+
+                        if (DateTime.TryParse(
+                                msgTimeRaw,
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                                out var msgUtc))
+                        {
+                            if (msgUtc > latestParticipantMessageUtc)
+                                latestParticipantMessageUtc = msgUtc;
+                        }
+                    }
+
+                    if (latestParticipantMessageUtc > helperLastReadUtc)
+                    {
                         set.Add(pid);
+                    }
                 }
             }
             catch
             {
-                // Soft fail; no indicators if we can't read the file.
                 set.Clear();
             }
 
             return set;
         }
+
 
         /// <summary>
         /// Determines whether a given user node is assigned to the specified Helper.

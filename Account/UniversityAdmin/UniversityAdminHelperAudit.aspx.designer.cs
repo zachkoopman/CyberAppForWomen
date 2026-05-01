@@ -87,6 +87,33 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.HiddenField HelperIdValue;
 
         /// <summary>
+        /// ChkQuizShowVerified control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ChkQuizShowVerified;
+
+        /// <summary>
+        /// ChkQuizShowQuestioned control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ChkQuizShowQuestioned;
+
+        /// <summary>
+        /// ChkQuizShowPending control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ChkQuizShowPending;
+
+        /// <summary>
         /// VerificationListPlaceholder control.
         /// </summary>
         /// <remarks>
@@ -105,76 +132,121 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.Repeater VerificationRepeater;
 
         /// <summary>
-        /// SessionReviewPlaceholder control.
+        /// QuizFilteredEmptyPlaceholder control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder SessionReviewPlaceholder;
+        protected global::System.Web.UI.WebControls.PlaceHolder QuizFilteredEmptyPlaceholder;
 
         /// <summary>
-        /// SessionReviewRepeater control.
+        /// ChkTeachingShowVerified control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater SessionReviewRepeater;
+        protected global::System.Web.UI.WebControls.CheckBox ChkTeachingShowVerified;
 
         /// <summary>
-        /// QuizLogsPlaceholder control.
+        /// ChkTeachingShowQuestioned control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder QuizLogsPlaceholder;
+        protected global::System.Web.UI.WebControls.CheckBox ChkTeachingShowQuestioned;
 
         /// <summary>
-        /// QuizLogRepeater control.
+        /// ChkTeachingShowPending control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater QuizLogRepeater;
+        protected global::System.Web.UI.WebControls.CheckBox ChkTeachingShowPending;
 
         /// <summary>
-        /// TeachingLogsPlaceholder control.
+        /// TeachingLogReviewPlaceholder control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder TeachingLogsPlaceholder;
+        protected global::System.Web.UI.WebControls.PlaceHolder TeachingLogReviewPlaceholder;
 
         /// <summary>
-        /// TeachingLogRepeater control.
+        /// TeachingLogReviewRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater TeachingLogRepeater;
+        protected global::System.Web.UI.WebControls.Repeater TeachingLogReviewRepeater;
 
         /// <summary>
-        /// HelpLogsPlaceholder control.
+        /// TeachingFilteredEmptyPlaceholder control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder HelpLogsPlaceholder;
+        protected global::System.Web.UI.WebControls.PlaceHolder TeachingFilteredEmptyPlaceholder;
 
         /// <summary>
-        /// HelpLogRepeater control.
+        /// ChkHelpShowVerified control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater HelpLogRepeater;
+        protected global::System.Web.UI.WebControls.CheckBox ChkHelpShowVerified;
+
+        /// <summary>
+        /// ChkHelpShowQuestioned control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ChkHelpShowQuestioned;
+
+        /// <summary>
+        /// ChkHelpShowPending control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ChkHelpShowPending;
+
+        /// <summary>
+        /// HelpLogReviewPlaceholder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder HelpLogReviewPlaceholder;
+
+        /// <summary>
+        /// HelpLogReviewRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater HelpLogReviewRepeater;
+
+        /// <summary>
+        /// HelpFilteredEmptyPlaceholder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder HelpFilteredEmptyPlaceholder;
 
         /// <summary>
         /// TxtSearch control.

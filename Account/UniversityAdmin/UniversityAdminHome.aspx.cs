@@ -104,74 +104,63 @@ namespace CyberApp_FIA.Account
         {
             if (!Page.IsValid) return;
 
-            // Read current university (hidden, predefined), and form inputs.
-            var uni = (UniversityValue.Value ?? "").Trim();    // predefined, required
+            var uni = (UniversityValue.Value ?? "").Trim();
             var name = (EventName.Text ?? "").Trim();
             var desc = (Description.Text ?? "").Trim();
-            var dateInput = (EventDate.Text ?? "").Trim();
+            var startInput = (EventStartDate.Text ?? "").Trim();
+            var endInput = (EventEndDate.Text ?? "").Trim();
 
-            // University must be known (this page is scoped to a specific institution).
             if (string.IsNullOrEmpty(uni))
             {
                 FormMessage.Text = "<span style='color:#c21d1d'>Your university is not set. Ask a Super Admin to add it to your account.</span>";
                 return;
             }
 
-            // Parse date from the HTML5 date input; persist as ISO 8601 UTC midnight.
-            if (!TryParseDateToIso(dateInput, out var eventDateIso))
+            if (!TryParseLocalToIso(startInput, out var startIso))
             {
-                FormMessage.Text = "<span style='color:#c21d1d'>Please enter a valid date.</span>";
+                FormMessage.Text = "<span style='color:#c21d1d'>Please enter a valid start date and time.</span>";
                 return;
             }
 
-            // Make sure the events XML file exists and has a root container.
+            if (!TryParseLocalToIso(endInput, out var endIso))
+            {
+                FormMessage.Text = "<span style='color:#c21d1d'>Please enter a valid end date and time.</span>";
+                return;
+            }
+
+            if (string.Compare(endIso, startIso, StringComparison.Ordinal) <= 0)
+            {
+                FormMessage.Text = "<span style='color:#c21d1d'>End date/time must be after start.</span>";
+                return;
+            }
+
             EnsureEventsXml();
 
-            // Create and append the <event> node.
             var doc = new XmlDocument();
             doc.Load(EventsXmlPath);
 
             var ev = doc.CreateElement("event");
-            ev.SetAttribute("id", Guid.NewGuid().ToString("N"));         // Compact unique id
-            ev.SetAttribute("status", "Draft");                          // Future: Published, Archived, etc.
-            ev.SetAttribute("createdAt", DateTime.UtcNow.ToString("o")); // Audit timestamp (UTC ISO 8601)
-            ev.SetAttribute("createdBy", (Session["Email"] as string) ?? "universityadmin@unknown"); // Audit actor
+            ev.SetAttribute("id", Guid.NewGuid().ToString("N"));
+            ev.SetAttribute("status", "Draft");
+            ev.SetAttribute("createdAt", DateTime.UtcNow.ToString("o"));
+            ev.SetAttribute("createdBy", (Session["Email"] as string) ?? "universityadmin@unknown");
 
-            // Child nodes: university scoping, name, date (ISO string), and description.
             ev.AppendChild(Mk(doc, "university", uni));
             ev.AppendChild(Mk(doc, "name", name));
-            ev.AppendChild(Mk(doc, "date", eventDateIso));     // ISO 8601 UTC midnight
+            ev.AppendChild(Mk(doc, "startDate", startIso));
+            ev.AppendChild(Mk(doc, "endDate", endIso));
             ev.AppendChild(Mk(doc, "description", desc));
-
-            // Placeholder container for future features (attaching course IDs, microcourses, etc.).
             ev.AppendChild(doc.CreateElement("courses"));
 
-            // Persist to disk.
             doc.DocumentElement.AppendChild(ev);
             doc.Save(EventsXmlPath);
 
-            // AUDIT: log Cyberfair event creation by university admin
-            try
-            {
-                var eventId = ev.GetAttribute("id");
-                var details =
-                    $"Cyberfair event created: eventId={eventId}, university=\"{uni}\", date={eventDateIso}.";
-                UniversityAuditLogger.AppendForCurrentUser(
-                    this,
-                    "Event Created",
-                    details);
-            }
-            catch
-            {
-                // best-effort only; do not block UI if audit logging fails
-            }
-
-
-            // Inform user, clear input fields (but keep the fixed university), and refresh the list.
+            // Inform user, clear inputs, and refresh the event list
             FormMessage.Text = "<span style='color:#0a7a3c'>Cyberfair event created.</span>";
-            ClearForm(); // leave university alone (it's fixed)
+            ClearForm();
             BindEventsForUniversity(uni);
         }
+        
 
         /// <summary>
         /// Clears form fields for event creation (university remains unchanged).
@@ -204,22 +193,29 @@ namespace CyberApp_FIA.Account
         /// </summary>
         private void BindEventsForUniversity(string uni)
         {
-            var rows = new List<object>();
+            var currentRows = new List<object>();
+            var pastRows = new List<object>();
 
-            // If the store doesn't exist, show an empty state.
             if (!File.Exists(EventsXmlPath))
             {
-                NoEventsPlaceholder.Visible = true;
-                EventsRepeater.DataSource = rows;
-                EventsRepeater.DataBind();
+                NoCurrentEventsPlaceholder.Visible = true;
+                NoPastEventsPlaceholder.Visible = true;
+
+                CurrentEventsRepeater.DataSource = currentRows;
+                CurrentEventsRepeater.DataBind();
+
+                PastEventsRepeater.DataSource = pastRows;
+                PastEventsRepeater.DataBind();
+
                 return;
             }
+
+            var nowUtc = DateTime.UtcNow;
 
             var doc = new XmlDocument();
             doc.Load(EventsXmlPath);
             var nodes = doc.SelectNodes("/events/event");
 
-            // Iterate over all events and keep only those for this university.
             foreach (XmlElement ev in nodes)
             {
                 var evUni = ev["university"]?.InnerText ?? "";
@@ -227,31 +223,77 @@ namespace CyberApp_FIA.Account
 
                 var id = ev.GetAttribute("id");
                 var name = ev["name"]?.InnerText ?? "(unnamed)";
-                var date = ev["date"]?.InnerText ?? "";
                 var status = ev.GetAttribute("status");
 
-                // Convert stored ISO timestamp to a local date string for display.
-                string dateHuman;
-                if (DateTime.TryParse(date, out var dt))
-                    dateHuman = dt.ToLocalTime().ToString("yyyy-MM-dd");
-                else
-                    dateHuman = "(unset)";
+                if (string.IsNullOrWhiteSpace(status))
+                {
+                    status = "Draft";
+                }
 
-                // Create a simple row object for the repeater (anonymous type).
-                rows.Add(new
+                var startStr = ev["startDate"]?.InnerText ?? ev["date"]?.InnerText ?? "";
+                var endStr = ev["endDate"]?.InnerText ?? "";
+
+                var hasStartDate = DateTime.TryParse(
+                    startStr,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                    out var startUtc
+                );
+
+                var hasEndDate = DateTime.TryParse(
+                    endStr,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal,
+                    out var endUtc
+                );
+
+                string dateHuman;
+
+                if (hasStartDate && hasEndDate)
+                {
+                    dateHuman = startUtc.ToLocalTime().ToString("MMM d, h:mm tt") +
+                                " — " + endUtc.ToLocalTime().ToString("MMM d, h:mm tt");
+                }
+                else if (hasStartDate)
+                {
+                    dateHuman = startUtc.ToLocalTime().ToString("MMM d, h:mm tt");
+                }
+                else
+                {
+                    dateHuman = "(unset)";
+                }
+
+                var row = new
                 {
                     id,
                     name,
                     status,
                     dateHuman,
                     manageUrl = ResolveUrl($"~/Account/UniversityAdmin/EventManage.aspx?id={id}")
-                });
+                };
+
+                // Past Events:
+                // If the event has a valid end date and that end date is before the current UTC time,
+                // it belongs in the Past Events section.
+                if (hasEndDate && endUtc < nowUtc)
+                {
+                    pastRows.Add(row);
+                }
+                else
+                {
+                    // Upcoming / Current Events:
+                    // If the event is ongoing, future, or missing a valid end date, keep it visible here.
+                    currentRows.Add(row);
+                }
             }
 
-            // Toggle "no events" placeholder and bind the list.
-            NoEventsPlaceholder.Visible = rows.Count == 0;
-            EventsRepeater.DataSource = rows;
-            EventsRepeater.DataBind();
+            NoCurrentEventsPlaceholder.Visible = currentRows.Count == 0;
+            CurrentEventsRepeater.DataSource = currentRows;
+            CurrentEventsRepeater.DataBind();
+
+            NoPastEventsPlaceholder.Visible = pastRows.Count == 0;
+            PastEventsRepeater.DataSource = pastRows;
+            PastEventsRepeater.DataBind();
         }
 
         /// <summary>
@@ -268,16 +310,15 @@ namespace CyberApp_FIA.Account
         /// Parses a date string (typically HTML5 yyyy-MM-dd) as local time and converts to ISO 8601 UTC midnight.
         /// Returns true on success with the ISO string in 'iso'; otherwise false.
         /// </summary>
-        private static bool TryParseDateToIso(string input, out string iso)
+        private static bool TryParseLocalToIso(string input, out string iso)
         {
             iso = "";
             if (string.IsNullOrWhiteSpace(input)) return false;
 
-            // HTML5 date usually "yyyy-MM-dd"; assume local zone, persist as UTC midnight for comparability.
-            if (DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt))
+            if (DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt) ||
+                DateTime.TryParse(input, out dt))
             {
-                var localMidnight = new DateTime(dt.Year, dt.Month, dt.Day, 0, 0, 0, DateTimeKind.Local);
-                iso = localMidnight.ToUniversalTime().ToString("o");
+                iso = dt.ToUniversalTime().ToString("o");
                 return true;
             }
             return false;
@@ -310,9 +351,9 @@ namespace CyberApp_FIA.Account
         private void ClearForm()
         {
             EventName.Text = "";
-            EventDate.Text = "";
+            EventStartDate.Text = "";
+            EventEndDate.Text = "";
             Description.Text = "";
-            // UniversityDisplay/Value stay as-is (predefined)
         }
     }
 }

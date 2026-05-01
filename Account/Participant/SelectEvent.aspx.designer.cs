@@ -33,6 +33,15 @@ namespace CyberApp_FIA.Participant
         protected global::System.Web.UI.WebControls.DropDownList UniversitySelect;
 
         /// <summary>
+        /// UniversityAvailabilityMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label UniversityAvailabilityMessage;
+
+        /// <summary>
         /// UniRequired control.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace CyberApp_FIA.Participant
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList EventSelect;
+
+        /// <summary>
+        /// EventAvailabilityMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label EventAvailabilityMessage;
 
         /// <summary>
         /// EventRequired control.

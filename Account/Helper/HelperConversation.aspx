@@ -277,6 +277,9 @@
 </head>
 <body>
   <form id="form1" runat="server">
+    <asp:ScriptManager runat="server" />
+    <asp:UpdatePanel runat="server">
+    <ContentTemplate>
     <div class="wrap">
 
       <!-- Header -->
@@ -354,6 +357,8 @@
       </div>
 
     </div>
+  </ContentTemplate>
+    </asp:UpdatePanel>
   </form>
 </body>
 </html>

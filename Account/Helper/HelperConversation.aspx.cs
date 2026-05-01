@@ -86,6 +86,9 @@ namespace CyberApp_FIA.Helper
                 return;
             }
 
+            // Mark as read as soon as the helper opens the thread
+            MarkConversationReadByHelper(doc, conv);
+
             // Participant name in header
             var participantIdAttr = participantId;
             if (string.IsNullOrWhiteSpace(participantIdAttr))
@@ -151,6 +154,23 @@ namespace CyberApp_FIA.Helper
             }
         }
 
+        private void MarkConversationReadByHelper(XmlDocument doc, XmlElement conv)
+        {
+            if (doc == null || conv == null)
+                return;
+
+            try
+            {
+                conv.SetAttribute("helperLastReadUtc", DateTime.UtcNow.ToString("o"));
+                doc.Save(HelperMessagesXmlPath);
+            }
+            catch
+            {
+                // Best-effort only; failure to write the read timestamp
+                // should not stop the conversation page from loading.
+            }
+        }
+
         private string GetParticipantDisplayName(string participantId)
         {
             if (string.IsNullOrWhiteSpace(participantId) || !File.Exists(UsersXmlPath))
@@ -200,7 +220,11 @@ namespace CyberApp_FIA.Helper
             foreach (XmlElement m in msgNodes)
             {
                 var from = (m.GetAttribute("from") ?? string.Empty).Trim();
-                var sentOnStr = m.GetAttribute("sentOn");
+                var sentOnStr = (m.GetAttribute("sentOn") ?? string.Empty).Trim();
+                if (string.IsNullOrWhiteSpace(sentOnStr))
+                {
+                    sentOnStr = (m.GetAttribute("ts") ?? string.Empty).Trim();
+                }
 
                 DateTime sentOnUtc;
                 if (!DateTime.TryParse(sentOnStr, CultureInfo.InvariantCulture,
@@ -276,7 +300,7 @@ namespace CyberApp_FIA.Helper
                 conv.AppendChild(msg);
 
                 // Update lastUpdated attribute
-                conv.SetAttribute("lastUpdated", DateTime.UtcNow.ToString("o"));
+                conv.SetAttribute("helperLastReadUtc", DateTime.UtcNow.ToString("o"));
 
                 doc.Save(HelperMessagesXmlPath);
 

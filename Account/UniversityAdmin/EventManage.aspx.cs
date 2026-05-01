@@ -77,11 +77,25 @@ namespace CyberApp_FIA.Account
             University.Text = ev["university"]?.InnerText ?? "";
             EventStatus.Text = "Published";
 
-            var date = ev["date"]?.InnerText ?? "";
-            if (DateTime.TryParse(date, out var dt))
-                EventDate.Text = dt.ToLocalTime().ToString("yyyy-MM-dd");
+            var startStr = ev["startDate"]?.InnerText ?? ev["date"]?.InnerText ?? "";
+            var endStr = ev["endDate"]?.InnerText ?? "";
+
+            if (DateTime.TryParse(startStr, CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var sDt) &&
+                DateTime.TryParse(endStr, CultureInfo.InvariantCulture,
+                DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var eDt))
+            {
+                EventDate.Text = sDt.ToLocalTime().ToString("MMM d, h:mm tt") +
+                                 " — " + eDt.ToLocalTime().ToString("MMM d, h:mm tt");
+            }
+            else if (DateTime.TryParse(startStr, out var fallback))
+            {
+                EventDate.Text = fallback.ToLocalTime().ToString("yyyy-MM-dd");
+            }
             else
+            {
                 EventDate.Text = "(unset)";
+            }
 
             // Populate editable fields
             TxtEventName.Text = name == "(unnamed)" ? "" : name;
@@ -384,8 +398,19 @@ namespace CyberApp_FIA.Account
             }
 
             var room = (Room.Text ?? "").Trim();
-            int.TryParse(Capacity.Text, out var cap);
-            if (cap < 0) cap = 0;
+            if (string.IsNullOrWhiteSpace(room))
+            {
+                ScheduleMessage.Text = "<span class='err'>Room is required.</span>";
+                BindHelpersList();
+                return;
+            }
+
+            if (!int.TryParse((Capacity.Text ?? "").Trim(), out var cap) || cap < 1)
+            {
+                ScheduleMessage.Text = "<span class='err'>Max participants must be a whole number of at least 1.</span>";
+                BindHelpersList();
+                return;
+            }
 
             EnsureEventSessionsXml();
 
@@ -423,7 +448,7 @@ namespace CyberApp_FIA.Account
             node.AppendChild(Mk(doc, "end", endUtc.ToString("o")));
             node.AppendChild(Mk(doc, "room", room));
             node.AppendChild(Mk(doc, "helper", helper));
-            node.AppendChild(Mk(doc, "capacity", cap > 0 ? cap.ToString() : ""));
+            node.AppendChild(Mk(doc, "capacity", cap.ToString()));
 
             root.AppendChild(node);
             doc.Save(EventSessionsXmlPath);

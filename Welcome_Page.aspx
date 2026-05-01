@@ -136,12 +136,6 @@
         }
         .accent{ color:var(--fia-blue); }
 
-        /* NEW: centers ONLY the Women! line */
-        .women-line{
-            display:block;
-            text-align:center;
-            width:100%;
-        }
 
         .hero p{
             color:var(--muted);
@@ -320,11 +314,9 @@
             <div>
                 <span class="tagline">Feminine Intelligence Agency</span>
 
-                <!-- UPDATED: force Women! onto a centered second line -->
                 <h2>
-                    Welcome to <span class="accent">Cybersecurity App For</span><br />
-                    <span class="accent women-line">Women!</span>
-                </h2>
+    Welcome to <span class="accent">Cybersecurity App For Women!</span>
+</h2>
 
                 <p>
                     This Feminine Intelligence Agency (FIA) application is a trauma-informed cybersecurity app that helps women

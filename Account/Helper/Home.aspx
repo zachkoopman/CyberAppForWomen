@@ -378,6 +378,24 @@
           </div>
         </div>
 
+          <!-- Badges card -->
+<div class="helper-card">
+  <h2 class="helper-card-title">
+    Your badges
+    <span class="badge-mini">Badges</span>
+  </h2>
+  <p class="helper-card-body">
+    Badges are awarded automatically as you teach more sessions for each microcourse.
+    Bronze is earned at 5 sessions taught, Silver at 10, and Gold at 20.
+  </p>
+  <div class="helper-card-actions">
+    <a href="<%: ResolveUrl("~/Account/Helper/Badges.aspx") %>" class="helper-link-btn">
+      <span class="icon">🏅</span>
+      <span>View your badges</span>
+    </a>
+  </div>
+</div>
+
       </div>
 
     </div>

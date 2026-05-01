@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AboutUs.aspx" />
+    <Content Include="Account\Helper\Badges.aspx" />
     <Content Include="Account\Helper\CertificationProgress.aspx" />
     <Content Include="Account\Helper\HelperConversation.aspx" />
     <Content Include="Account\Helper\Home.aspx" />
@@ -75,15 +76,18 @@
     <Content Include="Account\Helper\ParticipantConversations.aspx" />
     <Content Include="Account\Helper\ResourceViewer.aspx" />
     <Content Include="Account\Helper\Schedule.aspx" />
+    <Content Include="Account\Participant\Badges.aspx" />
     <Content Include="Account\Participant\EnrollSuccess.aspx" />
     <Content Include="Account\Participant\HelperConversation.aspx" />
     <Content Include="Account\Participant\HelperMessage.aspx" />
     <Content Include="Account\Participant\ParticipantScoreWidget.ascx" />
     <Content Include="Account\Participant\Quiz.aspx" />
     <Content Include="Account\Participant\Replacements.aspx" />
+    <Content Include="Account\Participant\SwapSession.aspx" />
     <Content Include="Account\SuperAdmin\CertificationRules.aspx" />
     <Content Include="Account\CreateAccountPage.aspx" />
     <Content Include="Account\SuperAdmin\CreateUniversityAdmin.aspx" />
+    <Content Include="Account\SuperAdmin\PasswordReset.aspx" />
     <Content Include="Account\SuperAdmin\SuperAdminAudit.aspx" />
     <Content Include="Account\SuperAdmin\SuperAdminMicrocourses.aspx" />
     <Content Include="Account\UniversityAdmin\EventManage.aspx" />
@@ -95,17 +99,22 @@
     <Content Include="Account\UniversityAdmin\UniversityAdminHelperAudit.aspx" />
     <Content Include="Account\UniversityAdmin\UniversityAdminHome.aspx" />
     <Content Include="App_Data\Audit_Log\UnvAdminAudit.xml" />
+    <Content Include="App_Data\badgeDescriptions.xml" />
     <Content Include="App_Data\certificationRules.xml" />
     <Content Include="App_Data\completions.xml" />
     <Content Include="App_Data\enrollments.xml" />
     <Content Include="App_Data\eventCourses.xml" />
     <Content Include="App_Data\events.xml" />
     <Content Include="App_Data\eventSessions.xml" />
+    <Content Include="App_Data\helperBadges.xml" />
     <Content Include="App_Data\helperCheckins.xml" />
     <Content Include="App_Data\helperHelpNotes.xml" />
     <Content Include="App_Data\helperNotes.xml" />
     <Content Include="App_Data\helperProgress.xml" />
+    <Content Include="App_Data\helperSessionReviews.xml" />
     <Content Include="App_Data\microcourses.xml" />
+    <Content Include="App_Data\missingParticipantSessions.xml" />
+    <Content Include="App_Data\participantBadges.xml" />
     <Content Include="App_Data\quiz_progress.xml" />
     <Content Include="App_Data\quiz_questions.xml" />
     <Content Include="App_Data\quiz_results.xml" />
@@ -114,6 +123,74 @@
     <Content Include="Account\Participant\Home.aspx" />
     <Content Include="Account\Participant\SelectEvent.aspx" />
     <Content Include="ContactUs.aspx" />
+    <Content Include="ParticipantBadges\Participant2FABadge.png" />
+    <Content Include="ParticipantBadges\ParticipantAIBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantBankingBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantElectronicScanningBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantFootprintBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantHomeNetworkBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantMobileAppsBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantOnlineIdentityBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantPasswordManagementBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantPhishingBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantPopularAppsBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantPublicComputerBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantSMSettingsBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantSpywareBadge.png" />
+    <Content Include="ParticipantBadges\ParticipantVPNBadge.png" />
+    <Content Include="Tier1HelperBadge\Tier12FAHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1AIHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1BankingHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1ElectronicScanningHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1FootprintHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1HomeNetHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1IdentityHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1MaliciousAppsHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1OneOnOneHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1PassManagementHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1PhishingHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1PopAppsHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1PublicComputersHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1SMSettingsHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1SpywareHelper.png" />
+    <Content Include="Tier1HelperBadge\Tier1VPNHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier22FAHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2AIHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2BankingHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2ElectronicScanningHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2FootprintHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2HomeNetHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2IdentityHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2MaliciousAppsHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2OneOnOneHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2PassManagementHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2PhishingHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2PopAppsHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2PublicComputersHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2SMSettingsHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2SpywareHelper.png" />
+    <Content Include="Tier2HelperBadge\Tier2VPNHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier32FAHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3AIHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3BankingHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3ElectronicScanningHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3FootprintHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3HomeNetHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3IdentityHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3MaliciousAppsHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3OneOnOneHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3PassManagementHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3PhishingHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3PopAppsHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3PublicComputersHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3SMSettingsHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3SpywareHelper.png" />
+    <Content Include="Tier3HelperBadges\Tier3VPNHelper.png" />
+    <Content Include="VisualContent\DiamondShielf.jpeg" />
+    <Content Include="VisualContent\gogglesOrange.jpeg" />
+    <Content Include="VisualContent\kissing2.jpeg" />
+    <Content Include="VisualContent\latinaPaintWall.jpeg" />
+    <Content Include="VisualContent\weirdos3.jpeg" />
     <Content Include="Web.config" />
     <Content Include="Welcome_Page.aspx" />
   </ItemGroup>
@@ -124,6 +201,13 @@
     </Compile>
     <Compile Include="AboutUs.aspx.designer.cs">
       <DependentUpon>AboutUs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Helper\Badges.aspx.cs">
+      <DependentUpon>Badges.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Helper\Badges.aspx.designer.cs">
+      <DependentUpon>Badges.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\Helper\CertificationProgress.aspx.cs">
       <DependentUpon>CertificationProgress.aspx</DependentUpon>
@@ -174,6 +258,13 @@
     <Compile Include="Account\Helper\Schedule.aspx.designer.cs">
       <DependentUpon>Schedule.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Account\Participant\Badges.aspx.cs">
+      <DependentUpon>Badges.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Participant\Badges.aspx.designer.cs">
+      <DependentUpon>Badges.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Account\Participant\Calendar.ashx.cs">
       <DependentUpon>Calendar.ashx</DependentUpon>
     </Compile>
@@ -219,6 +310,13 @@
     <Compile Include="Account\Participant\Replacements.aspx.designer.cs">
       <DependentUpon>Replacements.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Account\Participant\SwapSession.aspx.cs">
+      <DependentUpon>SwapSession.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Participant\SwapSession.aspx.designer.cs">
+      <DependentUpon>SwapSession.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Account\SuperAdmin\CertificationRules.aspx.cs">
       <DependentUpon>CertificationRules.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -239,6 +337,13 @@
     </Compile>
     <Compile Include="Account\SuperAdmin\CreateUniversityAdmin.aspx.designer.cs">
       <DependentUpon>CreateUniversityAdmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\SuperAdmin\PasswordReset.aspx.cs">
+      <DependentUpon>PasswordReset.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\SuperAdmin\PasswordReset.aspx.designer.cs">
+      <DependentUpon>PasswordReset.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\SuperAdmin\SuperAdminAudit.aspx.cs">
       <DependentUpon>SuperAdminAudit.aspx</DependentUpon>
@@ -324,6 +429,7 @@
     <Compile Include="Account\Participant\SelectEvent.aspx.designer.cs">
       <DependentUpon>SelectEvent.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_Code\Services\EnrollmentSync.cs" />
     <Compile Include="App_Code\Services\QuizService.cs" />
     <Compile Include="App_Code\Services\UniversityAuditLogger.cs" />
     <Compile Include="ContactUs.aspx.cs">
@@ -345,6 +451,13 @@
   <ItemGroup>
     <Content Include="Account\Participant\Calendar.ashx" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\fiacyberapp-001-site1 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\fiacyberapp-001-site1 - FTP1.pubxml" />
+    <None Include="Properties\PublishProfiles\fiacyberapp-001-site1 - FTP2.pubxml" />
+    <None Include="Properties\PublishProfiles\fiacyberapp-001-site1 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\fiacyberapp-001-site1 - Web Deploy1.pubxml" />
+    <None Include="Properties\PublishProfiles\fiacyberapp-001-site1 - Web Deploy2.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -352,9 +465,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="VisualContent\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

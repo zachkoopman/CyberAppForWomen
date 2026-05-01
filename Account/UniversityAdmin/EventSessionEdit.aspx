@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EventSessionEdit.aspx.cs" Inherits="CyberApp_FIA.Account.EventSessionEdit" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EventSessionEdit.aspx.cs" Inherits="CyberApp_FIA.Account.EventSessionEdit" MaintainScrollPositionOnPostBack="true" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -432,12 +432,12 @@
         </div>
 
         <div>
-          <label for="Room">Room / link (optional)</label>
+          <label for="Room">Room / link (Enter Google Classroom Link)</label>
           <asp:TextBox ID="Room" runat="server" Placeholder="e.g., MU 201 or Zoom link" />
         </div>
 
         <div>
-          <label for="Capacity">Max participants (optional)</label>
+          <label for="Capacity">Max participants </label>
           <asp:TextBox ID="Capacity" runat="server" TextMode="Number" Placeholder="e.g., 25" />
         </div>
       </div>

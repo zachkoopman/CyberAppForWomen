@@ -1,16 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <certRules version="1">
-  <rule id="3" version="1">
-    <name>Quiz</name>
-    <description>
-    </description>
-    <passScore>80</passScore>
-    <minSessionsTaught>0</minSessionsTaught>
-    <minHelpSessions>0</minHelpSessions>
-    <expiryDays>
-    </expiryDays>
-    <requireQuiz>true</requireQuiz>
-  </rule>
   <rule id="4" version="1">
     <name>Easy Rule</name>
     <description>Early Requirements for New Helpers</description>

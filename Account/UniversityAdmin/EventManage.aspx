@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EventManage.aspx.cs" Inherits="CyberApp_FIA.Account.EventManage" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EventManage.aspx.cs" Inherits="CyberApp_FIA.Account.EventManage" MaintainScrollPositionOnPostBack="true" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -393,7 +393,7 @@
         </p>
         <div class="page-meta">
           <span class="pill">University: <asp:Literal ID="University" runat="server" /></span>
-          <span class="pill">Date: <asp:Literal ID="EventDate" runat="server" /></span>
+          <span class="pill"><asp:Literal ID="EventDate" runat="server" /></span>
           <span class="pill">Status: <asp:Literal ID="EventStatus" runat="server" /></span>
         </div>
       </div>
@@ -540,14 +540,36 @@
         </div>
 
         <div>
-          <label for="Room">Room (optional)</label>
-          <asp:TextBox ID="Room" runat="server" Placeholder="e.g., MU 201" />
-        </div>
+  <label for="Room">Room</label>
+  <asp:TextBox ID="Room" runat="server" Placeholder="e.g., Zoom link or room number" />
+  <asp:RequiredFieldValidator
+    runat="server"
+    ControlToValidate="Room"
+    CssClass="val"
+    ErrorMessage="Room is required."
+    Display="Dynamic" />
+</div>
 
-        <div>
-          <label for="Capacity">Max participants (optional)</label>
-          <asp:TextBox ID="Capacity" runat="server" TextMode="Number" Placeholder="e.g., 25" />
-        </div>
+<div>
+  <label for="Capacity">Max participants</label>
+  <asp:TextBox ID="Capacity" runat="server" TextMode="Number" Placeholder="e.g., 25" />
+  <asp:RequiredFieldValidator
+    runat="server"
+    ControlToValidate="Capacity"
+    CssClass="val"
+    ErrorMessage="Max participants is required."
+    Display="Dynamic" />
+  <asp:RangeValidator
+    runat="server"
+    ControlToValidate="Capacity"
+    CssClass="val"
+    ErrorMessage="Max participants must be at least 1."
+    MinimumValue="1"
+    MaximumValue="10000"
+    Type="Integer"
+    Display="Dynamic" />
+</div>
+          
       </div>
 
       <!-- Helper overview -->

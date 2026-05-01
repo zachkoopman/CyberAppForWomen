@@ -340,8 +340,12 @@
               <asp:TextBox ID="EventName" runat="server" CssClass="fia-input"></asp:TextBox>
             </div>
             <div>
-              <label class="fia-label" for="EventDate">Event date</label>
-              <asp:TextBox ID="EventDate" runat="server" CssClass="fia-input" TextMode="Date"></asp:TextBox>
+              <label class="fia-label" for="EventStartDate">Start date & time</label>
+              <asp:TextBox ID="EventStartDate" runat="server" CssClass="fia-input" TextMode="DateTimeLocal"></asp:TextBox>
+            </div>
+            <div>
+              <label class="fia-label" for="EventEndDate">End date & time</label>
+              <asp:TextBox ID="EventEndDate" runat="server" CssClass="fia-input" TextMode="DateTimeLocal"></asp:TextBox>
             </div>
             <div class="full">
               <label class="fia-label" for="Description">Description</label>
@@ -366,38 +370,68 @@
           </div>
         </div>
 
-        <!-- Event list -->
-        <div class="fia-card">
-          <div class="fia-section-title">Upcoming Events for Your University</div>
+        <!-- Event lists -->
+<div class="fia-card">
+  <div class="fia-section-title">Upcoming / Current Events for Your University</div>
 
-          <asp:Panel ID="NoEventsPlaceholder" runat="server" Visible="false" CssClass="fia-empty">
-            No events have been created yet. Once you add events, they’ll show up here.
-          </asp:Panel>
+  <asp:Panel ID="NoCurrentEventsPlaceholder" runat="server" Visible="false" CssClass="fia-empty">
+    No current or upcoming events are scheduled right now.
+  </asp:Panel>
 
-          <div class="fia-event-list">
-            <asp:Repeater ID="EventsRepeater" runat="server">
-              <ItemTemplate>
-                <div class="fia-event-row">
-                  <div class="fia-event-main">
-                    <span class="fia-event-name"><%# Eval("name") %></span>
-                    <span class="fia-event-meta">
-                      <span>Date: <%# Eval("dateHuman") %></span>
-                      <span class="fia-chip">
-                        Status: Published
-                      </span>
-                    </span>
-                  </div>
-                  <div>
-                    <a href="<%# Eval("manageUrl") %>"
-                       style="font-size:12px; text-decoration:none; color:#2563eb;">
-                      Manage
-                    </a>
-                  </div>
-                </div>
-              </ItemTemplate>
-            </asp:Repeater>
+  <div class="fia-event-list">
+    <asp:Repeater ID="CurrentEventsRepeater" runat="server">
+      <ItemTemplate>
+        <div class="fia-event-row">
+          <div class="fia-event-main">
+            <span class="fia-event-name"><%# Eval("name") %></span>
+            <span class="fia-event-meta">
+              <span><%# Eval("dateHuman") %></span>
+              <span class="fia-chip">
+                Status: <%# Eval("status") %>
+              </span>
+            </span>
+          </div>
+          <div>
+            <a href="<%# Eval("manageUrl") %>"
+               style="font-size:12px; text-decoration:none; color:#2563eb;">
+              Manage
+            </a>
           </div>
         </div>
+      </ItemTemplate>
+    </asp:Repeater>
+  </div>
+
+  <div class="fia-section-title" style="margin-top:18px;">Past Events</div>
+
+  <asp:Panel ID="NoPastEventsPlaceholder" runat="server" Visible="false" CssClass="fia-empty">
+    No past events are available yet.
+  </asp:Panel>
+
+  <div class="fia-event-list">
+    <asp:Repeater ID="PastEventsRepeater" runat="server">
+      <ItemTemplate>
+        <div class="fia-event-row">
+          <div class="fia-event-main">
+            <span class="fia-event-name"><%# Eval("name") %></span>
+            <span class="fia-event-meta">
+              <span><%# Eval("dateHuman") %></span>
+              <span class="fia-chip">
+                Status: <%# Eval("status") %>
+              </span>
+            </span>
+          </div>
+          <div>
+            <a href="<%# Eval("manageUrl") %>"
+               style="font-size:12px; text-decoration:none; color:#2563eb;">
+              Manage
+            </a>
+          </div>
+        </div>
+      </ItemTemplate>
+    </asp:Repeater>
+  </div>
+</div>
       </div>
     </div>
   </form>

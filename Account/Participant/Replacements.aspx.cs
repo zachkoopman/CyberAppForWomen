@@ -17,7 +17,7 @@ namespace CyberApp_FIA.Participant
         private string MicrocoursesXmlPath => Server.MapPath("~/App_Data/microcourses.xml");
         private string EnrollmentsXmlPath => Server.MapPath("~/App_Data/enrollments.xml");
 
-        private static readonly object EnrollmentsLock = new object();
+        
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -222,7 +222,7 @@ namespace CyberApp_FIA.Participant
 
         private bool TryEnroll(string eventId, string sessionId, string userId, out string message)
         {
-            lock (EnrollmentsLock)
+            lock (EnrollmentSync.EnrollmentsLock)
             {
                 // conflict guard
                 if (SessionOverlapsUser(eventId, userId, sessionId))

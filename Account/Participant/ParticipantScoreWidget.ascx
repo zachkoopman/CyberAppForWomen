@@ -78,6 +78,26 @@
   .actions{margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .btnTiny{padding:6px 10px;border:0;border-radius:10px;background:var(--fia-blue);color:#fff;cursor:pointer;font-weight:700}
   .btnTiny:disabled{opacity:.6;cursor:not-allowed}
+
+  .cellLeft{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:0;
+}
+
+.doneBadge{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:700;
+  color:#0a5b4e;
+  background:linear-gradient(180deg,#e6fbf7,#ffffff);
+  border:1px solid #bfeee6;
+}
 </style>
 
 <div class="scoreCard">
@@ -91,23 +111,24 @@
     Your overall and module scores range from <strong>0–10</strong>. Higher numbers mean a higher priority for help in that area (you’ll see those first in your plan). Lower numbers mean you’re relatively covered and can be scheduled later.
   </div>
 
-  <div class="mini">Private to you by default. Share with your Helper only if you want targeted help.</div>
+  <div class="mini">Private to you by default.</div>
 
   <!-- Cleaner, even grid with priority color-bands -->
   <div class="grid">
     <asp:Repeater ID="RptDomainMini" runat="server" OnItemDataBound="RptDomainMini_ItemDataBound">
       <ItemTemplate>
-        <div id="Cell" runat="server" class="cell">
-          <span class="name"><%# Eval("Key") %></span>
-          <span id="Chip" runat="server" class="chip">–</span>
-        </div>
-      </ItemTemplate>
+  <div id="Cell" runat="server" class="cell">
+    <div class="cellLeft">
+      <span class="name"><%# Eval("Key") %></span>
+      <span id="CompletedBadge" runat="server" class="doneBadge" visible="false">Completed</span>
+    </div>
+    <span id="Chip" runat="server" class="chip">–</span>
+  </div>
+</ItemTemplate>
     </asp:Repeater>
   </div>
 
   <div class="actions">
-    <asp:CheckBox ID="ChkShare" runat="server" Text="Share with my Helper" />
-    <asp:Button ID="BtnShare" runat="server" Text="Update" CssClass="btnTiny" OnClick="BtnShare_Click"/>
   </div>
 </div>
 

@@ -87,13 +87,22 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.TextBox EventName;
 
         /// <summary>
-        /// EventDate control.
+        /// EventStartDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox EventDate;
+        protected global::System.Web.UI.WebControls.TextBox EventStartDate;
+
+        /// <summary>
+        /// EventEndDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox EventEndDate;
 
         /// <summary>
         /// Description control.
@@ -132,21 +141,39 @@ namespace CyberApp_FIA.Account
         protected global::System.Web.UI.WebControls.Literal FormMessage;
 
         /// <summary>
-        /// NoEventsPlaceholder control.
+        /// NoCurrentEventsPlaceholder control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel NoEventsPlaceholder;
+        protected global::System.Web.UI.WebControls.Panel NoCurrentEventsPlaceholder;
 
         /// <summary>
-        /// EventsRepeater control.
+        /// CurrentEventsRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater EventsRepeater;
+        protected global::System.Web.UI.WebControls.Repeater CurrentEventsRepeater;
+
+        /// <summary>
+        /// NoPastEventsPlaceholder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel NoPastEventsPlaceholder;
+
+        /// <summary>
+        /// PastEventsRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater PastEventsRepeater;
     }
 }

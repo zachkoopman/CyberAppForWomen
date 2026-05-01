@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<badgeDescriptions version="1">
+	<!-- Key by courseId so it always matches completions/badges -->
+	<badge courseId="f98b4b69dc334c9496ca948351e843b7" title="Enhancing Social Media Privacy Settings">
+		<description>Adjust privacy settings on social platforms, limit who can see your info and posts, and strengthen account protection.</description>
+	</badge>
+
+	<badge courseId="550051f55dad499c850dc2e94289a941" title="Phishing Awareness And Email Security">
+		<description>Spot phishing red flags, verify senders, and avoid unsafe links and attachments.</description>
+	</badge>
+
+	<badge courseId="d1c1c3f5edd04cc4abed5927d16eff3f" title="Privacy Settings on Popular Apps">
+		<description>Manage app permissions, reduce data sharing, and control what apps can access.</description>
+	</badge>
+
+	<badge courseId="5138068e2bf6482fa1c3aaa0a287f096" title="Detecting Spyware Infection on Devices">
+		<description>Recognize spyware symptoms and run scans to remove threats and restore device safety.</description>
+	</badge>
+
+	<badge courseId="154085e49eb7427b95e967c0af05c870" title="2FA Setup And Management">
+		<description>Set up two-factor authentication and backup methods to protect important accounts.</description>
+	</badge>
+
+	<badge courseId="83b7b2cadf3446d3a81d4e9836cd5982" title="Password Management And Security">
+		<description>Create strong passwords and use a password manager to reduce account takeovers.</description>
+	</badge>
+
+	<badge courseId="a0e70ced9b0649b68eb6128b2ed2ad7c" title="Managing Digital Footprint">
+		<description>Reduce personal exposure online by cleaning profiles and sharing with intention.</description>
+	</badge>
+
+	<badge courseId="eb171af242e14d3c82db92678ed73b3d" title="Recognizing AI-Assisted Manipulation And Deepfakes">
+		<description>Identify manipulated media and use quick checks to verify authenticity.</description>
+	</badge>
+
+	<badge courseId="d05390f150da4af599b3b66b7b37ef79" title="Using VPNs for Secure Browsing">
+		<description>Understand VPN protection and set up safer browsing on public networks.</description>
+	</badge>
+
+	<badge courseId="ba9ef2af382e4f8e80e2c4357c7993b1" title="Safe Use of Public Computers and Wi-Fi">
+		<description>Use public devices and Wi-Fi safely without leaking logins or personal data.</description>
+	</badge>
+
+	<badge courseId="3d36f5f0f13d42b78653b71ba4089a37" title="Identifying Hidden-Surveilance Devices">
+		<description>Learn practical steps to detect hidden cameras/mics and understand tool limitations.</description>
+	</badge>
+
+	<badge courseId="caebb3c577994d098c5086f17c4f7464" title="Safe Online Banking Practices">
+		<description>Bank online safely using secure habits, strong authentication, and monitoring.</description>
+	</badge>
+
+	<badge courseId="0c1e0fd46a0244ad8176b65ea44b05f1" title="Recognizing Malicious Mobile Apps">
+		<description>Spot risky apps by permissions, reputation, and behavior before installing.</description>
+	</badge>
+
+	<badge courseId="2415376ae813427bb8fb61f2652fb6d3" title="Verifying Online Identities and Combating Catfishing">
+		<description>Verify identities and catch red flags using practical cross-checking steps.</description>
+	</badge>
+
+	<badge courseId="97d38c5f9c0246fd9d3ba79014ab56cc" title="Securing Home Wi-Fi Networks">
+		<description>Harden your router settings, update firmware, and improve home network safety.</description>
+	</badge>
+</badgeDescriptions>

@@ -69,6 +69,42 @@ namespace CyberApp_FIA.Participant
         protected global::System.Web.UI.WebControls.Literal SessionDeletionNoticeText;
 
         /// <summary>
+        /// NoShowNoticePH control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder NoShowNoticePH;
+
+        /// <summary>
+        /// NoShowNoticeText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal NoShowNoticeText;
+
+        /// <summary>
+        /// NoShowAckKey control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField NoShowAckKey;
+
+        /// <summary>
+        /// AckNoShowBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton AckNoShowBtn;
+
+        /// <summary>
         /// ScoreWidget control.
         /// </summary>
         /// <remarks>
@@ -78,49 +114,31 @@ namespace CyberApp_FIA.Participant
         protected global::CyberApp_FIA.Account.Participant.ParticipantScoreWidget ScoreWidget;
 
         /// <summary>
-        /// HelperSupportPanel control.
+        /// RecommendedCoursesPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder HelperSupportPanel;
+        protected global::System.Web.UI.WebControls.PlaceHolder RecommendedCoursesPanel;
 
         /// <summary>
-        /// HelperName control.
+        /// RecommendedCoursesEmpty control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal HelperName;
+        protected global::System.Web.UI.WebControls.PlaceHolder RecommendedCoursesEmpty;
 
         /// <summary>
-        /// StartHelperMessageBtn control.
+        /// RecommendedCoursesRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button StartHelperMessageBtn;
-
-        /// <summary>
-        /// ConversationsEmpty control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder ConversationsEmpty;
-
-        /// <summary>
-        /// ConversationsRepeater control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater ConversationsRepeater;
+        protected global::System.Web.UI.WebControls.Repeater RecommendedCoursesRepeater;
 
         /// <summary>
         /// FilterFrom control.
@@ -211,6 +229,51 @@ namespace CyberApp_FIA.Participant
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater SessionsRepeater;
+
+        /// <summary>
+        /// HelperSupportPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder HelperSupportPanel;
+
+        /// <summary>
+        /// HelperName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal HelperName;
+
+        /// <summary>
+        /// StartHelperMessageBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button StartHelperMessageBtn;
+
+        /// <summary>
+        /// ConversationsEmpty control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder ConversationsEmpty;
+
+        /// <summary>
+        /// ConversationsRepeater control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater ConversationsRepeater;
 
         /// <summary>
         /// FormMessage control.
